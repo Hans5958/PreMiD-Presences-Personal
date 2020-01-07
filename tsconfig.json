@@ -5,6 +5,7 @@
     "removeComments": true,
     "typeRoots": ["@types"],
     "inlineSourceMap": true
+    
   },
   "exclude": ["node_modules"]
 }

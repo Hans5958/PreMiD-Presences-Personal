@@ -52,7 +52,6 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 			presenceData.state = document.querySelector(".topic-header__title").firstElementChild.innerHTML
 		} else if (href.pathname.includes("/video")) {
 			updateCallback.function = () => {
-				resetData()
 				presenceData.details = "Watching a video"
 				presenceData.state = document.querySelector(".video-page-featured-player__title").textContent
 				try {
@@ -199,21 +198,21 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 				presenceData.details = "Viewing a discussion user page"
 				presenceData.state = document.querySelector(".user-overview__username").textContent
 			}
-			cleanData()	
 		}
 
 	}
-
-	cleanData()
 
 })()
 
 if (updateCallback.present) {
 	presence.on("UpdateData", async () => {
-		updateCallback.function()
-		presence.setActivity(presenceData)
+		resetData()
+        updateCallback.function();
+		cleanData()
+        presence.setActivity(presenceData);
 	})
 } else {
+	cleanData()
 	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
@@ -247,6 +246,7 @@ function resetData() {
  * Cleans presenceData
  */
 function cleanData() {
-	if (presenceData.state === null) delete presenceData.state
-	if (presenceData.endTimestamp === null) delete presenceData.endTimestamp
+	Object.keys(presenceData).forEach(key => {
+		if (presenceData[key] === null) delete presenceData[key]
+	})
 }

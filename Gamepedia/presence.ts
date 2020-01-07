@@ -29,6 +29,13 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 	if (href.hostname === "www.gamepedia.com") {
 
+		/*
+		
+		Chapter 1
+		This part is for the editorial part of Gamepedia.
+		
+		*/
+
 		if (href.pathname === "/") {
 			presenceData.state = "Index"
 			presenceData.startTimestamp = browsingStamp
@@ -61,6 +68,14 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 		}
 
 	} else {
+
+		/*
+		
+		Chapter 2
+		This part is for the wiki part of Gamepedia.
+		
+		*/
+
 		
 		let title: string, 
 			sitename: string,
@@ -128,30 +143,20 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 	} 
 
-	cleanData()
-
 })()
 
 if (updateCallback.present) {
 	presence.on("UpdateData", async () => {
-		updateCallback.function()
-		presence.setActivity(presenceData)
+		resetData()
+        updateCallback.function();
+		cleanData()
+        presence.setActivity(presenceData);
 	})
 } else {
+	cleanData()
 	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
-}
-
-/**
- * Get timestamps.
- * @param {Number} videoTime Current video time seconds
- * @param {Number} videoDuration Video duration seconds
- */
-function getTimestamps(videoTime: number, videoDuration: number) {
-	var startTime = Date.now()
-	var endTime = Math.floor(startTime / 1000) - videoTime + videoDuration
-	return [Math.floor(startTime / 1000), endTime]
 }
 
 /**
@@ -171,6 +176,7 @@ function resetData() {
  * Cleans presenceData
  */
 function cleanData() {
-	if (presenceData.state === null) delete presenceData.state
-	if (presenceData.endTimestamp === null) delete presenceData.endTimestamp
+	Object.keys(presenceData).forEach(key => {
+		if (presenceData[key] === null) delete presenceData[key]
+	})
 }

@@ -1,0 +1,19 @@
+{
+	"author": {
+		"name": "Hans5958",
+		"id": "279855717203050496"
+	},
+	"service": "DeviantArt",
+	"url": ["www.deviantart.com"],
+	"version": "1.0.0",
+	"logo": "https://avatars3.githubusercontent.com/u/11584103",
+	"thumbnail": "https://avatars3.githubusercontent.com/u/11584103",
+	"color": "#00e59b",
+	"tags": [
+		"TBA"
+	],
+	"description": {
+		"en": "Founded in August 2000, DeviantArt is the largest online social network for artists and art enthusiasts, and a platform for emerging and established artists to exhibit, promote, and share their works with an enthusiastic, art-centric community."
+	},
+	"category": "other"
+}
