@@ -1,67 +1,99 @@
 var presence = new Presence({
-		clientId: "609364070684033044",
-		mediaKeys: false
-	}),
-	strings = presence.getStrings({
-		play: "presence.playback.playing",
-		pause: "presence.playback.paused"
-	});
+	clientId: "609364070684033044",
+	mediaKeys: false
+})
 
-var browsingStamp = Math.floor(Date.now() / 1000);
-
-var title: string;
-
-var actionURL = new URL(document.location.href);
-var title2URL = new URL(document.location.href);
-
-presence.on("UpdateData", async () => {
-
-	let presenceData: presenceData = {
-		details: "In construction",
-		state: "-",
-		largeImageKey: "lg"
+var currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
+	browsingStamp = Math.floor(Date.now() / 1000),
+	href = new URL(document.location.href),
+	presenceData = {
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
+		largeImageKey: <string> "lg",
+		startTimestamp: <number> browsingStamp,
+		endTimestamp: <number> undefined
+	},
+	updateCallback = {
+		_function: null,
+		get function() {
+			return this._function;
+		},
+		set function(parameter){
+			this._function = parameter
+		},
+		get present() {
+			return this._function !== null
+		}
 	};
 
-	let title = document.querySelector('h1#firstHeading');
+(() => {
 
-	var actionResult = actionURL.searchParams.get("action");
-	var title2Result = title2URL.searchParams.get("title");
+	let title: string, 
+		sitename: string,
+		actionResult = href.searchParams.get("action"),
+		titleFromURL = () => {
+			let raw: string
+			if (href.pathname.startsWith("/index.php")) raw = href.searchParams.get("title")
+			else raw = href.pathname.slice(1)
+			if (raw.includes("_")) return raw.replace(/_/g, " ")
+			else return raw
+		}
 
-	if (document.location.pathname == "/wiki/Main_Page") {
-		presenceData.state = "Main Page | Home";
-		presenceData.startTimestamp = browsingStamp;
-		delete presenceData.details;
-	} else if (title && document.location.pathname.includes("/wiki/")) {
-		presenceData.details = "Reading about"
-		presenceData.state = title.innerText;
-		presenceData.startTimestamp = browsingStamp;
-	} else if (actionResult == "history" && title2Result && document.location.pathname.includes("/w/")) {
-		presenceData.details = "Viewing revision history"
-		if (title2Result.includes("_")) {
-			presenceData.state = title2Result.replace(/_/g, " ");
-		} else {
-			presenceData.state = title2Result;
-		}
-		presenceData.startTimestamp = browsingStamp;
-	} else if (actionResult == "edit" && title2Result && document.location.pathname.includes("/w/")) {
-		presenceData.details = "Editing a page"
-		if (title2Result.includes("_")) {
-			presenceData.state = title2Result.replace(/_/g, " ");
-		} else {
-			presenceData.state = title2Result;
-		}
-		presenceData.startTimestamp = browsingStamp;
+	try {
+		title = document.querySelector("h1#firstHeading").textContent
+	} catch (e) {
+		title = titleFromURL()
 	}
-	presence.setActivity(presenceData);
-});
+
+	// try { 
+	// 	sitename = document.querySelector("meta[property='og:site_name']").content
+	// } catch (e) {
+	// 	sitename = null
+	// }
+
+	if (document.querySelector("title").textContent.split(" - ").length === 1) {
+		presenceData.state = "Main Page | Home"
+		delete presenceData.details
+	} else if (actionResult == "history" && titleFromURL) {
+		presenceData.details = "Viewing revision history"
+		presenceData.state = title
+	} else if (actionResult == "edit" && titleFromURL) {
+		presenceData.details = "Editing a page"
+		presenceData.state = title
+	} else {
+		presenceData.details = "Reading a page"
+		presenceData.state = title
+	}
+
+	presenceData.startTimestamp = browsingStamp
+	// presenceData.state += " | " + sitename
+
+})()
+
+if (updateCallback.present) {
+	presence.on("UpdateData", async () => {
+		resetData()
+		updateCallback.function()
+		presence.setActivity(presenceData)
+	})
+} else {
+	presence.on("UpdateData", async () => {
+		presence.setActivity(presenceData)
+	})
+}
 
 /**
- * Get Timestamps
- * @param {Number} videoTime Current video time seconds
- * @param {Number} videoDuration Video duration seconds
+ * Initialize presenceData.
  */
-function getTimestamps(videoTime: number, videoDuration: number) {
-	var startTime = Date.now();
-	var endTime = Math.floor(startTime / 1000) - videoTime + videoDuration;
-	return [Math.floor(startTime / 1000), endTime];
+function resetData() {
+	currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
+	presenceData = {
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
+		largeImageKey: <string> "lg",
+		startTimestamp: <number> browsingStamp,
+		endTimestamp: <number> undefined
+	};
 }

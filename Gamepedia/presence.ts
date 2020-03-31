@@ -3,14 +3,15 @@ var presence = new Presence({
 	mediaKeys: false
 })
 
-var browsingStamp = Math.floor(Date.now() / 1000),
-	href = new URL(document.location.href),
-	presenceData = {
-		details: <string> 'In construction',
-		state: <string> null,
+var currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
+	browsingStamp = Math.floor(Date.now() / 1000), 
+	presenceData: presenceData = {
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> null
+		endTimestamp: <number> undefined
 	},
 	updateCallback = {
 		_function: null,
@@ -27,7 +28,7 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 (() => {
 
-	if (href.hostname === "www.gamepedia.com") {
+	if (currentURL.hostname === "www.gamepedia.com") {
 
 		/*
 		
@@ -36,33 +37,33 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 		
 		*/
 
-		if (href.pathname === "/") {
+		if (currentPath[0] === "") {
 			presenceData.state = "Index"
 			presenceData.startTimestamp = browsingStamp
 			delete presenceData.details
-		} else if (href.pathname.includes("/twitch-login")) {
+		} else if (currentPath[0] === "twitch-login") {
 			presenceData.details = "Signing in"
 			presenceData.startTimestamp = browsingStamp
 			delete presenceData.state
-		} else if (href.pathname.includes("/twitch-signup")) {
+		} else if (currentPath[0] === "twitch-signup") {
 			presenceData.details = "Registering an account"
 			presenceData.startTimestamp = browsingStamp
 			delete presenceData.details
-		} else if (href.pathname.includes("/news/")) {
+		} else if (currentPath[0] === "news") {
 			presenceData.details = "Reading an news article"
 			presenceData.state = document.querySelector(".p-article-title").textContent
 			presenceData.startTimestamp = browsingStamp
-		} else if (href.pathname.includes("/blog/")) {
+		} else if (currentPath[0] === "blog") {
 			presenceData.details = "Reading a blog article"
 			presenceData.state = document.querySelector(".p-article-title").textContent
 			presenceData.startTimestamp = browsingStamp
-		} else if (href.pathname.includes("/members/")) {
+		} else if (currentPath[0] === "members") {
 			presenceData.details = "Reading a blog article"
 			presenceData.state = document.querySelector(".username").textContent
 			presenceData.startTimestamp = browsingStamp
 		} else {
 			presenceData.details = "Viewing a page"
-			if (href.pathname.includes("/PRO")) presenceData.state = "Gamepedia PRO"
+			if (currentPath[0] === "PRO") presenceData.state = "Gamepedia PRO"
 			else presenceData.state = document.title.split(" - ")[0]
 			presenceData.startTimestamp = browsingStamp
 		}
@@ -77,13 +78,13 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 		*/
 
 		
-		let title: string, 
+		var title: string, 
 			sitename: string,
-			actionResult = href.searchParams.get("action"),
+			actionResult = currentURL.searchParams.get("action"),
 			titleFromURL = () => {
-				let raw: string
-				if (href.pathname.startsWith("/index.php")) raw = href.searchParams.get("title")
-				else raw = href.pathname.slice(1)
+				var raw: string
+				if (currentURL.pathname.startsWith("/index.php")) raw = currentURL.searchParams.get("title")
+				else raw = currentURL.pathname.slice(1)
 				if (raw.includes("_")) return raw.replace(/_/g, " ")
 				else return raw
 			}
@@ -100,7 +101,7 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 			sitename = null
 		}
 
-		let namespaceDetails = {
+		var namespaceDetails = {
 			"Media": "Viewing a media",
 			"Special": "Viewing a special page",
 			"Talk": "Viewing a talk page",
@@ -123,10 +124,10 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 		if (title === sitename) {
 			presenceData.state = "Home"
 			delete presenceData.details
-		} else if (actionResult == "history" && titleFromURL) {
+		} else if (actionResult == "history") {
 			presenceData.details = "Viewing revision history"
 			presenceData.state = title
-		} else if (actionResult == "edit" && titleFromURL) {
+		} else if (actionResult == "edit") {
 			presenceData.details = "Editing a wiki page"
 			presenceData.state = title
 		} else if (title.startsWith("UserProfile:")) {
@@ -148,35 +149,26 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 if (updateCallback.present) {
 	presence.on("UpdateData", async () => {
 		resetData()
-        updateCallback.function();
-		cleanData()
-        presence.setActivity(presenceData);
+		updateCallback.function()
+		presence.setActivity(presenceData)
 	})
 } else {
-	cleanData()
 	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
 
 /**
- * Initialize presenceData
+ * Initialize presenceData.
  */
 function resetData() {
+	currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
 	presenceData = {
-		details: <string> 'In construction',
-		state: <string> null,
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> null
+		endTimestamp: <number> undefined
 	};
-}
-
-/**
- * Cleans presenceData
- */
-function cleanData() {
-	Object.keys(presenceData).forEach(key => {
-		if (presenceData[key] === null) delete presenceData[key]
-	})
 }

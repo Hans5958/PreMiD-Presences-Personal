@@ -3,14 +3,15 @@ var presence = new Presence({
 	mediaKeys: false
 })
 
-var browsingStamp = Math.floor(Date.now() / 1000),
-	href = new URL(document.location.href),
-	presenceData = {
-		details: <string> 'In construction',
-		state: <string> null,
+var currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
+	browsingStamp = Math.floor(Date.now() / 1000), 
+	presenceData: presenceData = {
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> null
+		endTimestamp: <number> undefined
 	},
 	updateCallback = {
 		_function: null,
@@ -27,7 +28,7 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 (() => {
 
-	if (href.host === "www.fandom.com") {
+	if (currentURL.host === "www.fandom.com") {
 
 		/*
 
@@ -36,28 +37,28 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 		*/
 		
-		if (href.pathname === "/") {
+		if (currentPath[0] === "/") {
 			presenceData.state = "Index"
 			delete presenceData.details
-		} else if (href.pathname.includes("/signin")) {
+		} else if (currentPath[0] === "signin") {
 			presenceData.details = "Signing in"
-		} else if (href.pathname.includes("/register")) {
+		} else if (currentPath[0] === "register") {
 			presenceData.details = "Registering an account"
 			delete presenceData.details
-		} else if (href.pathname.includes("/articles/")) {
+		} else if (currentPath[0] === "articles") {
 			presenceData.details = "Reading an article"
 			presenceData.state = document.querySelector(".article-header__title").textContent
-		} else if (href.pathname.includes("/topics/")) {
+		} else if (currentPath[0] === "topics") {
 			presenceData.details = "Viewing a topic"
 			presenceData.state = document.querySelector(".topic-header__title").firstElementChild.innerHTML
-		} else if (href.pathname.includes("/video")) {
+		} else if (currentPath[0] === "video") {
 			updateCallback.function = () => {
 				presenceData.details = "Watching a video"
 				presenceData.state = document.querySelector(".video-page-featured-player__title").textContent
 				try {
 					if (document.querySelector(".jw-icon-playback").getAttribute("aria-label") === "Pause") {
-						let video = document.querySelector(".jw-video")
-						let timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
+						var video = document.querySelector(".jw-video")
+						var timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
 						presenceData.startTimestamp = timestamps[0]
 						presenceData.endTimestamp = timestamps[1]
 					} else {
@@ -68,23 +69,25 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 					delete presenceData.startTimestamp
 					delete presenceData.endTimestamp
 				}
-				console.log(presenceData)
 			}
-		} else if (href.pathname.includes("/curated/")) {
+		} else if (currentPath[0] === "curated") {
 			presenceData.details = "Viewing a curation"
 			presenceData.state = document.querySelector(".card__title").textContent
+		} else if (currentPath[0] === "u") {
+			presenceData.details = "Viewing a profile page"
+			presenceData.state = `${document.querySelector(".profile-info-card__name").textContent} (${document.querySelector(".profile-info-card__username").textContent})`
 		} else {
 			presenceData.details = "Viewing a page"
-			if (href.pathname.includes("/explore")) presenceData.state = "Explore"
-			else if (href.pathname.includes("/about")) presenceData.state = "About"
-			else if (href.pathname.includes("/carriers")) presenceData.state = "Carriers"
-			else if (href.pathname.includes("/terms-of-use")) presenceData.state = "Terms of Use"
-			else if (href.pathname.includes("/privacy-policy")) presenceData.state = "Privacy Policy"
-			else if (href.pathname.includes("/mediakit")) presenceData.state = "Media Kit"
-			else if (href.pathname.includes("/local-sitemap")) presenceData.state = "Local Sitemap"
+			if (currentPath[0] === "explore") presenceData.state = "Explore"
+			else if (currentPath[0] === "about") presenceData.state = "About"
+			else if (currentPath[0] === "carriers") presenceData.state = "Carriers"
+			else if (currentPath[0] === "terms-of-use") presenceData.state = "Terms of Use"
+			else if (currentPath[0] === "privacy-policy") presenceData.state = "Privacy Policy"
+			else if (currentPath[0] === "mediakit") presenceData.state = "Media Kit"
+			else if (currentPath[0] === "local-sitemap") presenceData.state = "Local Sitemap"
 		}
 
-	} else if (href.pathname.includes("/wiki/")) {
+	} else if (currentPath.includes("wiki")) {
 		/*
 
 		Chapter 2
@@ -92,16 +95,16 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 		*/
 
-		let title: string, 
+		var title: string, 
 			sitename: string,
-			actionResult = href.searchParams.get("action") || href.searchParams.get("veaction"),
+			actionResult = getURLParam("action") || getURLParam("veaction"),
 			titleFromURL = () => {
-			let raw: string, lang: string
-			if (href.pathname.startsWith("/wiki/")) {
-				raw = href.pathname.slice(6)
+			var raw: string, lang: string
+			if (currentPath[0] === "wiki") {
+				raw = currentURL.pathname.slice(6)
 			} else {
-				lang = href.pathname.split("/")[0]
-				raw = href.pathname.slice(7 + lang.length)
+				lang = currentPath[0]
+				raw = currentPath[2]
 			}
 			if (raw.includes("_")) return raw.replace(/_/g, " ")
 			else return raw
@@ -119,7 +122,7 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 			sitename = null
 		}
 
-		let namespaceDetails = {
+		var namespaceDetails = {
 			"Media": "Viewing a media",
 			"Special": "Viewing a special page",
 			"Talk": "Viewing a talk page",
@@ -148,14 +151,14 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 			sitename = document.querySelector("meta[property='og:title']").content
 			presenceData.state = "Home"
 			delete presenceData.details
-		} else if (actionResult == "history" && titleFromURL) {
+		} else if (actionResult == "history") {
 			presenceData.details = "Viewing revision history"
 			presenceData.state = titleFromURL()
-		} else if (actionResult == "edit" && titleFromURL) {
-			if (href.searchParams.has("action")) title = document.querySelector("#EditPageHeader").children[2].textContent
+		} else if (actionResult == "edit") {
+			if (currentURL.searchParams.has("action")) title = document.querySelector("#EditPageHeader").children[2].textContent
 			presenceData.details = "Editing a wiki page"
 			presenceData.state = titleFromURL()
-		} else if (href.pathname.includes("User_blog:")) {
+		} else if (currentURL.pathname.includes("User_blog:")) {
 			if (title) {
 				presenceData.details = "Reading a user blog post"
 				presenceData.state = title + " by " + document.querySelector(".page-header__blog-post-details").firstElementChild.textContent
@@ -172,7 +175,7 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 		presenceData.startTimestamp = browsingStamp
 		presenceData.state += " | " + sitename
 
-	} else if (href.pathname === "/f" || href.pathname.includes("/f/")) {
+	} else if (currentPath[0] === "f") {
 
 		/*
 
@@ -181,22 +184,18 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 
 		*/
 
+		var sitename = document.querySelector("meta[property='og:title']").content.substring(25).replace(" | Fandom", "")
+
 		updateCallback.function = () => {
-			var presenceData = {
-				details: <string> 'In construction',
-				state: <string> null,
-				largeImageKey: <string> "lg",
-				startTimestamp: <number> browsingStamp,
-			};
-			href = new URL(document.location.href)
-			if (href.pathname === "/f") {
+			if (!currentPath[1]) {
 				presenceData.details = "Viewing the discussion page"
-			} else if (href.pathname.includes("/p/")) {
+				presenceData.state = sitename
+			} else if (currentPath[1] === "p") {
 				presenceData.details = "Reading an discussion post"
-				presenceData.state = document.querySelector(".post__title").textContent
-			} else if (href.pathname.includes("/u/")) {
+				presenceData.state = `${document.querySelector(".post__title").textContent} | ${sitename}`
+			} else if (currentPath[1] === "u") {
 				presenceData.details = "Viewing a discussion user page"
-				presenceData.state = document.querySelector(".user-overview__username").textContent
+				presenceData.state = `${document.querySelector(".user-overview__username").textContent} | ${sitename}`
 			}
 		}
 
@@ -207,21 +206,19 @@ var browsingStamp = Math.floor(Date.now() / 1000),
 if (updateCallback.present) {
 	presence.on("UpdateData", async () => {
 		resetData()
-        updateCallback.function();
-		cleanData()
-        presence.setActivity(presenceData);
+		updateCallback.function()
+		presence.setActivity(presenceData)
 	})
 } else {
-	cleanData()
 	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
 
 /**
- * Get timestamps.
- * @param {Number} videoTime Current video time seconds
- * @param {Number} videoDuration Video duration seconds
+ * Get timestamps based on the video element.
+ * @param {Number} videoTime Current video time seconds.
+ * @param {Number} videoDuration Video duration seconds.
  */
 function getTimestamps(videoTime: number, videoDuration: number) {
 	var startTime = Date.now()
@@ -230,23 +227,24 @@ function getTimestamps(videoTime: number, videoDuration: number) {
 }
 
 /**
- * Initialize presenceData
+ * Initialize presenceData.
  */
 function resetData() {
+	currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
 	presenceData = {
-		details: <string> 'In construction',
-		state: <string> null,
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> null
+		endTimestamp: <number> undefined
 	};
 }
 
 /**
- * Cleans presenceData
+ * Search for URL parameters.
+ * @param urlParam The parameter that you want to know about the value.
  */
-function cleanData() {
-	Object.keys(presenceData).forEach(key => {
-		if (presenceData[key] === null) delete presenceData[key]
-	})
+function getURLParam(urlParam: string) {
+	return currentURL.searchParams.get(urlParam)
 }

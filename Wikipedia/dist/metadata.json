@@ -3,6 +3,10 @@
         "name": "TheDrop.",
         "id": "293828021134295040"
     },
+    "contributors": [{
+		"name": "Hans5958",
+		"id": "279855717203050496"
+    }],
     "service": "Wikipedia",
     "description": {
         "en": "Wikipedia is a multilingual online encyclopedia, based on open collaboration through a wiki-based content editing system.",
@@ -15,7 +19,7 @@
     "url": [
         "wikipedia.org"
     ],
-    "version": "2.4",
+    "version": "2.6",
     "logo": "https://i.imgur.com/zFdTVKT.png",
     "thumbnail": "https://i.imgur.com/vJiuzZy.png",
     "color": "#f9f9f9",
