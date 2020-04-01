@@ -57,8 +57,8 @@ var currentURL = new URL(document.location.href),
 				presenceData.state = document.querySelector(".video-page-featured-player__title").textContent
 				try {
 					if (document.querySelector(".jw-icon-playback").getAttribute("aria-label") === "Pause") {
-						var video = document.querySelector(".jw-video")
-						var timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
+						let video = document.querySelector(".jw-video")
+						let timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
 						presenceData.startTimestamp = timestamps[0]
 						presenceData.endTimestamp = timestamps[1]
 					} else {
@@ -88,6 +88,7 @@ var currentURL = new URL(document.location.href),
 		}
 
 	} else if (currentPath.includes("wiki")) {
+
 		/*
 
 		Chapter 2
@@ -95,15 +96,16 @@ var currentURL = new URL(document.location.href),
 
 		*/
 
-		var title: string, 
+		let title: string, 
 			sitename: string,
 			actionResult = getURLParam("action") || getURLParam("veaction"),
 			titleFromURL = () => {
-			var raw: string, lang: string
+			let raw: string
+			//var lang: string
 			if (currentPath[0] === "wiki") {
 				raw = currentURL.pathname.slice(6)
 			} else {
-				lang = currentPath[0]
+				// lang = currentPath[0]
 				raw = currentPath[2]
 			}
 			if (raw.includes("_")) return raw.replace(/_/g, " ")
@@ -122,7 +124,7 @@ var currentURL = new URL(document.location.href),
 			sitename = null
 		}
 
-		var namespaceDetails = {
+		let namespaceDetails = {
 			"Media": "Viewing a media",
 			"Special": "Viewing a special page",
 			"Talk": "Viewing a talk page",
@@ -155,7 +157,7 @@ var currentURL = new URL(document.location.href),
 			presenceData.details = "Viewing revision history"
 			presenceData.state = titleFromURL()
 		} else if (actionResult == "edit") {
-			if (currentURL.searchParams.has("action")) title = document.querySelector("#EditPageHeader").children[2].textContent
+			// if (currentURL.searchParams.has("action")) title = document.querySelector("#EditPageHeader").children[2].textContent
 			presenceData.details = "Editing a wiki page"
 			presenceData.state = titleFromURL()
 		} else if (currentURL.pathname.includes("User_blog:")) {
@@ -184,7 +186,7 @@ var currentURL = new URL(document.location.href),
 
 		*/
 
-		var sitename = document.querySelector("meta[property='og:title']").content.substring(25).replace(" | Fandom", "")
+		let sitename = document.querySelector("meta[property='og:title']").content.substring(25).replace(" | Fandom", "")
 
 		updateCallback.function = () => {
 			if (!currentPath[1]) {
@@ -221,8 +223,8 @@ if (updateCallback.present) {
  * @param {Number} videoDuration Video duration seconds.
  */
 function getTimestamps(videoTime: number, videoDuration: number) {
-	var startTime = Date.now()
-	var endTime = Math.floor(startTime / 1000) - videoTime + videoDuration
+	let startTime = Date.now()
+	let endTime = Math.floor(startTime / 1000) - videoTime + videoDuration
 	return [Math.floor(startTime / 1000), endTime]
 }
 

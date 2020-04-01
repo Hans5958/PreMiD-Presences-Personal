@@ -11,5 +11,5 @@ cd ../PreMiD-Presences-Personal
 rm -r -f ../PreMiD-Presences/$1
 cp -r $1 ../PreMiD-Presences/$1
 cd ../PreMiD-Presences
-git add --all
+git add "$1/*"
 git commit --message "Update $1 ($ver)"

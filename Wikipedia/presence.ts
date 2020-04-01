@@ -30,7 +30,6 @@ var currentURL = new URL(document.location.href),
 (() => {
 
 	let title: string, 
-		sitename: string,
 		actionResult = href.searchParams.get("action"),
 		titleFromURL = () => {
 			let raw: string
@@ -55,10 +54,10 @@ var currentURL = new URL(document.location.href),
 	if (document.querySelector("title").textContent.split(" - ").length === 1) {
 		presenceData.state = "Main Page | Home"
 		delete presenceData.details
-	} else if (actionResult == "history" && titleFromURL) {
+	} else if (actionResult == "history") {
 		presenceData.details = "Viewing revision history"
 		presenceData.state = title
-	} else if (actionResult == "edit" && titleFromURL) {
+	} else if (actionResult == "edit") {
 		presenceData.details = "Editing a page"
 		presenceData.state = title
 	} else {

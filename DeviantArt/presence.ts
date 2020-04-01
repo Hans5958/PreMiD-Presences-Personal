@@ -53,15 +53,15 @@ var currentURL = new URL(document.location.href),
 
 	if (currentURL.hostname === "www.deviantart.com") {
 
-		var loadedPath = [], forceUpdate = false, presenceDataPlaced: presenceData = {}, retries = 0
+		let loadedPath = [], forceUpdate = false, presenceDataPlaced: presenceData = {}, retries = 0, websiteTheme: string, profileType: string
 
 		/* This one decides if the current theme is the old one or the new one, also known as Eclipse. */
-		if (document.querySelector("table#overhead") === null) var websiteTheme = "eclipse"
-		else var websiteTheme = "old"
+		if (document.querySelector("table#overhead") === null) websiteTheme = "eclipse"
+		else websiteTheme = "old"
 
 		/* This one decides if the current page belongs to an user or a group */
-		if (document.querySelector("#group")) var profileType = "group"
-		else var profileType = "user"
+		if (document.querySelector("#group")) profileType = "group"
+		else profileType = "user"
 	
 		updateCallback.function = () => {
 	
@@ -160,7 +160,7 @@ var currentURL = new URL(document.location.href),
 							presenceData.state = getURLParam("q")
 						} else {
 							presenceData.details = "Viewing deviations"
-							var li = document.querySelectorAll(".browse-facet-category ul li")
+							let li = document.querySelectorAll(".browse-facet-category ul li")
 							if (currentPath[3]) presenceData.state = `${li[1].textContent} > ${li[2].textContent} > ${document.querySelector(".search-stats").textContent.trim().slice(7)} > `
 							else if (currentPath[2]) presenceData.state = `${li[1].textContent} > ${document.querySelector(".search-stats").textContent.trim().slice(7)} > `
 							else if (currentPath[1]) presenceData.state = `${document.querySelector(".search-stats").textContent.trim().slice(7)} > `
@@ -345,7 +345,7 @@ var currentURL = new URL(document.location.href),
 		function lastItem(array: NodeList | Array<any>) {
 			return array[array.length - 1]
 		}
-
+	
 	} else if (currentURL.hostname === "about.deviantart.com") {
 
 		presenceData.details = "Viewing the about pages"
@@ -453,7 +453,7 @@ var currentURL = new URL(document.location.href),
 			presenceData.state = getURLParam("q")
 		} else {
 			presenceData.details = "Viewing deviations on the shop"
-			var li = document.querySelectorAll(".browse-facet-product ul li .selected")
+			let li = document.querySelectorAll(".browse-facet-product ul li .selected")
 			li.forEach((v) => {
 				if (presenceData.state === undefined) presenceData.state = v.textContent
 				else presenceData.state += ` > ${v.textContent}`
@@ -462,7 +462,7 @@ var currentURL = new URL(document.location.href),
 
 	} else if (currentURL.hostname === "www.deviantartsupport.com") {
 
-		var currentTitle = "", presenceDataPlaced: presenceData = {}
+		let currentTitle = "", presenceDataPlaced: presenceData = {}
 
 		updateCallback.function = () => {
 			if (currentTitle !== document.title.split(" - ")[0]) {
@@ -484,8 +484,8 @@ var currentURL = new URL(document.location.href),
 		presenceData.details = "Viewing the media kit"
 
 	} else if (currentURL.hostname === "sta.sh") {
-		
-		var loadedPath = [], forceUpdate = false, presenceDataPlaced: presenceData = {}, retries = 0
+
+		let loadedPath = [], forceUpdate = false, presenceDataPlaced: presenceData = {}, retries = 0
 	
 		updateCallback.function = () => {
 	

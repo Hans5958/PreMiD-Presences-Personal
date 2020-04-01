@@ -28,7 +28,7 @@ var currentURL = new URL(document.location.href),
 
 (() => { 
 
-	var loadedPath = [], presenceDataPlaced: presenceData = {}
+	let loadedPath = [], presenceDataPlaced: presenceData = {}
 
 	updateCallback.function = () => {
 
@@ -67,7 +67,7 @@ var currentURL = new URL(document.location.href),
 				presenceData.details = "Viewing a page"
 				presenceData.state = "PRO Membership"
 			} else if (currentPath[0] === "static") {
-				var pageNames = {
+				let pageNames = {
 					"faq.html": "FAQ",
 					"terms.html": "Terms of Service",
 					"privacy.html": "Privacy Policy"
@@ -78,7 +78,7 @@ var currentURL = new URL(document.location.href),
 				if (currentPath[2] === undefined) {
 					presenceData.details = "Viewing their own profile"
 				} else {
-					var pageNames = {
+					let pageNames = {
 						"settings": "Settings",
 						"leagues": "Leagues",
 						"activities": "Activities",
