@@ -1,6 +1,5 @@
 var presence = new Presence({
 	clientId: "644400074008297512",
-	mediaKeys: false
 })
 
 var currentURL = new URL(document.location.href),
@@ -8,10 +7,8 @@ var currentURL = new URL(document.location.href),
 	browsingStamp = Math.floor(Date.now() / 1000), 
 	presenceData: presenceData = {
 		details: <string> "Viewing an unsupported page",
-		state: <string> undefined,
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> undefined
 	},
 	updateCallback = {
 		_function: null,
@@ -240,7 +237,7 @@ function resetData() {
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
 		endTimestamp: <number> undefined
-	};
+	}
 }
 
 /**

@@ -1,6 +1,5 @@
 var presence = new Presence({
 	clientId: "655247212728811530",
-	mediaKeys: false
 })
 
 var currentURL = new URL(document.location.href),
@@ -8,10 +7,8 @@ var currentURL = new URL(document.location.href),
 	browsingStamp = Math.floor(Date.now() / 1000), 
 	presenceData: presenceData = {
 		details: <string> "Viewing an unsupported page",
-		state: <string> undefined,
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> undefined
 	},
 	updateCallback = {
 		_function: null,
@@ -44,7 +41,7 @@ var currentURL = new URL(document.location.href),
 			if (document.querySelector(".gameView")) {
 
 				presenceData.details = "Playing a race"
-				var gameStatusLabel = document.querySelector(".gameStatusLabel").textContent
+				let gameStatusLabel = document.querySelector(".gameStatusLabel").textContent
 				
 				if (gameStatusLabel === "Waiting for more people...") {
 					presenceData.state = "Waiting for more people..."
@@ -52,33 +49,32 @@ var currentURL = new URL(document.location.href),
 					presenceData.startTimestamp = raceStamp
 				
 				} else if (gameStatusLabel === "The race is about to start!") {
-					var timeString = document.querySelector(".countdownPopup .time").textContent
 					presenceData.state = "Counting down..."
 					presenceData.endTimestamp = Math.floor(Date.now()/1000) + Number(document.querySelector(".countdownPopup .time").textContent.slice(1))
 					raceStamp = null
 				
 				} else if (gameStatusLabel === "The race is on! Type the text below:" || gameStatusLabel === "Go!") {
-					var textBox = document.querySelector("table.gameView > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td > div > div")
-					var lettersTotal = textBox.textContent.length
-					var lettersTyped = 0
-					for (var i in textBox.children) {
+					let textBox = document.querySelector("table.gameView > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td > div > div")
+					let lettersTotal = textBox.textContent.length
+					let lettersTyped = 0
+					for (let i in textBox.children) {
 						if (typeof textBox.children[i] !== "number" && typeof textBox.children[i] !== "function") {
 							if (getComputedStyle(textBox.children[i]).color === "rgb(153, 204, 0)") {
 								lettersTyped += textBox.children[i].textContent.length
 							}
 						}
 					}
-					var percentage = Math.round((lettersTyped/lettersTotal)*10000)/100
-					var wpm = document.querySelector(".rankPanelWpm-self").textContent.toUpperCase()
+					let percentage = Math.round((lettersTyped/lettersTotal)*10000)/100
+					let wpm = document.querySelector(".rankPanelWpm-self").textContent.toUpperCase()
 					presenceData.state = `${percentage}%, ${wpm}`
 					if (raceStamp === null) raceStamp = Math.floor(Date.now()/1000)
 					presenceData.startTimestamp = raceStamp
 				
 				} else if (gameStatusLabel === "The race has ended." || gameStatusLabel.startsWith("You finished")) {
 					presenceData.details = "Just finished with a race"
-					var wpm = document.querySelector(".rankPanelWpm-self").textContent.toUpperCase()
-					var accuracy = document.querySelector(".tblOwnStats > tbody:nth-child(2) > tr:nth-child(3) > td:nth-child(2)").textContent
-					var time = document.querySelector(".tblOwnStats > tbody:nth-child(2) > tr:nth-child(2) > td:nth-child(2)").textContent
+					let wpm = document.querySelector(".rankPanelWpm-self").textContent.toUpperCase()
+					let accuracy = document.querySelector(".tblOwnStats > tbody:nth-child(2) > tr:nth-child(3) > td:nth-child(2)").textContent
+					let time = document.querySelector(".tblOwnStats > tbody:nth-child(2) > tr:nth-child(2) > td:nth-child(2)").textContent
 					presenceData.state = `${wpm}, ${accuracy} acc., ${time}`
 					presenceData.startTimestamp = browsingStamp
 				}
@@ -116,8 +112,8 @@ var currentURL = new URL(document.location.href),
 				presenceData.details = "Viewing the pit stop"
 			} else if (currentPath[1] === "competitions") {
 				presenceData.details = "Viewing the competition result"
-				var option = document.querySelector("option[selected]").textContent.trim()
-				var strong = document.querySelector("div.themeContent > div:nth-child(5) > strong").textContent.trim().slice(0, -1).split(" ")
+				let option = document.querySelector("option[selected]").textContent.trim()
+				let strong = document.querySelector("div.themeContent > div:nth-child(5) > strong").textContent.trim().slice(0, -1).split(" ")
 				if (option === "day") presenceData.state = strong.join(" ")
 				else if (option === "week") presenceData.state = `${strong[1]} ${strong[2]}, ${strong[4]}`
 				else if (option === "month") presenceData.state = `${strong[3]} ${strong[4]}`
@@ -125,7 +121,7 @@ var currentURL = new URL(document.location.href),
 			} else if (currentPath[1] === "login") {
 				presenceData.details = "Logging in"
 			} else {
-				var pageNames = {
+				let pageNames = {
 					"upgrade_account": "Upgrade your account",
 					"tos": "Terms of Service",
 					"privacy_poicy": "Privacy Policy"
@@ -171,5 +167,5 @@ function resetData() {
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
 		endTimestamp: <number> undefined
-	};
+	}
 }

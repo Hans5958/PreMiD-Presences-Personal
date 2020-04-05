@@ -1,6 +1,5 @@
 var presence = new Presence({
 	clientId: "609364070684033044",
-	mediaKeys: false
 })
 
 var currentURL = new URL(document.location.href),
@@ -94,5 +93,5 @@ function resetData() {
 		largeImageKey: <string> "lg",
 		startTimestamp: <number> browsingStamp,
 		endTimestamp: <number> undefined
-	};
+	}
 }
