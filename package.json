@@ -1,0 +1,35 @@
+{
+  "name": "premid-presences-personal",
+  "version": "1.0.0",
+  "description": "Hans5958's Personal PreMiD Presences",
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/node": "^13.11.1",
+    "@types/prettier": "^2.0.0",
+    "@types/semver": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.28.0",
+    "@typescript-eslint/parser": "^2.28.0",
+    "chalk": "^4.0.0",
+    "eslint": "^6.8.0",
+    "execa": "^4.0.0",
+    "glob": "^7.1.6",
+    "prettier": "^2.0.4",
+    "semver": "^7.3.2",
+    "source-map-support": "^0.5.16",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hans5958/PreMiD-Presences-Personal.git"
+  },
+  "author": "Hans5958",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Hans5958/PreMiD-Presences-Personal/issues"
+  },
+  "homepage": "https://github.com/Hans5958/PreMiD-Presences-Personal#readme"
+}

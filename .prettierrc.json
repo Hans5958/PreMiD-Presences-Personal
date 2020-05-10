@@ -1,6 +1,10 @@
 {
-  "$schema": "http://json.schemastore.org/prettierrc",
-  "trailingComma": "none",
-  "tabWidth": 2,
-  "useTabs": false
+	"$schema": "http://json.schemastore.org/prettierrc",
+	"trailingComma": "none",
+	"tabWidth": 4,
+	"useTabs": true,
+	"printWidth": 999999,
+	"endOfLine": "crlf",
+	"semi": false,
+	"arrowParens": "avoid"
 }

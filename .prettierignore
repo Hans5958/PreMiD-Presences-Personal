@@ -1,2 +1,5 @@
 **/node_modules/
 *.md
+
+# Only use Prettier on certain cases, not always.
+*.ts
