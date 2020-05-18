@@ -36,7 +36,7 @@ If you look closely to the files, it is quite different than the rest of the mai
 
 1. I use tabs for indentations instead of two spaces.
 2. I don't use semicolons.
-3. I built my own structure/base for my presences. See the [base collection](https://github.com/Hans5958/PreMiD-Presences-Personal/blob/master/#%20Docs/base-collection.md) and [my explanation of how it is built](https://github.com/Hans5958/PreMiD-Presences-Personal/blob/master/#%20Docs/explanation-for-base.md).
+3. I built my own structure/base for my presences. See the [base collection](https://github.com/Hans5958/PreMiD-Presences-Personal/blob/master/%23%20Docs/base-collection.md) and [my explanation of how it is built](https://github.com/Hans5958/PreMiD-Presences-Personal/blob/master/%23%20Docs/explanation-for-base.md).
 4. There are no limits for the width.
 5. All presence are built with TypeScript. (may not relevant since all presences are now built with TS)
 6. The folder structure differs, since, for now, I only support websites and I only have a few presences.
@@ -44,7 +44,7 @@ If you look closely to the files, it is quite different than the rest of the mai
 
 Because of this, I need to adjust my presences before making pull requests to the main repository. I used multiple scripts so I could do the adjustments easier.
 
-I also made other scripts, such as [metadata-test-suite.sh](https://github.com/Hans5958/PreMiD-Presences-Personal/blob/master/metadata-test-suite.sh), that you can use yourself.
+I also made other projects related to PreMiD, such as [the metadata test suite](https://github.com/Hans5958/PreMiD-MTS).
 
 
 ## Folder structure
