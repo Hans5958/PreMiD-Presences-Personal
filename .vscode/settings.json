@@ -1,4 +1,3 @@
 {
-  // "discord.enabled": false,
-  "deepscan.enable": true
+    "deepscan.enable": true
 }

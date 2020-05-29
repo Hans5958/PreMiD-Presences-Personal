@@ -15,17 +15,17 @@ module.exports = {
 		project: "./tsconfig.json"
 	},
 	rules: {
-		semi: ["warn", "never"],
-		quotes: "off",
-		indent: "off",
-		camelcase: "off",
+		"semi": ["warn", "never"],
+		"quotes": "off",
+		"indent": "off",
+		"camelcase": "off",
 		"comma-dangle": ["warn", "never"],
 		"linebreak-style": "off",
 		"no-console": "off",
-		"no-var": "off",
+		"no-var": "error",
 		"no-undef": "off",
 		"@typescript-eslint/camelcase": "off",
-		"@typescript-eslint/no-explicit-any": "off"
+		"@typescript-eslint/no-explicit-any": "error"
 	},
 	plugins: ["@typescript-eslint"]
 }

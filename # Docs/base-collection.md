@@ -1,69 +1,76 @@
+# Meta
+
+App description: This is an app for PreMiD.
+Imgur album: PreMiD - [name]
+
 # Non-Strict Base (errors on ESLint, not recommended) (Initial)
 
 ```ts
 var presence = new Presence({
-	clientId: "662312595239469097"
-});
+	clientId: "662312595239469097",
+})
 
 var currentURL = new URL(document.location.href),
 	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
+	browsingStamp = Math.floor(Date.now() / 1000), 
 	presenceData: presenceData = {
-		details: <string>"Viewing an unsupported page",
-		state: <string>undefined,
-		largeImageKey: <string>"lg",
-		startTimestamp: <number>browsingStamp,
-		endTimestamp: <number>undefined
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
+		largeImageKey: <string> "lg",
+		startTimestamp: <number> browsingStamp,
+		endTimestamp: <number> undefined
 	},
 	updateCallback = {
 		_function: null,
 		get function() {
 			return this._function;
 		},
-		set function(parameter) {
-			this._function = parameter;
+		set function(parameter){
+			this._function = parameter
 		},
 		get present() {
-			return this._function !== null;
+			return this._function !== null
 		}
 	};
 
-(() => {
-	/*
+(() => { 
+
+/*
 
 This is the anonymous function.
 All code related to the presence are written here.
 
 */
+
 })();
 
 if (updateCallback.present) {
 	presence.on("UpdateData", async () => {
-		resetData();
-		updateCallback.function();
+		resetData()
+		updateCallback.function()
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
-		presence.setActivity(presenceData);
-	});
+		presence.setActivity(presenceData)
+	})
 } else {
 	presence.on("UpdateData", async () => {
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
-		presence.setActivity(presenceData);
-	});
+		presence.setActivity(presenceData)
+	})
 }
 
 /**
  * Initialize/reset presenceData.
  */
 function resetData() {
-	(currentURL = new URL(document.location.href)),
-		(currentPath = currentURL.pathname.slice(1).split("/")),
-		(presenceData = {
-			details: <string>"Viewing an unsupported page",
-			state: <string>undefined,
-			largeImageKey: <string>"lg",
-			startTimestamp: <number>browsingStamp,
-			endTimestamp: <number>undefined
-		});
+	currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
+	presenceData = {
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
+		largeImageKey: <string> "lg",
+		startTimestamp: <number> browsingStamp,
+		endTimestamp: <number> undefined
+	}
 }
 
 /**
@@ -75,103 +82,101 @@ var logHandler = {
 	 * @param isCritical If the URL is essential to the operation, this should be true, so it will output an error, not a warning.
 	 */
 	pageNotSupported(isCritical: boolean = false) {
-		if (isCritical)
-			console.error(
-				"Whoops. It seems that this page is not supported. \nPlease contact @Hans5958#0969 to request a support for this page."
-			);
-		else
-			console.warn(
-				"It seems that this page is not fully supported. \nPlease contact @Hans5958#0969 to request a support for this page."
-			);
-		console.log(currentURL.href);
+		if (isCritical) console.error("Whoops. It seems that this page is not supported. \nPlease contact @Hans5958#0969 to request a support for this page.")
+		else console.warn("It seems that this page is not fully supported. \nPlease contact @Hans5958#0969 to request a support for this page.")
+		console.log(currentURL.href)
 	},
 	/**
 	 * Handles fatal errors.
 	 * @param error The error that it threw.
 	 */
 	fatalError(error: string) {
-		console.groupEnd();
-		console.error(
-			"Fatal error! Terminating.\nPlease report this problem to @Hans5958#0969."
-		);
-		console.groupCollapsed("Error log");
-		console.log(currentURL.href);
-		console.error(error);
-		console.groupEnd();
+		console.groupEnd()
+		console.error("Fatal error! Terminating.\nPlease report this problem to @Hans5958#0969.")
+		console.groupCollapsed("Error log")
+		console.log(currentURL.href)
+		console.error(error)
+		console.groupEnd()
 	}
-};
+}
 
 /**
  * Search for URL parameters.
  * @param urlParam The parameter that you want to know about the value.
  */
 function getURLParam(urlParam: string) {
-	return currentURL.searchParams.get(urlParam);
+	return currentURL.searchParams.get(urlParam)
 }
 ```
 
 # Non-Strict Base (errors on ESLint, not recommended) (Simplified)
 
 ```ts
+var presence = new Presence({
+	clientId: "662312595239469097",
+})
+
 var currentURL = new URL(document.location.href),
 	currentPath = currentURL.pathname.slice(1).split("/"),
- 	browsingStamp = Math.floor(Date.now() / 1000),
+	browsingStamp = Math.floor(Date.now() / 1000), 
 	presenceData: presenceData = {
-		details: <string>"Viewing an unsupported page",
-		state: <string>undefined,
-		largeImageKey: <string>"lg",
-		startTimestamp: <number>browsingStamp,
-		endTimestamp: <number>undefined
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
+		largeImageKey: <string> "lg",
+		startTimestamp: <number> browsingStamp,
+		endTimestamp: <number> undefined
 	},
 	updateCallback = {
 		_function: null,
 		get function() {
 			return this._function;
 		},
-		set function(parameter) {
-			this._function = parameter;
+		set function(parameter){
+			this._function = parameter
 		},
 		get present() {
-			return this._function !== null;
+			return this._function !== null
 		}
 	};
 
-(() => {
+(() => { 
+
 /*
 
 This is the anonymous function.
 All code related to the presence are written here.
 
 */
+
 })();
 
 if (updateCallback.present) {
 	presence.on("UpdateData", async () => {
-		resetData();
-		updateCallback.function();
+		resetData()
+		updateCallback.function()
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
-		presence.setActivity(presenceData);
-	});
+		presence.setActivity(presenceData)
+	})
 } else {
 	presence.on("UpdateData", async () => {
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
-		presence.setActivity(presenceData);
-	});
+		presence.setActivity(presenceData)
+	})
 }
 
 /**
  * Initialize/reset presenceData.
  */
 function resetData() {
-	(currentURL = new URL(document.location.href)),
-		(currentPath = currentURL.pathname.slice(1).split("/")),
-		(presenceData = {
-			details: <string>"Viewing an unsupported page",
-			state: <string>undefined,
-			largeImageKey: <string>"lg",
-			startTimestamp: <number>browsingStamp,
-			endTimestamp: <number>undefined
-		});
+	currentURL = new URL(document.location.href),
+	currentPath = currentURL.pathname.slice(1).split("/"),
+	presenceData = {
+		details: <string> "Viewing an unsupported page",
+		state: <string> undefined,
+		largeImageKey: <string> "lg",
+		startTimestamp: <number> browsingStamp,
+		endTimestamp: <number> undefined
+	}
 }
 ```
 
@@ -339,15 +344,19 @@ if (updateCallback.present) {
 # Adjusted ESLint/Prettify Safe Base (Initial)
 
 ```ts
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+const presence = new Presence({
+	clientId: "715602476249776239"
+})
+
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: presenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -359,26 +368,24 @@ var currentURL = new URL(document.location.href),
 			return this._function !== null
 		}
 	}
-
+	
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = () => void {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
-		details: "Viewing an unsupported page" as string,
-		state: undefined as string,
-		largeImageKey: "lg" as string,
-		startTimestamp: browsingStamp as number,
-		endTimestamp: undefined as number
+		details: "Viewing an unsupported page",
+		largeImageKey: "lg",
+		startTimestamp: browsingStamp
 	}
 }
 
 /**
  * Function definitions for logging-related things.
  */
-var logHandler = {
+const logHandler = {
 	/**
 	 * Handles not supported pages.
 	 * @param isCritical If the URL is essential to the operation, this should be true, so it will output an error, not a warning.
@@ -410,7 +417,7 @@ var logHandler = {
  * Search for URL parameters.
  * @param urlParam The parameter that you want to know about the value.
  */
-function getURLParam(urlParam: string): string {
+const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
 }
 
@@ -440,19 +447,19 @@ if (updateCallback.present) {
 # Adjusted ESLint/Prettify Safe Base (Simplified)
 
 ```ts
-var presence = new Presence({
-	clientId: "662312595239469097"
+const presence = new Presence({
+	clientId: "715602476249776239"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: presenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -468,15 +475,13 @@ var currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = () => void {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
-		details: "Viewing an unsupported page" as string,
-		state: undefined as string,
-		largeImageKey: "lg" as string,
-		startTimestamp: browsingStamp as number,
-		endTimestamp: undefined as number
+		details: "Viewing an unsupported page",
+		largeImageKey: "lg",
+		startTimestamp: browsingStamp
 	}
 }
 
