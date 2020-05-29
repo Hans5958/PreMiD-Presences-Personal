@@ -13,13 +13,13 @@ cp -r "$1/dist/metadata.json" "../PreMiD-Presences/websites/$letter_folder/$1/di
 cd "../PreMiD-Presences/websites/$letter_folder/$1"
 # echo -e "Compiling \e[100mpresence.ts\e[0m..."
 # cmd.exe /c "tsc"
-# echo -e "Printing ESLint report and do the auto-fix.."
-# cmd.exe /c "eslint presence.ts"
-# cmd.exe /c "eslint presence.ts --fix"
 echo -e "Tidying up files using Prettier..."
 cmd.exe /c "prettier --write presence.ts"
 cmd.exe /c "prettier --write tsconfig.json"
 cmd.exe /c "prettier --write dist/metadata.json"
+echo -e "Printing ESLint report and do the auto-fix.."
+cmd.exe /c "eslint presence.ts"
+cmd.exe /c "eslint presence.ts --fix"
 echo "Copying done!"
 
 
