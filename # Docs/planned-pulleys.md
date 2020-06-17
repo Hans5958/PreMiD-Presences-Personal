@@ -28,7 +28,7 @@ This PR resolves #998.
 ## Notes
 
 - I have tried my best to upscale the logo manually (except the TMX logo, it's already 1024x). You can see the logos here. If you can make a better version out of it, be my guest and contact me.
-- I probably going to do [ManiaExchange](https://mania.exchange/) after this. I don't know if I should merge this presence with ManiaExchange because the portal also includes TMX on it.
+- I probably going to do [ManiaExchange](https://mania.exchange/) after this. Even If I'm making one, I don't know if I should merge this presence to ManiaExchange because the portal also includes TMX on it.
 
 ## Images
 
