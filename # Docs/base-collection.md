@@ -3,7 +3,7 @@
 App description: This is an app for PreMiD.
 Imgur album: PreMiD - [name]
 
-# Non-Strict Base (errors on ESLint, not recommended) (Initial)
+# Non-Strict Base (errors on ESLint, not recommended)
 
 ```ts
 var presence = new Presence({
@@ -72,7 +72,10 @@ function resetData() {
 		endTimestamp: <number> undefined
 	}
 }
+```
+# Non-Strict Base Supplement
 
+```ts
 /**
  * Function definitions for logging-related things.
  */
@@ -109,78 +112,7 @@ function getURLParam(urlParam: string) {
 }
 ```
 
-# Non-Strict Base (errors on ESLint, not recommended) (Simplified)
-
-```ts
-var presence = new Presence({
-	clientId: "662312595239469097",
-})
-
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000), 
-	presenceData: presenceData = {
-		details: <string> "Viewing an unsupported page",
-		state: <string> undefined,
-		largeImageKey: <string> "lg",
-		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> undefined
-	},
-	updateCallback = {
-		_function: null,
-		get function() {
-			return this._function;
-		},
-		set function(parameter){
-			this._function = parameter
-		},
-		get present() {
-			return this._function !== null
-		}
-	};
-
-(() => { 
-
-/*
-
-This is the anonymous function.
-All code related to the presence are written here.
-
-*/
-
-})();
-
-if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
-		resetData()
-		updateCallback.function()
-		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
-		presence.setActivity(presenceData)
-	})
-} else {
-	presence.on("UpdateData", async () => {
-		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
-		presence.setActivity(presenceData)
-	})
-}
-
-/**
- * Initialize/reset presenceData.
- */
-function resetData() {
-	currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	presenceData = {
-		details: <string> "Viewing an unsupported page",
-		state: <string> undefined,
-		largeImageKey: <string> "lg",
-		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> undefined
-	}
-}
-```
-
-# ESLint/Prettify Safe Base (Initial)
+# ESLint/Prettify Safe Base
 
 ```ts
 var presence = new Presence({
@@ -223,6 +155,27 @@ function resetData(): void {
 	};
 }
 
+((): void => {
+	// This is the anonymous function.
+	// All code related to the presence are written here.
+})();
+
+if (updateCallback.present) {
+	presence.on("UpdateData", async () => {
+		resetData();
+		updateCallback.function();
+		presence.setActivity(presenceData);
+	});
+} else {
+	presence.on("UpdateData", async () => {
+		presence.setActivity(presenceData);
+	});
+}
+```
+
+# ESLint/Prettify Safe Base Supplement
+
+```ts
 /**
  * Function definitions for logging-related things.
  */
@@ -265,83 +218,9 @@ var logHandler = {
 function getURLParam(urlParam: string): string {
 	return currentURL.searchParams.get(urlParam);
 }
-
-((): void => {
-	// This is the anonymous function.
-	// All code related to the presence are written here.
-})();
-
-if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
-		resetData();
-		updateCallback.function();
-		presence.setActivity(presenceData);
-	});
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData);
-	});
-}
 ```
 
-# ESLint/Prettify Safe Base (Simplified)
-
-```ts
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	},
-	updateCallback = {
-		_function: null as Function,
-		get function(): Function {
-			return this._function;
-		},
-		set function(parameter) {
-			this._function = parameter;
-		},
-		get present(): boolean {
-			return this._function !== null;
-		}
-	};
-
-/**
- * Initialize/reset presenceData.
- */
-function resetData(): void {
-	currentURL = new URL(document.location.href);
-	currentPath = currentURL.pathname.slice(1).split("/");
-	presenceData = {
-		details: "Viewing an unsupported page" as string,
-		state: undefined as string,
-		largeImageKey: "lg" as string,
-		startTimestamp: browsingStamp as number,
-		endTimestamp: undefined as number
-	};
-}
-
-((): void => {
-	// This is the anonymous function.
-	// All code related to the presence are written here.
-})();
-
-if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
-		resetData();
-		updateCallback.function();
-		presence.setActivity(presenceData);
-	});
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData);
-	});
-}
-```
-
-# Adjusted ESLint/Prettify Safe Base (Initial)
+# Adjusted ESLint/Prettify Safe Base
 
 ```ts
 const presence = new Presence({
@@ -368,7 +247,7 @@ const updateCallback = {
 			return this._function !== null
 		}
 	}
-	
+
 /**
  * Initialize/reset presenceData.
  */
@@ -382,6 +261,31 @@ const resetData = () => void {
 	}
 }
 
+((): void => {
+	/*
+	
+	This is the anonymous function.
+	All code related to the presence are written here.
+	
+	*/
+})()
+
+if (updateCallback.present) {
+	presence.on("UpdateData", async () => {
+		resetData()
+		updateCallback.function()
+		presence.setActivity(presenceData)
+	})
+} else {
+	presence.on("UpdateData", async () => {
+		presence.setActivity(presenceData)
+	})
+}
+```
+
+# Adjusted ESLint/Prettify Safe Supplement
+
+```ts
 /**
  * Function definitions for logging-related things.
  */
@@ -419,90 +323,5 @@ const logHandler = {
  */
 const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
-}
-
-((): void => {
-	/*
-	
-	This is the anonymous function.
-	All code related to the presence are written here.
-	
-	*/
-})()
-
-if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
-		resetData()
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
-}
-```
-
-# Adjusted ESLint/Prettify Safe Base (Simplified)
-
-```ts
-const presence = new Presence({
-	clientId: "715602476249776239"
-})
-
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.slice(1).split("/")
-const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
-
-/**
- * Initialize/reset presenceData.
- */
-const resetData = () => void {
-	currentURL = new URL(document.location.href)
-	currentPath = currentURL.pathname.slice(1).split("/")
-	presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-}
-
-((): void => {
-	/*
-	
-	This is the anonymous function.
-	All code related to the presence are written here.
-	
-	*/
-})()
-
-if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
-		resetData()
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
 }
 ```

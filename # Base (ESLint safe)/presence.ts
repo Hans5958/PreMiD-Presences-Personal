@@ -26,7 +26,7 @@ const updateCallback = {
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = (): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
