@@ -1,16 +1,16 @@
-var presence = new Presence({
+const presence = new Presence({
 	clientId: "644400074008297512"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -26,7 +26,7 @@ var currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = (): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
@@ -40,7 +40,7 @@ function resetData(): void {
  * Search for URL parameters.
  * @param urlParam The parameter that you want to know about the value.
  */
-function getURLParam(urlParam: string): string {
+const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
 }
 
@@ -49,7 +49,7 @@ function getURLParam(urlParam: string): string {
  * @param {Number} videoTime Current video time seconds.
  * @param {Number} videoDuration Video duration seconds.
  */
-function getTimestamps(videoTime: number, videoDuration: number): Array<number> {
+const getTimestamps = (videoTime: number, videoDuration: number): Array<number> => {
 	const startTime = Date.now()
 	const endTime = Math.floor(startTime / 1000) - videoTime + videoDuration
 	return [Math.floor(startTime / 1000), endTime]
@@ -84,7 +84,7 @@ function getTimestamps(videoTime: number, videoDuration: number): Array<number> 
 				presenceData.state = document.querySelector(".video-page-featured-player__title").textContent
 				try {
 					if (document.querySelector(".jw-icon-playback").getAttribute("aria-label") === "Pause") {
-						const video = document.querySelector(".jw-video")
+						const video: HTMLVideoElement = document.querySelector(".jw-video")
 						const timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
 						presenceData.startTimestamp = timestamps[0]
 						presenceData.endTimestamp = timestamps[1]
@@ -145,7 +145,7 @@ function getTimestamps(videoTime: number, videoDuration: number): Array<number> 
 		}
 
 		try {
-			sitename = document.querySelector("meta[property='og:site_name']").content
+			sitename = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement).content
 		} catch (e) {
 			sitename = null
 		}
@@ -176,7 +176,7 @@ function getTimestamps(videoTime: number, videoDuration: number): Array<number> 
 		}
 
 		if (title === "Home") {
-			sitename = document.querySelector("meta[property='og:title']").content
+			sitename = (document.querySelector("meta[property='og:title']") as HTMLMetaElement).content
 			presenceData.state = "Home"
 			delete presenceData.details
 		} else if (actionResult == "history") {

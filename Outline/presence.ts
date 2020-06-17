@@ -5,7 +5,7 @@ const presence = new Presence({
 let currentURL = new URL(document.location.href), 
 	currentPath = currentURL.pathname.slice(1).split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: presenceData = {
+let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
@@ -48,7 +48,7 @@ const resetData = (): void => {
 	} else if (currentPath[0] === "report.html") {
 		presenceData.details = "Reporting an article"
 	} else {
-		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: presenceData = {}
+		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: PresenceData = {}
 		updateCallback.function = (): void => {
 			if (loadedPath !== currentPath || forceUpdate) {
 				loadedPath = currentPath

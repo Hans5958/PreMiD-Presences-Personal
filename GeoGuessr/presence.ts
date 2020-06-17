@@ -1,16 +1,16 @@
-var presence = new Presence({
+const presence = new Presence({
 	clientId: "654906151523057664"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -26,7 +26,7 @@ var currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = (): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
@@ -39,7 +39,7 @@ function resetData(): void {
 ((): void => {
 
 	let loadedPath: Array<string>,
-		presenceDataPlaced: presenceData = {}
+		presenceDataPlaced: PresenceData = {}
 
 	updateCallback.function = (): void => {
 
@@ -48,7 +48,7 @@ function resetData(): void {
 			loadedPath = currentPath
 
 			if (currentPath[0] === "") {
-				presenceData.details = "Viewing the home page"
+				presenceData.details = "On the home page"
 			} else if (currentPath[0] === "game") {
 				presenceData.details = document.querySelector(".game-status[data-qa=map-name] .game-status__body").textContent
 				if (document.querySelector(".result")) {

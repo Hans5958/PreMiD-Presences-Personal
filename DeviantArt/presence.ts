@@ -1,16 +1,16 @@
-var presence = new Presence({
+const presence = new Presence({
 	clientId: "664057766809436161"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -26,7 +26,7 @@ var currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = (): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
@@ -39,7 +39,7 @@ function resetData(): void {
 /**
  * Function definitions for logging-related things.
  */
-var logHandler = {
+const logHandler = {
 	/**
 	 * Handles not supported pages.
 	 * @param isCritical If the URL is essential to the operation, this should be true, so it will output an error, not a warning.
@@ -67,7 +67,7 @@ var logHandler = {
  * Search for URL parameters.
  * @param urlParam The parameter that you want to know about the value.
  */
-function getURLParam(urlParam: string): string {
+const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
 }
 
@@ -98,7 +98,7 @@ function getURLParam(urlParam: string): string {
 
 	if (currentURL.hostname === "www.deviantart.com") {
 		
-		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: presenceData = {}, retries = 0, profileType: string, websiteTheme: string
+		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: PresenceData = {}, retries = 0, profileType: string, websiteTheme: string
 
 		/* This one decides if the current theme is the old one or the new one, also known as Eclipse. */
 		if (document.querySelector("table#overhead") === null) websiteTheme = "eclipse"
@@ -108,7 +108,7 @@ function getURLParam(urlParam: string): string {
 		if (document.querySelector("#group")) profileType = "group"
 		else profileType = "user"
 
-		const lastItem = (array: NodeList | Array<any>): any => {
+		const lastItem = (array: NodeList | Array<unknown>): unknown => {
 			return array[array.length - 1]
 		}
 
@@ -122,7 +122,7 @@ function getURLParam(urlParam: string): string {
 					}
 				} else {
 					try {
-						return lastItem(document.querySelectorAll("h1 .author .u .u")).textContent
+						return (lastItem(document.querySelectorAll("h1 .author .u .u")) as Element).textContent
 					} catch {
 						return document.querySelector("h1 .u .u").textContent
 					}
@@ -518,7 +518,7 @@ function getURLParam(urlParam: string): string {
 	} else if (currentURL.hostname === "www.deviantartsupport.com") {
 
 		let currentTitle = "",
-			presenceDataPlaced: presenceData = {}
+			presenceDataPlaced: PresenceData = {}
 
 		updateCallback.function = (): void => {
 			if (currentTitle !== document.title.split(" - ")[0]) {
@@ -541,7 +541,7 @@ function getURLParam(urlParam: string): string {
 	
 	} else if (currentURL.hostname === "sta.sh") {
 
-		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: presenceData = {},	retries = 0
+		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: PresenceData = {},	retries = 0
 
 		updateCallback.function = (): void => {
 			if (loadedPath !== currentPath || forceUpdate) {

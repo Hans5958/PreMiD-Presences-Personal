@@ -1,16 +1,16 @@
-var presence = new Presence({
+const presence = new Presence({
 	clientId: "655247212728811530"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -26,7 +26,7 @@ var currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = (): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
@@ -46,7 +46,6 @@ function resetData(): void {
 
 		Part 1
 		play.typeracer.com (game page)
-		
 		
 		*/
 
@@ -71,7 +70,7 @@ function resetData(): void {
 					const textBox = document.querySelector("table.gameView > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td > div > div")
 					const lettersTotal = textBox.textContent.length
 					let lettersTyped = 0
-					for (var i in textBox.children) {
+					for (const i in textBox.children) {
 						if (typeof textBox.children[i] !== "number" && typeof textBox.children[i] !== "function") {
 							if (getComputedStyle(textBox.children[i]).color === "rgb(153, 204, 0)") {
 								lettersTyped += textBox.children[i].textContent.length

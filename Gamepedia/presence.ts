@@ -1,16 +1,16 @@
-var presence = new Presence({
+const presence = new Presence({
 	clientId: "652880245371699222"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.slice(1).split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	},
-	updateCallback = {
+	}
+const updateCallback = {
 		_function: null as Function,
 		get function(): Function {
 			return this._function
@@ -26,7 +26,7 @@ var currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-function resetData(): void {
+const resetData = (): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.slice(1).split("/")
 	presenceData = {
@@ -90,7 +90,7 @@ function resetData(): void {
 		let title: string, sitename: string
 		const actionResult = currentURL.searchParams.get("action")
 		const titleFromURL = (): string => {
-				var raw: string
+				let raw: string
 				if (currentURL.pathname.startsWith("/index.php")) raw = currentURL.searchParams.get("title")
 				else raw = currentURL.pathname.slice(1)
 				if (raw.includes("_")) return raw.replace(/_/g, " ")
@@ -131,7 +131,6 @@ function resetData(): void {
 
 		if (title === sitename) {
 			presenceData.state = "Home"
-			delete presenceData.details
 		} else if (actionResult == "history") {
 			presenceData.details = "Viewing revision history"
 			presenceData.state = title
