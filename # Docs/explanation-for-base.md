@@ -1,5 +1,7 @@
 # Explanation for the base ``presence.ts``
 
+> Also readable on [dev.to](https://dev.to/hans5958/explanation-for-my-presence-ts-base-on-premid-5877).
+
 Hello, and welcome to my explanation for my base/template on ``presence.ts``. You might be wondering either how this works or why this thing complicated. In this explanation text, I will guide you how I came with the base that I made, and consequently, solve this systematic problem that a lot of developers do, as I could say.
 
 Now, keep in mind, the problem is not quite a big deal, as the overhead will be small (in fact, it could be tiny), but I just wanted to see if I could make an optimized code, because I wanted to avoid having those small overhead makes my poor laptop laggy, and because I genuinely bored and wanted to do something. 
