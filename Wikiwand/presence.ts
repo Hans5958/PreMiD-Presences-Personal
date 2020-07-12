@@ -72,7 +72,6 @@ const resetData = (): void => {
 		presenceData.state = title
 	}
 
-	console.log(presenceData)
 })()
 
 if (updateCallback.present) {
