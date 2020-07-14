@@ -26,14 +26,14 @@ const updateCallback = {
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (): void => {
+const resetData = (defaultData: PresenceData = {
+	details: "Viewing an unsupported page",
+	largeImageKey: "lg",
+	startTimestamp: browsingStamp
+}): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
-	presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
+	presenceData = {...defaultData}
 }
 
 /**
@@ -69,7 +69,7 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			presenceData.details = "Privacy Policy"
 		}
 	
-	} else if (currentURL.hostname.startsWith("tm.") || currentURL.hostname.startsWith("sm")) {
+	} else if (currentURL.hostname.startsWith("tm.") || currentURL.hostname.startsWith("sm") || currentURL.hostname.startsWith("trackmania")) {
 
 		/**
 		 * Choose between two strings based on the website.
@@ -80,20 +80,22 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			return (presenceData.smallImageKey === "tm") ? tm : sm
 		}		
 
-		const setSmallKey = (): void => {
-			switch (currentURL.hostname.slice(0,2)) {
-				case "tm":
-					presenceData.smallImageKey = "tm"
-					presenceData.smallImageText = "TrackMania²"
-					break
-				case "sm":
-					presenceData.smallImageKey = "sm"
-					presenceData.smallImageText = "ShootMania"
-					break
-			}
+		switch (currentURL.hostname.split(".")[0]) {
+			case "tm":
+				presenceData.smallImageKey = "tm"
+				presenceData.smallImageText = "TrackMania²"
+				break
+			case "sm":
+				presenceData.smallImageKey = "sm"
+				presenceData.smallImageText = "ShootMania"
+				break
+			case "trackmania":
+				presenceData.smallImageKey = "tm-2020"
+				presenceData.smallImageText = "Trackmania (2020)"
+				presenceData.largeImageKey = "tmx"
+				break
+	
 		}
-
-		setSmallKey()
 
 		if (currentPath[0] === "error") {
 			presenceData.details = "On a non-existent page"
@@ -101,7 +103,7 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 		} else if (currentPath[0] === "" || currentPath[0] === "home") {
 			if (currentPath[1] === "rules") {
 				presenceData.details = "Viewing a page"
-				presenceData.state = "Rules & Guildlines" // actually "Guildelines" on the page		
+				presenceData.state = "Rules & Guidelines" // actually "Guildelines" on the page		
 			} else if (currentPath[1] === "about") {
 				presenceData.details = "Viewing a page"
 				presenceData.state = "About"
@@ -118,7 +120,6 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		} else if (currentPath[0] === "tracksearch2" || currentPath[0] === "mapsearch2" || currentPath[0] === "ts" || currentPath[0] === "ms" ) {
 			updateCallback.function = (): void => {
-				setSmallKey()
 				presenceData.details = chooseTwo("Searching for a track", "Searching for a map")
 				presenceData.state = getURLParam("trackname") || undefined
 			}
@@ -129,14 +130,13 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			if ((document.querySelector("#TrackName") as HTMLInputElement).value) presenceData.state = `${(document.querySelector("#TrackName") as HTMLInputElement).value}, ${searchSummary}`
 			else presenceData.state = searchSummary[0].toUpperCase() + searchSummary.slice(1)
 
-		} else if (currentPath[0] === "mappacksearch") { // Valid on TrackMania only
+		} else if (currentPath[0] === "mappacksearch") { // Valid on TrackMania² and Trackmania (2020) only
 			updateCallback.function = (): void => {
-				setSmallKey()
 				presenceData.details = "Searching for a mappack"
 				presenceData.state = getURLParam("name") || undefined
 			}
 
-		} else if (currentPath[0] === "mappack") { // Valid on TrackMania only
+		} else if (currentPath[0] === "mappack") { // Valid on TrackMania² and Trackmania (2020) only
 			if (currentPath[1] === "create") {
 				presenceData.details = "Creating a mappack"
 			} else if (currentPath[1] === "view") {
@@ -144,22 +144,33 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 				presenceData.state = `${document.querySelector(".WindowText:nth-of-type(2) td:nth-of-type(2)").textContent.trim()} (mappack)`
 			} 
  
-		} else if (currentPath[0] === "recordsearch") { // Valid on TrackMania only
+		} else if (currentPath[0] === "upload") { // Valid on TrackMania² and Trackmania (2020) only
+			if (currentPath[1] === "track") {
+				presenceData.details = "Uploading a track"
+			} else if (currentPath[1] === "replay") {
+				presenceData.details = "Uploading a replay"
+			} 
+
+		} else if (currentPath[0] === "recordsearch") { // Valid on TrackMania² and Trackmania (2020) only
 			updateCallback.function = (): void => {
-				presenceData.smallImageKey = "tm"
-				presenceData.smallImageText = "TrackMania²"
 				presenceData.details = "Searching for a record"
 				presenceData.state = getURLParam("name") || undefined
 			}
 
-		} else if (currentPath[0] === "leaderboard") { // Valid on TrackMania only
+		} else if (currentPath[0] === "leaderboard") { // Valid on TrackMania² and Trackmania (2020) only
 			const searchSummary = document.querySelector(".windowv2-textcontainer").textContent.slice(17, this.length - 4)
 			presenceData.details = "Viewing the leaderboards"
 			if ((document.querySelector("#DriverName") as HTMLInputElement).value) presenceData.state = `${(document.querySelector("#DriverName") as HTMLInputElement).value}, ${searchSummary}`
 			else presenceData.state = searchSummary[0].toUpperCase() + searchSummary.slice(1)
 
 		} else if (currentPath[0] === "reports") {
-			presenceData.details = "Viewing reports"
+			if (currentPath[1] === "compose") {
+				presenceData.details = "Reporting something"
+			} else if (currentPath[1] === "my-reports") {
+				presenceData.details = "Viewing reports"
+			} else {
+				presenceData.details = "Viewing a report"
+			}
 
 		} else if (currentPath[0] === "forums") {
 			presenceData.details = "Viewing the forums"
@@ -167,8 +178,19 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			if (presenceData.state === "Community forums") delete presenceData.state
 
 		} else if (currentPath[0] === "threads") {
-			presenceData.details = "Viewing a thread"
-			presenceData.state = document.querySelector(".windowv2-header").textContent.trim()
+			if (currentPath[1] === "new-thread") {
+				presenceData.details = "Writing a new thread"
+			} else if (currentPath[1] === "new-post") {
+				presenceData.details = "Replying to a thread"
+			} else {
+				presenceData.details = "Viewing a thread"
+				presenceData.state = document.querySelector(".windowv2-header").textContent.trim()
+			}
+
+		} else if (currentPath[0] === "posts") {
+			if (currentPath[1] === "edit") {
+				presenceData.details = "Editing a post"
+			}
 
 		} else if (currentPath[0] === "blogs") {
 			if (currentPath[1] === "entry") {
@@ -230,9 +252,10 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 		} 
 
 	} else if (currentURL.hostname.startsWith("item")) {
-		
-		presenceData.smallImageKey = "item"
+
+		presenceData.smallImageKey = "lg"
 		presenceData.smallImageText = "ItemExchange"
+		presenceData.largeImageKey = "item"
 
 		if (currentPath[0] === "error") {
 			presenceData.details = "On a non-existent page"
@@ -253,16 +276,12 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		} else if (currentPath[0] === "itemsearch") {
 			updateCallback.function = (): void => {
-				presenceData.smallImageKey = "item"
-				presenceData.smallImageText = "ItemExchange"		
 				presenceData.details = "Searching for an item"
 				presenceData.state = getURLParam("itemname") || undefined
 			}
 
 		} else if (currentPath[0] === "setsearch") {
 			updateCallback.function = (): void => {
-				presenceData.smallImageKey = "item"
-				presenceData.smallImageText = "ItemExchange"		
 				presenceData.details = "Searching for a set"
 				presenceData.state = getURLParam("setname") || undefined
 			}
@@ -339,9 +358,11 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 	} else if (currentURL.hostname.startsWith("tmtube")) {
 		
+		presenceData.smallImageKey = "lg"
+		presenceData.smallImageText = "TMTube Archive"
+		presenceData.largeImageKey = "tmtube"
+
 		updateCallback.function = (): void => {
-			presenceData.smallImageKey = "tmtube"
-			presenceData.smallImageText = "TMTube Archive"	
 			if (currentPath[0] === "") {	
 				presenceData.details = "On the home page"
 			} else if (currentPath[0] === "view") {	
@@ -387,8 +408,9 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 })()
 
 if (updateCallback.present) {
+	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
-		resetData()
+		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
