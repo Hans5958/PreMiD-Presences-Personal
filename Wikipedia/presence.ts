@@ -1,77 +1,156 @@
-var presence = new Presence({
-	clientId: "609364070684033044",
+const presence = new Presence({
+	clientId: "609364070684033044"
 })
 
-var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	browsingStamp = Math.floor(Date.now() / 1000),
-	href = new URL(document.location.href),
-	presenceData = {
-		details: <string> "Viewing an unsupported page",
-		state: <string> undefined,
-		largeImageKey: <string> "lg",
-		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> undefined
-	},
-	updateCallback = {
-		_function: null,
-		get function() {
-			return this._function;
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
+const browsingStamp = Math.floor(Date.now() / 1000)
+let presenceData: PresenceData = {
+		details: "Viewing an unsupported page",
+		largeImageKey: "lg",
+		startTimestamp: browsingStamp
+	}
+const updateCallback = {
+		_function: null as Function,
+		get function(): Function {
+			return this._function
 		},
-		set function(parameter){
+		set function(parameter) {
 			this._function = parameter
 		},
-		get present() {
+		get present(): boolean {
 			return this._function !== null
 		}
-	};
+	}
 
-(() => {
+/**
+ * Initialize/reset presenceData.
+ */
+const resetData = (defaultData: PresenceData = {
+	details: "Viewing an unsupported page",
+	largeImageKey: "lg",
+	startTimestamp: browsingStamp
+}): void => {
+	currentURL = new URL(document.location.href)
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
+	presenceData = {...defaultData}
+}
 
-	let title: string, 
-		actionResult = href.searchParams.get("action"),
-		titleFromURL = () => {
-			let raw: string
-			if (href.pathname.startsWith("/index.php")) raw = href.searchParams.get("title")
-			else raw = href.pathname.slice(1)
-			if (raw.includes("_")) return raw.replace(/_/g, " ")
-			else return raw
+/**
+ * Search for URL parameters.
+ * @param urlParam The parameter that you want to know about the value.
+ */
+const getURLParam = (urlParam: string): string => {
+	return currentURL.searchParams.get(urlParam)
+}
+
+((): void => {
+	
+	if (currentURL.hostname === "www.wikipedia.org") {
+		presenceData.details = "On the home page"
+
+	} else {
+	
+		let title: string
+		const actionResult = getURLParam("action"), lang = currentURL.hostname.split(".")[0]
+
+		const titleFromURL = (): string => {
+			const raw = currentPath[1] === "index.php" ? getURLParam("title") : currentPath.slice(1).join("/")
+			return decodeURI(raw.replace(/_/g, " "))
 		}
 
-	try {
-		title = document.querySelector("h1#firstHeading").textContent
-	} catch (e) {
-		title = titleFromURL()
+		try {
+			title = document.querySelector("h1").textContent
+		} catch (e) {
+			title = titleFromURL()
+		}
+
+		/**
+		 * Returns details based on the namespace.
+		 * @link https://en.wikipedia.org/wiki/Wikipedia:Namespace 
+		 */
+		const namespaceDetails = (): string => {
+			const details = {
+				"-2": "Viewing a media",
+				"-1": "Viewing a special page",
+				0: "Reading an article",
+				1: "Viewing a talk page",
+				2: "Viewing a user page",
+				3: "Viewing a user talk page",
+				4: "Viewing a project page",
+				5: "Viewing a project talk page",
+				6: "Viewing a file",
+				7: "Viewing a file talk page",
+				8: "Viewing an interface page",
+				9: "Viewing an interface talk page",
+				10: "Viewing a template",
+				11: "Viewing a template talk page",
+				12: "Viewing a help page",
+				13: "Viewing a help talk page",
+				14: "Viewing a category",
+				15: "Viewing a category talk page",
+				100: "Viewing a portal",
+				101: "Viewing a portal talk page",
+				118: "Viewing a draft",
+				119: "Viewing a draft talk page",
+				710: "Viewing a media's subtitles",
+				711: "Viewing a media's subtitles talk page",
+				828: "Viewing a module",
+				829: "Viewing a module talk page",
+				108: "Viewing a Wikipedia book",
+				109: "Viewing a Wikipedia book talk page",
+				446: "Viewing an Education Program page",
+				447: "Viewing an Education Program talk page",
+				2300: "Viewing a gadget",
+				2301: "Viewing a gadget talk page",
+				2302: "Viewing a gadget definition page",
+				2303: "Viewing a gadget definition talk page"
+			}
+			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a page"
+		}
+		/*
+		
+		Important note:
+
+		When checking for the current location, avoid using the URL.
+		The URL is going to be different in other languages.
+		Use the elements on the page instead.
+
+		*/
+
+		if ((document.querySelector(".mw-wiki-logo") as HTMLAnchorElement).href === currentURL.href) {
+			presenceData.details = "On the main page"
+		} else if (actionResult == "history") {
+			presenceData.details = "Viewing revision history"
+			presenceData.state = title
+		} else if (actionResult == "edit") {
+			presenceData.details = "Editing a page"
+			presenceData.state = title
+		} else if (document.querySelector("#wpLoginAttempt")) {
+			presenceData.details = "Logging in"
+		} else if (document.querySelector("#wpCreateaccount")) {
+			presenceData.details = "Creating an account"
+		} else if (document.querySelector(".searchresults")) {
+			presenceData.details = "Searching for a page"
+			presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
+		} else {
+			presenceData.details = namespaceDetails()
+			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+		}
+
+		if (lang !== "en") {
+			if (presenceData.state) presenceData.state += ` (${lang})`
+			else presenceData.details += ` (${lang})`
+		}
+
 	}
-
-	// try { 
-	// 	sitename = document.querySelector("meta[property='og:site_name']").content
-	// } catch (e) {
-	// 	sitename = null
-	// }
-
-	if (document.querySelector("title").textContent.split(" - ").length === 1) {
-		presenceData.state = "Main Page | Home"
-		delete presenceData.details
-	} else if (actionResult == "history") {
-		presenceData.details = "Viewing revision history"
-		presenceData.state = title
-	} else if (actionResult == "edit") {
-		presenceData.details = "Editing a page"
-		presenceData.state = title
-	} else {
-		presenceData.details = "Reading a page"
-		presenceData.state = title
-	}
-
-	presenceData.startTimestamp = browsingStamp
-	// presenceData.state += " | " + sitename
 
 })()
 
 if (updateCallback.present) {
+	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
-		resetData()
+		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
@@ -81,17 +160,4 @@ if (updateCallback.present) {
 	})
 }
 
-/**
- * Initialize presenceData.
- */
-function resetData() {
-	currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
-	presenceData = {
-		details: <string> "Viewing an unsupported page",
-		state: <string> undefined,
-		largeImageKey: <string> "lg",
-		startTimestamp: <number> browsingStamp,
-		endTimestamp: <number> undefined
-	}
-}
+
