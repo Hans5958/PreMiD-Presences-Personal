@@ -46,15 +46,11 @@ const getURLParam = (urlParam: string): string => {
 
 ((): void => {
 
-	console.log("test")
-	
 	if (currentURL.hostname === "www.wikipedia.org") {
 		presenceData.details = "On the home page"
 
 	} else {
 
-		try {
-	
 		let title: string
 		const actionResult = getURLParam("action"), lang = currentURL.hostname.split(".")[0]
 
@@ -68,8 +64,6 @@ const getURLParam = (urlParam: string): string => {
 		} catch (e) {
 			title = titleFromURL()
 		}
-
-		console.log(title)
 
 		/**
 		 * Returns details based on the namespace.
@@ -149,11 +143,6 @@ const getURLParam = (urlParam: string): string => {
 			else presenceData.details += ` (${lang})`
 		}
 
-		console.log("end")
-
-		} catch (e) {
-			console.log(e)
-		}
 	}
 
 })()
