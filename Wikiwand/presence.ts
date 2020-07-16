@@ -26,18 +26,18 @@ const updateCallback = {
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (): void => {
+const resetData = (defaultData: PresenceData = {
+	details: "Viewing an unsupported page",
+	largeImageKey: "lg",
+	startTimestamp: browsingStamp
+}): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
-	presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
+	presenceData = {...defaultData}
 }
 
 ((): void => {
-
+	
 	let title: string
 
 	const titleFromURL = (): string => currentPath[1]
@@ -49,7 +49,7 @@ const resetData = (): void => {
 	}
 
 	if (currentPath[0] === "") {
-		presenceData.details = "On the home page"
+		presenceData.details = "On the main page"
 	} else if (document.querySelector(".error_content")) {	
 		presenceData.details = "On a non-existent page"
 	} else if (currentPath[0] === "news") {
@@ -75,8 +75,9 @@ const resetData = (): void => {
 })()
 
 if (updateCallback.present) {
+	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
-		resetData()
+		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
@@ -85,3 +86,5 @@ if (updateCallback.present) {
 		presence.setActivity(presenceData)
 	})
 }
+
+
