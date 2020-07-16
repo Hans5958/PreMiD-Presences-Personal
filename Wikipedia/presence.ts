@@ -108,15 +108,14 @@ const getURLParam = (urlParam: string): string => {
 			}
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a page"
 		}
-		/*
 		
-		Important note:
-
-		When checking for the current location, avoid using the URL.
-		The URL is going to be different in other languages.
-		Use the elements on the page instead.
-
-		*/
+		//
+		// Important note:
+		//
+		// When checking for the current location, avoid using the URL.
+		// The URL is going to be different in other languages.
+		// Use the elements on the page instead.
+		//
 
 		if (((document.querySelector("#n-mainpage a") || document.querySelector("#p-navigation a")) as HTMLAnchorElement).href === currentURL.href) {
 			presenceData.details = "On the main page"
