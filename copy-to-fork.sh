@@ -11,8 +11,6 @@ echo '"outDir": "./dist/"' >> "../PreMiD-Presences/websites/$letter_folder/$1/ts
 echo '}}' >> "../PreMiD-Presences/websites/$letter_folder/$1/tsconfig.json"
 cp -r "$1/dist/metadata.json" "../PreMiD-Presences/websites/$letter_folder/$1/dist/metadata.json"
 cd "../PreMiD-Presences/websites/$letter_folder/$1"
-# echo -e "Compiling \e[100mpresence.ts\e[0m..."
-# cmd.exe /c "tsc"
 echo -e "Tidying up files using Prettier..."
 cmd.exe /c "prettier --write presence.ts"
 cmd.exe /c "prettier --write tsconfig.json"
@@ -20,6 +18,10 @@ cmd.exe /c "prettier --write dist/metadata.json"
 echo -e "Printing ESLint report and do the auto-fix.."
 cmd.exe /c "eslint presence.ts"
 cmd.exe /c "eslint presence.ts --fix"
+echo -e "Compiling \e[100mpresence.ts\e[0m for testing purposes..."
+cmd.exe /c "tsc --build tsconfig.json"
+echo -e "Removing \e[100mdist/presence.js\e[0m..."
+rm -rf dist/presence.js
 echo "Copying done!"
 
 
