@@ -27,5 +27,5 @@
 		"wmf"
 	],
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])+wikisource[.]org[/]"
+	"regExp": "([a-z0-9-]+[.])*wikisource[.]org[/]"
 }

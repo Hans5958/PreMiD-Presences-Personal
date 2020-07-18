@@ -46,7 +46,7 @@ const getURLParam = (urlParam: string): string => {
 
 ((): void => {
 
-	if (currentURL.hostname === "www.wikipedia.org") {
+	if (currentURL.hostname === "www.wikinews.org") {
 		presenceData.details = "On the home page"
 
 	} else {
@@ -67,13 +67,13 @@ const getURLParam = (urlParam: string): string => {
 
 		/**
 		 * Returns details based on the namespace.
-		 * @link https://...
+		 * @link https://en.wikinews.org/wiki/Special:PrefixIndex
 		 */
 		const namespaceDetails = (): string => {
-			const details = {
+			const details: {[index: string]: string} = {
 				"-2": "Viewing a media",
 				"-1": "Viewing a special page",
-				0: "Reading an article",
+				0: "Reading a news article",
 				1: "Viewing a talk page",
 				2: "Viewing a user page",
 				3: "Viewing a user talk page",
@@ -90,7 +90,16 @@ const getURLParam = (urlParam: string): string => {
 				14: "Viewing a category",
 				15: "Viewing a category talk page",
 				100: "Viewing a portal",
-				101: "Viewing a portal talk page"
+				101: "Viewing a portal talk page",
+				102: "Viewing comments of an article",
+				103: "Viewing a comments talk page",
+				828: "Viewing a module",
+				829: "Viewing a module talk page",
+				2300: "Viewing a gadget",
+				2301: "Viewing a gadget talk page",
+				2302: "Viewing a gadget definition page",
+				2303: "Viewing a gadget definition talk page",
+				2600: "Viewing a topic"
 			}
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a page"
 		}
@@ -107,10 +116,10 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.details = "On the main page"
 		} else if (actionResult == "history") {
 			presenceData.details = "Viewing revision history"
-			presenceData.state = title
+			presenceData.state = titleFromURL()
 		} else if (actionResult == "edit") {
 			presenceData.details = "Editing a page"
-			presenceData.state = title
+			presenceData.state = titleFromURL()
 		} else if (document.querySelector("#wpLoginAttempt")) {
 			presenceData.details = "Logging in"
 		} else if (document.querySelector("#wpCreateaccount")) {

@@ -46,7 +46,7 @@ const getURLParam = (urlParam: string): string => {
 
 ((): void => {
 
-	if (currentURL.hostname === "www.wikipedia.org") {
+	if (currentURL.hostname === "www.wiktionary.org") {
 		presenceData.details = "On the home page"
 
 	} else {
@@ -67,13 +67,13 @@ const getURLParam = (urlParam: string): string => {
 
 		/**
 		 * Returns details based on the namespace.
-		 * @link https://...
+		 * @link https://en.wiktionary.org/wiki/Wiktionary:Namespace
 		 */
 		const namespaceDetails = (): string => {
-			const details = {
+			const details: {[index: string]: string} = {
 				"-2": "Viewing a media",
 				"-1": "Viewing a special page",
-				0: "Reading an article",
+				0: "Reading about a word/term",
 				1: "Viewing a talk page",
 				2: "Viewing a user page",
 				3: "Viewing a user talk page",
@@ -89,8 +89,35 @@ const getURLParam = (urlParam: string): string => {
 				13: "Viewing a help talk page",
 				14: "Viewing a category",
 				15: "Viewing a category talk page",
-				100: "Viewing a portal",
-				101: "Viewing a portal talk page"
+				90: "Viewing a thread",
+				91: "Viewing a thread talk page",
+				92: "Viewing a summary",
+				93: "Viewing a summary talk page",
+				100: "Viewing an appendix",
+				101: "Viewing an appendix talk page",
+				102: "Viewing a concordance",
+				103: "Viewing a concordance talk page",
+				104: "Viewing an index",
+				105: "Viewing an index talk page",
+				106: "Viewing a list of words that rhymes",
+				107: "Viewing a rhymes talk page",
+				108: "Viewing a Transwiki page",
+				109: "Viewing a Transwiki talk page",
+				110: "Viewing a thesaurus page",
+				111: "Viewing a thesaurus talk page",
+				114: "Viewing citations of a word/term",
+				115: "Viewing a citations talk page",
+				116: "Viewing a sign language gloss",
+				117: "Viewing a sign language gloss talk page",
+				118: "Viewing a appendix",
+				119: "Viewing a appendix talk page",
+				828: "Viewing a reconstructed word/term",
+				829: "Viewing a reconstructed word/term talk page",
+				2300: "Viewing a gadget",
+				2301: "Viewing a gadget talk page",
+				2302: "Viewing a gadget definition page",
+				2303: "Viewing a gadget definition talk page",
+				2600: "Viewing a topic"
 			}
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a page"
 		}
@@ -107,10 +134,10 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.details = "On the main page"
 		} else if (actionResult == "history") {
 			presenceData.details = "Viewing revision history"
-			presenceData.state = title
+			presenceData.state = titleFromURL()
 		} else if (actionResult == "edit") {
 			presenceData.details = "Editing a page"
-			presenceData.state = title
+			presenceData.state = titleFromURL()
 		} else if (document.querySelector("#wpLoginAttempt")) {
 			presenceData.details = "Logging in"
 		} else if (document.querySelector("#wpCreateaccount")) {
