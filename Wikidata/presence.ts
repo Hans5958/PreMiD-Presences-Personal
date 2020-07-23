@@ -47,7 +47,7 @@ const getURLParam = (urlParam: string): string => {
 ((): void => {
 
 	let title: string
-	const actionResult = getURLParam("action")
+	const actionResult = getURLParam("action") || getURLParam("veaction")
 
 	const titleFromURL = (): string => {
 		const raw = currentPath[1] === "index.php" ? getURLParam("title") : currentPath.slice(1).join("/")
@@ -113,12 +113,6 @@ const getURLParam = (urlParam: string): string => {
 
 	if (((document.querySelector("#n-mainpage a") || document.querySelector("#p-navigation a")) as HTMLAnchorElement).href === currentURL.href) {
 		presenceData.details = "On the main page"
-	} else if (actionResult == "history") {
-		presenceData.details = "Viewing revision history"
-		presenceData.state = titleFromURL()
-	} else if (actionResult == "edit") {
-		presenceData.details = "Editing a page"
-		presenceData.state = titleFromURL()
 	} else if (document.querySelector("#wpLoginAttempt")) {
 		presenceData.details = "Logging in"
 	} else if (document.querySelector("#wpCreateaccount")) {
@@ -126,10 +120,30 @@ const getURLParam = (urlParam: string): string => {
 	} else if (document.querySelector(".searchresults")) {
 		presenceData.details = "Searching for a page"
 		presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
-	} else {
-		presenceData.details = namespaceDetails()
-		presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
-	}
+		} else if (getURLParam("diff")) {
+			presenceData.details = "Viewing difference between revisions"
+			presenceData.state = titleFromURL()
+		} else if (getURLParam("oldid")) {
+			presenceData.details = "Viewing an old revision of a page"
+			presenceData.state = titleFromURL()
+		} else if (document.querySelector("#pt-logout") || getURLParam("veaction")) { 
+			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+			updateCallback.function = () => {
+				if (actionResult == "edit" || actionResult == "editsource") {
+					presenceData.details = "Editing a page"
+				} else {
+					presenceData.details = namespaceDetails()
+				}
+			}
+		} else {
+			if (actionResult == "edit") {
+				presenceData.details = "Editing a page"
+				presenceData.state = titleFromURL()
+			} else {
+				presenceData.details = namespaceDetails()
+				presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+			}
+		}
 
 })()
 
