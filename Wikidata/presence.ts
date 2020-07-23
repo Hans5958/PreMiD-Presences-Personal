@@ -120,30 +120,30 @@ const getURLParam = (urlParam: string): string => {
 	} else if (document.querySelector(".searchresults")) {
 		presenceData.details = "Searching for a page"
 		presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
-		} else if (getURLParam("diff")) {
-			presenceData.details = "Viewing difference between revisions"
-			presenceData.state = titleFromURL()
-		} else if (getURLParam("oldid")) {
-			presenceData.details = "Viewing an old revision of a page"
-			presenceData.state = titleFromURL()
-		} else if (document.querySelector("#pt-logout") || getURLParam("veaction")) { 
-			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
-			updateCallback.function = () => {
-				if (actionResult == "edit" || actionResult == "editsource") {
-					presenceData.details = "Editing a page"
-				} else {
-					presenceData.details = namespaceDetails()
-				}
-			}
-		} else {
-			if (actionResult == "edit") {
+	} else if (getURLParam("diff")) {
+		presenceData.details = "Viewing difference between revisions"
+		presenceData.state = titleFromURL()
+	} else if (getURLParam("oldid")) {
+		presenceData.details = "Viewing an old revision of a page"
+		presenceData.state = titleFromURL()
+	} else if (document.querySelector("#pt-logout") || getURLParam("veaction")) { 
+		presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+		updateCallback.function = () => {
+			if (actionResult == "edit" || actionResult == "editsource") {
 				presenceData.details = "Editing a page"
-				presenceData.state = titleFromURL()
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
 			}
 		}
+	} else {
+		if (actionResult == "edit") {
+			presenceData.details = "Editing a page"
+			presenceData.state = titleFromURL()
+		} else {
+			presenceData.details = namespaceDetails()
+			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+		}
+	}
 
 })()
 
