@@ -86,5 +86,3 @@ if (updateCallback.present) {
 		presence.setActivity(presenceData)
 	})
 }
-
-

@@ -131,7 +131,7 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.state = titleFromURL()
 		} else if (document.querySelector("#pt-logout") || getURLParam("veaction")) { 
 			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
-			updateCallback.function = () => {
+			updateCallback.function = (): void => {
 				if (actionResult == "edit" || actionResult == "editsource") {
 					presenceData.details = "Editing a page"
 				} else {
@@ -169,5 +169,3 @@ if (updateCallback.present) {
 		presence.setActivity(presenceData)
 	})
 }
-
-
