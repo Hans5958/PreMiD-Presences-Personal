@@ -20,10 +20,18 @@ module.exports = {
 		"indent": "off",
 		"camelcase": "off",
 		"comma-dangle": ["warn", "never"],
-		"linebreak-style": "off",
-		"no-console": "off",
+		"one-var": "off", // should be ["warn", "consecutive"], doesn't matter since it is auto-fixed by ESLint nonetheless
+		"linebreak-style": "off", // should be Unix (lf), doesn't matter since it is converted by Prettier nonetheless
+		"no-console": "warn", // should be error, just for reminder
 		"no-var": "error",
 		"no-undef": "off",
+		"no-restricted-syntax": [
+			"error",
+			{
+			  "selector": "TSEnumDeclaration[const=true]",
+			  "message": "Usage of const enums is forbidden."
+			}
+		  ],
 		"@typescript-eslint/camelcase": "off",
 		"@typescript-eslint/no-explicit-any": "error"
 	},
