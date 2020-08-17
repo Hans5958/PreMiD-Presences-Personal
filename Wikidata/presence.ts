@@ -55,7 +55,7 @@ const getURLParam = (urlParam: string): string => {
 	}
 
 	try {
-		title = document.querySelector("h1").textContent
+		title = (document.querySelector(".wikibase-title")) ? document.querySelector(".wikibase-title-label").textContent.trim() : document.querySelector("h1").textContent
 	} catch (e) {
 		title = titleFromURL()
 	}
