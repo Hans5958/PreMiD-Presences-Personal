@@ -113,7 +113,7 @@ const getURLParam = (urlParam: string): string => {
 	// Use the elements on the page instead.
 	//
 
-	if (((document.querySelector("#n-mainpage a") || document.querySelector("#p-navigation a")) as HTMLAnchorElement).href === currentURL.href) {
+	if (((document.querySelector("#n-mainpage a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href) {
 		presenceData.details = "On the main page"
 	} else if (document.querySelector("#wpLoginAttempt")) {
 		presenceData.details = "Logging in"
@@ -147,7 +147,13 @@ const getURLParam = (urlParam: string): string => {
 			}
 		}
 
-	if (lang !== "en" && lang !== "wikisource") {
+	if (lang === "wikisource") {
+		if (presenceData.details === "On the main page") presenceData.details = "On the home page"  
+		else {
+			if (presenceData.state) presenceData.state += " (multilingual)"
+			else presenceData.details += " (multilingual)"
+		}
+	} else if (lang !== "en") {
 		if (presenceData.state) presenceData.state += ` (${lang})`
 		else presenceData.details += ` (${lang})`
 	}

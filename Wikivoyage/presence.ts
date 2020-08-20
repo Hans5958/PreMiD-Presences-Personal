@@ -60,7 +60,7 @@ const getURLParam = (urlParam: string): string => {
 		}
 
 		try {
-			title = document.querySelector("h1").textContent
+			title = document.querySelector("h1:not(:empty)").textContent
 		} catch (e) {
 			title = titleFromURL()
 		}
@@ -108,7 +108,7 @@ const getURLParam = (urlParam: string): string => {
 		// Use the elements on the page instead.
 		//
 
-		if (((document.querySelector("#n-mainpage a") || document.querySelector("#p-navigation a")) as HTMLAnchorElement).href === currentURL.href) {
+		if (((document.querySelector("#n-mainpage a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href) {
 			presenceData.details = "On the main page"
 		} else if (document.querySelector("#wpLoginAttempt")) {
 			presenceData.details = "Logging in"
