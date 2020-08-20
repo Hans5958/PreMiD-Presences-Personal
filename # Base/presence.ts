@@ -3,7 +3,7 @@ var presence = new Presence({
 })
 
 var currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
 	browsingStamp = Math.floor(Date.now() / 1000), 
 	presenceData: PresenceData = {
 		details: <string> "Viewing an unsupported page",
@@ -55,7 +55,7 @@ if (updateCallback.present) {
  */
 function resetData() {
 	currentURL = new URL(document.location.href),
-	currentPath = currentURL.pathname.slice(1).split("/"),
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
 	presenceData = {
 		details: <string> "Viewing an unsupported page",
 		state: <string> undefined,
