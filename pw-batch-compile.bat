@@ -1,20 +1,23 @@
-REM tsc.cmd -p "Wikibooks\tsconfig.json"
-REM tsc.cmd -p "Wikidata\tsconfig.json"
-REM tsc.cmd -p "Wikimedia Commons\tsconfig.json"
-REM tsc.cmd -p "Wikinews\tsconfig.json"
-REM tsc.cmd -p "Wikiquote\tsconfig.json"
-REM tsc.cmd -p "Wikisource\tsconfig.json"
-REM tsc.cmd -p "Wikispecies\tsconfig.json"
-REM tsc.cmd -p "Wikiversity\tsconfig.json"
-REM tsc.cmd -p "Wikivoyage\tsconfig.json"
-REM tsc.cmd -p "Wiktionary\tsconfig.json"
-branch-copy-to-fork.sh Wikibooks
-branch-copy-to-fork.sh Wikidata
-branch-copy-to-fork.sh Wikimedia Commons
-branch-copy-to-fork.sh Wikinews
-branch-copy-to-fork.sh Wikiquote
-branch-copy-to-fork.sh Wikisource
-branch-copy-to-fork.sh Wikispecies
-branch-copy-to-fork.sh Wikiversity
-branch-copy-to-fork.sh Wikivoyage
-branch-copy-to-fork.sh Wiktionary
+@echo off
+
+REM cd Wikipedia & tsc & cd..
+REM cd Wikidata & tsc & cd..
+REM cd Wikimedia Commons & tsc & cd..
+REM cd Wikinews & tsc & cd..
+REM cd Wikiquote & tsc & cd..
+REM cd Wikisource & tsc & cd..
+REM cd Wikispecies & tsc & cd..
+REM cd Wikiversity & tsc & cd..
+REM cd Wikivoyage & tsc & cd..
+REM cd Wiktionary & tsc & cd..
+commit-copy-to-fork.sh Wikipedia
+commit-copy-to-fork.sh Wikibooks
+commit-copy-to-fork.sh Wikidata
+commit-copy-to-fork.sh Wikimedia Commons
+commit-copy-to-fork.sh Wikinews
+commit-copy-to-fork.sh Wikiquote
+commit-copy-to-fork.sh Wikisource
+commit-copy-to-fork.sh Wikispecies
+commit-copy-to-fork.sh Wikiversity
+commit-copy-to-fork.sh Wikivoyage
+commit-copy-to-fork.sh Wiktionary
