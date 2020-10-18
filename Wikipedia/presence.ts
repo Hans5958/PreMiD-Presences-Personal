@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -52,7 +52,7 @@ const getURLParam = (urlParam: string): string => {
 	} else {
 
 		let title: string
-		const actionResult = getURLParam("action") || getURLParam("veaction"), lang = currentURL.hostname.split(".")[0]
+		const actionResult = (): string => getURLParam("action") || getURLParam("veaction"), lang = currentURL.hostname.split(".")[0]
 
 		const titleFromURL = (): string => {
 			const raw = currentPath[1] === "index.php" ? getURLParam("title") : currentPath.slice(1).join("/")
@@ -127,7 +127,7 @@ const getURLParam = (urlParam: string): string => {
 		} else if (document.querySelector(".searchresults")) {
 			presenceData.details = "Searching for a page"
 			presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
-		} else if (actionResult == "history") {
+		} else if (actionResult() === "history") {
 			presenceData.details = "Viewing revision history"
 			presenceData.state = titleFromURL()
 		} else if (getURLParam("diff")) {
@@ -136,18 +136,18 @@ const getURLParam = (urlParam: string): string => {
 		} else if (getURLParam("oldid")) {
 			presenceData.details = "Viewing an old revision of a page"
 			presenceData.state = titleFromURL()
-		} else if (document.querySelector("#pt-logout") || getURLParam("veaction")) { 
+		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
 			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
 			updateCallback.function = (): void => {
-				if (actionResult == "edit" || actionResult == "editsource") {
+				if (actionResult() === "edit" || actionResult() === "editsource") {
 					presenceData.details = "Editing a page"
 				} else {
 					presenceData.details = namespaceDetails()
 				}
 			}
 		} else {
-			if (actionResult == "edit") {
-				presenceData.details = "Editing a page"
+			if (actionResult() === "edit") {
+				presenceData.details = document.querySelector("#ca-edit") ? "Editing a page" : "Viewing source"
 				presenceData.state = titleFromURL()
 			} else {
 				presenceData.details = namespaceDetails()
