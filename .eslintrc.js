@@ -1,8 +1,7 @@
 module.exports = {
 	root: true,
 	env: {
-		browser: true,
-		es6: true
+		browser: true
 	},
 	extends: ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
 	globals: {
@@ -15,7 +14,7 @@ module.exports = {
 		project: "./tsconfig.json"
 	},
 	rules: {
-		"semi": ["warn", "never"],
+		"semi": ["warn", "never"], // should be ["warn", "always", { "omitLastInOneLineBlock": true }], doesn't matter since it is handled by Prettier noneteless
 		"quotes": "off",
 		"indent": "off",
 		"camelcase": "off",
@@ -33,7 +32,23 @@ module.exports = {
 			}
 		  ],
 		"@typescript-eslint/camelcase": "off",
-		"@typescript-eslint/no-explicit-any": "error"
+		"@typescript-eslint/no-explicit-any": "error",
+		"@typescript-eslint/indent": "off"
 	},
+	overrides: [
+		{
+		  "env": {
+			"node": true,
+			"mongo": true
+		  },
+		  "files": ["./*.ts"],
+		  "rules": {
+			"@typescript-eslint/no-non-null-assertion": "off",
+			"no-console": "off"
+		  }
+		}
+	  ],
+	reportUnusedDisableDirectives: true,	
+	noInlineConfig: true,
 	plugins: ["@typescript-eslint"]
 }

@@ -11,7 +11,8 @@
 		"noUnusedParameters": true,
 		"inlineSourceMap": true,
 		"typeRoots": ["@types"],
-		"esModuleInterop": true
-		},
+		"esModuleInterop": true,
+		"skipLibCheck": true
+	},
 	"exclude": ["node_modules", "**/dist/*.js"]
 }
