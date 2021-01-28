@@ -3,7 +3,7 @@ const presence = new Presence({
 })
 
 let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.slice(1).split("/")
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
 let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -26,14 +26,14 @@ const updateCallback = {
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (): void => {
+const resetData = (defaultData: PresenceData = {
+	details: "Viewing an unsupported page",
+	largeImageKey: "lg",
+	startTimestamp: browsingStamp
+}): void => {
 	currentURL = new URL(document.location.href)
-	currentPath = currentURL.pathname.slice(1).split("/")
-	presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
+	presenceData = {...defaultData}
 }
 
 ((): void => {
@@ -135,7 +135,7 @@ const resetData = (): void => {
 			} else if (currentPath[1] === "login") {
 				presenceData.details = "Logging in"
 			} else {
-				const pageNames = {
+				const pageNames: {[index: string]: string} = {
 					upgrade_account: "Upgrade your account",
 					tos: "Terms of Service",
 					privacy_poicy: "Privacy Policy"
@@ -159,8 +159,9 @@ const resetData = (): void => {
 })()
 
 if (updateCallback.present) {
+	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
-		resetData()
+		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})

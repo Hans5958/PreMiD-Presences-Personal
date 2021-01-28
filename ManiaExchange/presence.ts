@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -115,8 +115,8 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			presenceData.details = "Logging in"
 
 		} else if (currentPath[0] === "tracks" || currentPath[0] === "maps") {
-			presenceData.details = document.querySelector(".WindowText td:nth-of-type(2)").textContent.trim()
-			presenceData.state = document.querySelector(".WindowText:nth-of-type(2) td:nth-of-type(2)").textContent.trim()
+			presenceData.details = document.querySelector(".panelbox-heading h1").textContent.trim()
+			presenceData.state = document.querySelector(".panelbox-stats a[id^='user-']").textContent.trim()
 
 		} else if (currentPath[0] === "tracksearch2" || currentPath[0] === "mapsearch2" || currentPath[0] === "ts" || currentPath[0] === "ms" ) {
 			updateCallback.function = (): void => {

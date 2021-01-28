@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {

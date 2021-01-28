@@ -73,6 +73,7 @@ function resetData() {
 	}
 }
 ```
+
 # Non-Strict Base Supplement
 
 ```ts
@@ -236,8 +237,8 @@ let presenceData: presenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -296,27 +297,23 @@ const logHandler = {
 	 */
 	pageNotSupported(isCritical = false): void {
 		if (isCritical)
-			console.error("Whoops. It seems that this page is not supported. \nPlease contact @Hans5958#0969 to request a support for this page.")
+			presence.error("Whoops. It seems that this page is not supported. \nPlease report this to Hans5958#0969 on Discord.")
 		else
-			console.warn("It seems that this page is not fully supported. \nPlease contact @Hans5958#0969 to request a support for this page.")
-		console.log(currentURL.href)
+			presence.error("It seems that this page is not fully supported. \nPlease report this to Hans5958#0969 on Discord.")
+		presence.info(currentURL.href)
 	},
 	/**
 	 * Handles fatal errors.
 	 * @param error The error that it threw.
 	 */
 	fatalError(error: string): void {
-		console.groupEnd()
-		console.error(
-			"Fatal error! Terminating.\nPlease report this problem to @Hans5958#0969."
+		presence.error(
+			"Fatal error! Terminating.\nPlease report this to Hans5958#0969 on Discord."
 		)
-		console.groupCollapsed("Error log")
-		console.log(currentURL.href)
-		console.error(error)
-		console.groupEnd()
+		presence.info(currentURL.href)
+		presence.info(error)
 	}
 }
-
 /**
  * Search for URL parameters.
  * @param urlParam The parameter that you want to know about the value.

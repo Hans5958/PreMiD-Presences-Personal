@@ -3,7 +3,7 @@ const presence = new Presence({
 })
 
 let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.slice(1).split("/")
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
 let presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -26,14 +26,14 @@ const updateCallback = {
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (): void => {
+const resetData = (defaultData: PresenceData = {
+	details: "Viewing an unsupported page",
+	largeImageKey: "lg",
+	startTimestamp: browsingStamp
+}): void => {
 	currentURL = new URL(document.location.href)
-	currentPath = currentURL.pathname.slice(1).split("/")
-	presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
+	presenceData = {...defaultData}
 }
 
 /**
@@ -45,21 +45,22 @@ const logHandler = {
 	 * @param isCritical If the URL is essential to the operation, this should be true, so it will output an error, not a warning.
 	 */
 	pageNotSupported(isCritical = false): void {
-		if (isCritical) console.error("Whoops. It seems that this page is not supported. \nPlease contact @Hans5958#0969 to request a support for this page.")
-		else console.warn("It seems that this page is not fully supported. \nPlease contact @Hans5958#0969 to request a support for this page.")
-		console.log(currentURL.href)
+		if (isCritical)
+			presence.error("Whoops. It seems that this page is not supported. \nPlease report this to Hans5958#0969 on Discord.")
+		else
+			presence.error("It seems that this page is not fully supported. \nPlease report this to Hans5958#0969 on Discord.")
+		presence.info(currentURL.href)
 	},
 	/**
 	 * Handles fatal errors.
 	 * @param error The error that it threw.
 	 */
 	fatalError(error: string): void {
-		console.groupEnd()
-		console.error("Fatal error! Terminating.\nPlease report this problem to @Hans5958#0969.")
-		console.groupCollapsed("Error log")
-		console.log(currentURL.href)
-		console.error(error)
-		console.groupEnd()
+		presence.error(
+			"Fatal error! Terminating.\nPlease report this to Hans5958#0969 on Discord."
+		)
+		presence.info(currentURL.href)
+		presence.info(error)
 	}
 }
 
@@ -69,9 +70,9 @@ const logHandler = {
  */
 const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
-}
+},
 
-((): void => {
+prepare = async (): Promise<void> => {
 
 	/*
 
@@ -96,13 +97,14 @@ const getURLParam = (urlParam: string): string => {
 
 	*/
 
+	const presenceSettings: {[index: string]: boolean} = {
+		chatChannelNames: await presence.getSetting("chatChannelNames"),
+		detailedSettings: await presence.getSetting("detailedSettings")
+	}
+
 	if (currentURL.hostname === "www.deviantart.com") {
 		
-		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: PresenceData = {}, retries = 0, profileType: string, websiteTheme: string
-
-		/* This one decides if the current theme is the old one or the new one, also known as Eclipse. */
-		if (document.querySelector("table#overhead") === null) websiteTheme = "eclipse"
-		else websiteTheme = "old"
+		let loadedPath: string, forceUpdate = false, presenceDataPlaced: PresenceData = {}, retries = 0, profileType: string
 
 		/* This one decides if the current page belongs to an user or a group */
 		if (document.querySelector("#group")) profileType = "group"
@@ -114,7 +116,7 @@ const getURLParam = (urlParam: string): string => {
 
 		const getName = (override = false): string => {
 			try {
-				if (websiteTheme === "eclipse" && !override) {
+				if (!override) {
 					try {
 						return document.querySelector("#content-container > div > div > div > div > div > a.user-link").textContent
 					} catch {
@@ -134,8 +136,9 @@ const getURLParam = (urlParam: string): string => {
 		}
 
 		updateCallback.function = (): void => {
-			if (loadedPath !== currentPath || forceUpdate) {
-				loadedPath = currentPath
+			if ((loadedPath !== currentURL.pathname) || forceUpdate) {
+				
+				loadedPath = currentURL.pathname
 
 				try {
 
@@ -161,8 +164,7 @@ const getURLParam = (urlParam: string): string => {
 	
 					} else if (currentPath[0] === "daily-deviations") {
 						presenceData.details = "Viewing daily deviations"
-						if (websiteTheme === "eclipse") presenceData.state = (document.querySelector("#daily-deviation-picker") as HTMLSelectElement).value
-						else presenceData.state = document.querySelector(".dailyDevCurDate").textContent.split(", ").slice(1).join(", ")
+						presenceData.state = (document.querySelector("#daily-deviation-picker") as HTMLSelectElement).value
 	
 					} else if (currentPath[0] === "journals") {
 						presenceData.details = "Viewing daily deviations"
@@ -197,10 +199,12 @@ const getURLParam = (urlParam: string): string => {
 					} else if (currentPath[0] === "settings") {
 						/* Detailed infos might be disabled by default. */
 						presenceData.details = "Doing some settings"
+						if (presenceSettings.detailedSettings) presenceData.state = document.querySelector("ul.menu_holder li > a.active").textContent
 					
 					} else if (currentPath[0] === "account") {
 						/* This might expose some stuff, because the page shows orders, points, and earnings. Additional infos might be disabled by default. */
 						presenceData.details = "Viewing the account pages"
+						// presenceSettings.detailedAccount
 					
 					} else if (currentPath[0] === "checkout") {
 						/* This might be disabled by default. */
@@ -220,28 +224,43 @@ const getURLParam = (urlParam: string): string => {
 					} else if (currentPath[0] === "makeagroup") {
 						presenceData.details = "Making a group"
 
-					/* The function below is only valid on the old theme. */
-					
-					} else if (websiteTheme === "old" && document.querySelector(".newbrowse") && !Object.keys({ presenceDataPlaced }).length) {
-						if (getURLParam("q")) {
-							presenceData.details = "Searching something"
-							presenceData.state = getURLParam("q")
+					} else if (currentPath[0] === "users" && currentPath[1] === "login") {
+						presenceData.details = "Logging in"
+
+					} else if (currentPath[0] === "join") {
+						presenceData.details = "Registering an account"
+
+					} else if (currentPath[0] === "forum") {
+
+						if (currentPath[2]) {
+							if (currentPath[3]) {
+								presenceData.details = "Viewing a topic"
+								presenceData.state = document.querySelector("h1").textContent
+							} else {
+								presenceData.details = "Viewing a topic category"
+								presenceData.state = document.querySelector("h1").textContent
+							}
 						} else {
-							presenceData.details = "Viewing deviations"
-							const li = document.querySelectorAll(".browse-facet-category ul li")
-							if (currentPath[3]) presenceData.state = `${li[1].textContent} > ${li[2].textContent} > ${document.querySelector(".search-stats").textContent.trim().slice(7)} > `
-							else if (currentPath[2]) presenceData.state = `${li[1].textContent} > ${document.querySelector(".search-stats").textContent.trim().slice(7)} > `
-							else if (currentPath[1]) presenceData.state = `${document.querySelector(".search-stats").textContent.trim().slice(7)} > `
-							else if (currentPath[0]) presenceData.state = ""
-							presenceData.state += document.querySelector(".browse-facet-order ul li .selected").textContent
+							presenceData.details = "Viewing the forums"
+						}
+
+					} else if (currentPath[0] === "about") {
+
+						presenceData.details = "Viewing the about pages"
+
+						if (currentPath[1] === "") presenceData.state = "About"
+						else if (currentPath[1] === "policy") {
+							if (currentPath[2] === "etiquette") presenceData.state = "Etiquette Policy"
+							if (currentPath[2] === "privacy") presenceData.state = "Privacy Policy"
+							if (currentPath[2] === "service") presenceData.state = "Terms of Service"
+							if (currentPath[2] === "copyright") presenceData.state = "Copyright Policy"
+						} else {
+							logHandler.pageNotSupported(false)
 						}
 					
 					} else if (currentPath[0] === "watch") {
 						presenceData.details = "Viewing the watch list"
 					
-					} else if (currentPath[0] === "critiques") {
-						presenceData.details = "Viewing critiques"
-
 					/*
 
 					Section 2
@@ -263,7 +282,7 @@ const getURLParam = (urlParam: string): string => {
 					} else if (currentPath[1] === "gallery" || currentPath[1] === "favourites") {
 						if (currentPath[1] === "gallery") presenceData.details = `Viewing a ${profileType}'s gallery`
 						else presenceData.details = `Viewing a ${profileType}'s favourites`
-						if (websiteTheme === "eclipse" && profileType === "user") {
+						if (profileType === "user") {
 							presenceData.state = `${document.querySelector("h2.uUWfu").textContent} by ${getName()}`
 						} else {
 							if (profileType === "group" && !currentPath[2]) {
@@ -287,7 +306,7 @@ const getURLParam = (urlParam: string): string => {
 					
 					} else if (currentPath[1] === "posts") {
 						/* This part is only valid on the Eclipse theme. */
-						const details = {
+						const details: {[index: string]: string} = {
 							All: "Viewing a user's posts",
 							Journals: "Viewing a user's journals",
 							"Status Updates": "Viewing a user's statuses",
@@ -298,13 +317,7 @@ const getURLParam = (urlParam: string): string => {
 					
 					} else if (currentPath[1] === "journal") {
 						if (currentPath[2]) {
-							if (websiteTheme === "eclipse") {
-								presenceData.details = document.querySelector("._2-k1X").textContent
-							} else {
-								/* This part is only valid on the old theme. */
-								if (currentPath[2] === "poll") document.querySelector("h2").textContent.substr(1, document.querySelector("h2").textContent.length - 2)
-								else presenceData.details = document.querySelector("h1 .title").textContent
-							}
+							presenceData.details = document.querySelector("._2-k1X").textContent
 							presenceData.state = `${getName()} (journal)`
 						} else {
 							/* This part is only valid on the old theme. */
@@ -313,14 +326,10 @@ const getURLParam = (urlParam: string): string => {
 						}
 					
 					} else if (currentPath[1] === "poll") {
-						if (websiteTheme === "eclipse") {
-							try {
-								presenceData.details = document.querySelector("._1ddsf").textContent
-							} catch {
-								presenceData.details = document.querySelector(".gfMBk").textContent
-							}
-						} else {
-							presenceData.details = document.querySelector("h2").textContent.substr(1, document.querySelector("h2").textContent.length - 2)
+						try {
+							presenceData.details = document.querySelector("._1ddsf").textContent
+						} catch {
+							presenceData.details = document.querySelector(".gfMBk").textContent
 						}
 						presenceData.state = getName()
 					
@@ -374,9 +383,9 @@ const getURLParam = (urlParam: string): string => {
 						logHandler.pageNotSupported(true)
 					}
 
-					console.groupEnd()
-					// console.log("Done!");
-					// console.log(`Presence:\n${presenceData.details}\n${presenceData.state}\n\ncurrentPath: ${currentPath.join("/")}\nloadedPath: ${loadedPath}\nBoth values same?: ${loadedPath === currentPath.join("/")}\nforceUpdate: ${forceUpdate}\n\n${Date.now()}`);
+					// console.groupEnd()
+					presence.success("Done!")
+					// console.info(`Presence:\n${presenceData.details}\n${presenceData.state}\n\ncurrentPath: ${currentURL.pathname}\nloadedPath: ${loadedPath}\nBoth values same?: ${loadedPath === currentURL.pathname}\nforceUpdate: ${forceUpdate}\n\n${loadedPath === currentURL.pathname || forceUpdate}`)
 					presenceDataPlaced = presenceData
 					forceUpdate = false
 					retries = 0
@@ -387,10 +396,8 @@ const getURLParam = (urlParam: string): string => {
 					retries++
 					resetData()
 					presenceData.details = "Loading..."
-					if (retries === 1) {
-						console.groupCollapsed("Loading or retrying...")
-					}
-					console.log(`${retries}/30`)
+					// if (retries === 1) console.groupCollapsed("Loading or retrying...")
+					// console.log(`${retries}/30`)
 
 					if (retries === 30) {
 						updateCallback.function = (): void => undefined
@@ -404,93 +411,51 @@ const getURLParam = (urlParam: string): string => {
 			}
 
 		}
-
-	} else if (currentURL.hostname === "about.deviantart.com") {
-		
-		presenceData.details = "Viewing the about pages"
-
-		switch (currentPath[0]) {
-			case "":
-				presenceData.state = "About"
-				break
-			case "policy":
-				if (currentPath[1] === "etiquette") presenceData.state = "Etiquette Policy"
-				break
-			default:
-				logHandler.pageNotSupported(false)
-		}
 	
 	} else if (currentURL.hostname === "chat.deviantart.com") {
 	
-		switch (currentPath[0]) {
+		if (currentPath[0] === "") {	
+			presenceData.details = "Viewing the chat room list"
+
+		} else if (currentPath[0] === "chat") {
+			presenceData.details = "On a chat room"
+
+			if (presenceSettings.chatChannelNames) {
+
+				const channel = (): string => document.querySelector(".damnc-tabbar strong").textContent
+				let loadedChannel = "", forceUpdate = false, presenceDataPlaced: PresenceData = {}, retries = 0
 	
-			case "":
-				presenceData.details = "Viewing the chat room list"
-				break
-
-			case "chat":
-				presenceData.details = "On a chat room"
-
-				/* Disabled for privacy reasons. Might be enabled if settings is a thing. */
-
-				// var channel = () => document.querySelector(".damnc-tabbar strong").textContent,
-				// 	loadedChannel = "", forceUpdate = false, presenceDataPlaced: presenceData = {}, retries = 0
-
-				// updateCallback.function = () => {
-
-				// 	if (loadedChannel !== channel() || forceUpdate) {
-				// 		loadedChannel = channel()
-				// 		try {
-				// 			if (true) {
-				// 				presenceData.state = channel()
-				// 			// Whoops.
-				// 			} else {
-				// 				logHandler.pageNotSupported(true)
-				// 			}
-				// 			console.groupEnd()
-				// 			presenceDataPlaced = presenceData
-				// 			forceUpdate = false
-				// 			retries = 0
-				// 			console.log("Done! Presence result:")
-				// 			console.log(`${presenceData.details}\n${presenceData.state}`)
-				// 		} catch (error) {
-				// 			forceUpdate = true
-				// 			retries++
-				// 			resetData()
-				// 			presenceData.details = "Loading..."
-				// 			if (retries === 1) console.groupCollapsed("Loading or retrying...")
-				// 			console.log(`${retries}/30`)
-				// 			if (retries === 30) {
-				// 				updateCallback.function = () => {}
-				// 				logHandler.fatalError()
-				// 			}
-				// 		}
-				// 	} else {
-				// 		presenceData = presenceDataPlaced
-				// 	}
-				// }
-
-				break
-
-			default:
-				logHandler.pageNotSupported(false)
+				updateCallback.function = (): void => {
 	
+					if (loadedChannel !== channel() || forceUpdate) {
+						loadedChannel = channel()
+						try {
+							presenceData.state = channel()
+							// console.groupEnd()
+							presenceDataPlaced = presenceData
+							forceUpdate = false
+							retries = 0
+						} catch (error) {
+							forceUpdate = true
+							retries++
+							resetData()
+							presenceData.details = "Loading..."
+							// if (retries === 1) console.groupCollapsed("Loading or retrying...")
+							// console.log(`${retries}/30`)
+							if (retries === 30) {
+								updateCallback.function = (): void => undefined
+								logHandler.fatalError(error)
+							}
+						}
+					} else {
+						presenceData = presenceDataPlaced
+					}
+				}
+
 			}
-	
-	} else if (currentURL.hostname === "forum.deviantart.com") {
 
-		if (currentPath[1]) {
-			if (currentPath[2]) {
-				presenceData.details = "Viewing a topic"
-				presenceData.state = document.querySelector("h1").textContent
-			} else {
-				presenceData.details = "Viewing a topic category"
-				presenceData.state = document.querySelector("h1").textContent
-			}
-		} else {
-			presenceData.details = "Viewing the forums"
 		}
-
+	
 	} else if (currentURL.hostname === "groups.deviantart.com") {
 		
 		presenceData.details = "Looking for a group"
@@ -541,11 +506,11 @@ const getURLParam = (urlParam: string): string => {
 	
 	} else if (currentURL.hostname === "sta.sh") {
 
-		let loadedPath: Array<string> = [], forceUpdate = false, presenceDataPlaced: PresenceData = {},	retries = 0
+		let loadedPath: string, forceUpdate = false, presenceDataPlaced: PresenceData = {},	retries = 0
 
 		updateCallback.function = (): void => {
-			if (loadedPath !== currentPath || forceUpdate) {
-				loadedPath = currentPath
+			if ((loadedPath !== currentURL.pathname) || forceUpdate) {
+				loadedPath = currentURL.pathname
 
 				try {
 					switch (currentPath[0]) {
@@ -558,9 +523,10 @@ const getURLParam = (urlParam: string): string => {
 							if (currentPath[1] === "settings") {
 								presenceData.details = "On Sta.sh"
 								presenceData.state = "Settings"
-							} else {
-								logHandler.pageNotSupported(true)
-							}
+							} 
+							// else {
+							//  	logHandler.pageNotSupported(true)
+							// }
 							break
 
 						case "writer":
@@ -581,7 +547,7 @@ const getURLParam = (urlParam: string): string => {
 							}
 					}
 
-					console.groupEnd()
+					// console.groupEnd()
 					presenceDataPlaced = presenceData
 					forceUpdate = false
 					retries = 0
@@ -592,10 +558,8 @@ const getURLParam = (urlParam: string): string => {
 					retries++
 					resetData()
 					presenceData.details = "Loading..."
-					if (retries === 1) {
-						console.groupCollapsed("Loading or retrying...")
-					}
-					console.log(`${retries}/30`)
+					// if (retries === 1) console.groupCollapsed("Loading or retrying...")
+					// console.log(`${retries}/30`)
 
 					if (retries === 30) {
 						updateCallback.function = (): void => undefined
@@ -612,11 +576,14 @@ const getURLParam = (urlParam: string): string => {
 
 	}
 	
-})()
+}
+
+(async (): Promise<void> => { await prepare()
 
 if (updateCallback.present) {
+	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
-		resetData()
+		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
@@ -625,3 +592,5 @@ if (updateCallback.present) {
 		presence.setActivity(presenceData)
 	})
 }
+
+})()

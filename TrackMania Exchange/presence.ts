@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -80,7 +80,7 @@ const getURLParam = (urlParam: string): string => {
 			currentURL = new URL(document.querySelector(".BookmarkCell a").textContent)
 			pageType = getURLParam("action")
 		} else {
-			const locationType = {
+			const locationType: {[index: string]: string} = {
 				"Home": "home",
 				"Login": "login", // action guessed
 				"Registration": "register", // action guessed

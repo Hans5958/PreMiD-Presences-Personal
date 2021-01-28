@@ -11,8 +11,8 @@ let presenceData: PresenceData = {
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as Function,
-		get function(): Function {
+		_function: null as () => void,
+		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
@@ -40,7 +40,10 @@ const resetData = (defaultData: PresenceData = {
 	
 	let title: string
 
-	const titleFromURL = (): string => currentPath[1]
+	const titleFromURL = (): string => {
+		const raw = currentPath.slice(1).join("/")
+		return decodeURI(raw.replace(/_/g, " "))
+	}
 
 	try {
 		title = document.querySelector("h1.firstHeading span").textContent
@@ -52,24 +55,13 @@ const resetData = (defaultData: PresenceData = {
 		presenceData.details = "On the main page"
 	} else if (document.querySelector(".error_content")) {	
 		presenceData.details = "On a non-existent page"
-	} else if (currentPath[0] === "news") {
-		presenceData.details = "Viewing a page"
-		presenceData.state = "Wikiwand Today"
-	} else if (currentPath[0] === "about") {
-		presenceData.details = "Viewing a page"
-		presenceData.state = "About"
-	} else if (currentPath[0] === "press") {
-		presenceData.details = "Viewing a page"
-		presenceData.state = "Press"
-	} else if (currentPath[0] === "terms") {
-		presenceData.details = "Viewing a page"
-		presenceData.state = "Terms of Service"
-	} else if (currentPath[0] === "privacy") {
-		presenceData.details = "Viewing a page"
-		presenceData.state = "Privacy Policy"
-	} else {
+	} else if (title) {
 		presenceData.details = "Reading a wiki page"
 		presenceData.state = title
+		if (currentPath[0] !== "en") presenceData.state += ` (${currentPath[0]})`
+	} else {
+		presenceData.details = "Viewing a page"
+		presenceData.state = document.title.replace(" - Wikiwand", "")
 	}
 
 })()
