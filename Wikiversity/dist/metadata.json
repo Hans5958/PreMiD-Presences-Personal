@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -7,13 +7,13 @@
 	"service": "Wikiversity",
 	"description": {
 		"en": "Wikiversity is devoted to learning resources, learning projects, and research for use in all levels, types, and styles of education.",
-		"ar": "ويكي الجامعة مكرسة لمصادر  التعلم ، ومشروعات التعلم ، والأبحاث لاستخدامها في جميع مستويات وأنواع وأنماط التعليم.",
+		"ar_SA": "ويكي الجامعة مكرسة لمصادر  التعلم ، ومشروعات التعلم ، والأبحاث لاستخدامها في جميع مستويات وأنواع وأنماط التعليم.",
 		"zh_CN": "維基學院致力於學習資源，學習項目和研究，以用於所有級別，類型和教育方式。",
 		"fr": "La Wikiversité est consacrée aux ressources d’apprentissage, aux projets pédagogiques et à la recherche pour tous les types, styles et niveaux d’éducation.",
 		"es": "Wkiversidad está dedicada a recursos de aprendizaje, proyectos educativos e investigación para su uso en todos los niveles, tipos y estilos de educación."
 	},
 	"url": "wikiversity.org",
-	"version": "1.0.2",
+	"version": "1.0.5",
 	"logo": "https://i.imgur.com/HU6hLSg.png",
 	"thumbnail": "https://i.imgur.com/FVkZ2gS.png",
 	"color": "#f9f9f9",
@@ -29,5 +29,6 @@
 		"wmf"
 	],
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])+wikiversity[.]org[/]"
+	"regExp": "([a-z0-9-]+[.])+wikiversity[.]org[/]",
+	"altnames": ["Veizgiek Hagdangz", "Viciversitas", "VikiVersitet", "Vikiversitato", "Vikiversite", "Vikiversitet", "Vikiversitetas", "Vikiülikool", "Wiki Dâi-hŏk", "Wiki-sveučilište", "Wikibertsitatea", "Wikiegyetem", "Wikiopisto", "Wikiučilište", "Wikiversidad", "Wikiversidade", "Wikiversidá", "Wikiversitet", "Wikiversità", "Wikiversité", "Wikiverza", "Wikiverzita", "Βικιεπιστήμιο", "Викиверзитет", "Викиверситет", "Викидонишгоҳ", "Викиуниверзитет", "Віківерситет", "Віківерсітэт", "Віківэрсытэт", "Уикиверситет", "Վիքիլսարան", "ויקיברסיטה", "ويكي الجامعة", "ويکيپوهنتون", "ویکی جامعہ", "ویکی‌دانشگاه", "विकिभर्सिटी", "विकिविद्यालय", "উইকিবিশ্ববিদ্যালয়", "ৱিকিভাৰ্চিটী", "ਵਿਕੀਵਰਸਿਟੀ", "ଉଇକି ମହାବିହାର", "ଉଇକିବିଦ୍ୟାଳୟ", "விக்கிப்பல்கலைக்கழகம்", "వికీవర్సిటీ", "ವಿಕಿವಿದ್ಯಾಲಯ", "വിക്കിവേഴ്സിറ്റി", "วิกิวิทยาลัย", "ვიკივერსიტეტი", "ウィキバーシティ", "維基學府", "維基學院", "维基学院", "위키배움터"]
 }

@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -12,7 +12,7 @@
 		"es": "Wikiespecies el la base de datos de especies por taxonomía que incluye representantes vivos y fósiles de Animalia, Plantae, Fungi, Bacteria, Archaea, Protista y otras formas de vida."
 	},
 	"url": "species.wikimedia.org",
-	"version": "1.0.2",
+	"version": "1.0.4",
 	"logo": "https://i.imgur.com/9f1XxZE.png",
 	"thumbnail": "https://i.imgur.com/5SnUKIH.png",
 	"color": "#f9f9f9",
@@ -23,5 +23,6 @@
 		"wikimedia",
 		"wmf"
 	],
-	"category": "other"
+	"category": "other",
+	"altnames": ["Biquiespecies", "Güiquiespéciis", "Veizgiek Vuzcungj", "VikiNövlər", "Vikinövlər", "Vikirūšys", "Vikispecioj", "Vikiturlar", "Vikitür", "Vikivrste", "Viquiespècies", "Wicirywogaeth", "Wiki Ŭk-cṳ̄ng", "Wikicynn", "Wikidruhy", "Wikiespezieak", "Wikifajok", "Wikilífverur", "Wikispeċi", "Wikitörlär", "Wikivrste", "Βικιείδη", "Викивидови", "Викивиды", "Викиврсте", "Викинамуд", "Викитĕссем", "Віківиди", "Віківиды", "Віківіды", "Уикивидове", "Վիքիցեղեր", "ויקימינים", "ويكي أنواع", "ویکی انواع", "ویکی‌گونه", "विकिप्रजाति", "विकिस्पेसिज", "উইকিপ্রজাতি", "ৱিকিস্পিচিজ", "ଉଇକିସ୍ପିସିସ", "விக்கியினங்கள்", "వికీస్పీసిస్", "ವಿಕಿ ಸ್ಪೀಷೀಸ್", "വിക്കിസ്പീഷിസ്", "วิกิสปีชีส์", "ウィキスピーシーズ", "維基物種", "维基物种", "위키생물종"]
 }

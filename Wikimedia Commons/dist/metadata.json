@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -7,7 +7,7 @@
 	"service": "Wikimedia Commons",
 	"description": {
 		"en": "Wikimedia Commons is the world’s largest free-to-use library of illustrations, photos, drawings, videos, and music.",
-		"ar": "ويكيميديا كومنز هي أكبر مكتبة مجانية في العالم من الرسوم التوضيحية والصور والرسومات والفيديو والموسيقى.",
+		"ar_SA": "ويكيميديا كومنز هي أكبر مكتبة مجانية في العالم من الرسوم التوضيحية والصور والرسومات والفيديو والموسيقى.",
 		"zh_CN": "維基共享資源是世界上最大的免費圖庫，照片，圖畫，視頻和音樂庫。",
 		"fr": "Wikimedia Commons est la plus grande médiathèque d’illustrations, photographies, dessins, vidéos et musiques libres de droits.",
 		"es": "Wikimedia Commons, la biblioteca de ilustraciones, fotografías, dibujos videos y música más grande del mundo."
@@ -16,7 +16,7 @@
 		"commons.wikimedia.org",
 		"test-commons.wikimedia.org"
 	],
-	"version": "1.0.2",
+	"version": "1.0.5",
 	"logo": "https://i.imgur.com/5Ko07gf.png",
 	"thumbnail": "https://i.imgur.com/SRU3R9d.png",
 	"color": "#f9f9f9",
@@ -31,5 +31,6 @@
 		"wikimedia",
 		"wmf"
 	],
-	"category": "other"
+	"category": "other",
+	"altnames": ["Comin Wicifryngau", "Comin Wicimedia", "Commons", "Cómhaoin Wikimedia", "Veizgiek Gunghyungh", "Vicimedia Communia", "VikiOmbor", "Vikianbar", "Vikikrātuve", "Vikimedia Komunejo", "Vikiombor", "Vikiteka", "Vikitėka", "Wiki Gê̤ṳng-hiōng", "Wikimedijina zbirka", "Wikimidia Commons", "Wikimédia Commons", "Wikkimedija Commons", "Zajednički poslužitelj", "ВикиКъæбиц", "Викиампар", "Викианбор", "Викигъамас", "Викиклат", "Викиларма", "Викимедиа Коммонс", "Викимедиаи Умумӣ", "Викимедијина остава", "Викимилек", "Викисклад", "Викиҗыентык", "ВікіСховішча", "Вікісклад", "Вікісховище", "Вікісховішча", "Общомедия", "Ортаққор", "Остава Викимедије", "Ризница", "Ризница", "Уикиказына", "Уикисурэтылъэ", "Ուիքիպահեստ", "Վիքիպահեստ", "וויקימעדיע קאמאנס", "וויקיקאמאנס", "ויקישיתוף", "انبار ویکی‌مدیا", "ويكيميديا كومنز", "ويكيميديا كومونز", "وڪيميڊيا ڪامنز", "ویکیمیدیا کۆمنز", "ویکیمیڈیا العام", "ویکی‌انبار", "ܘܝܩܝܡܝܕܝܐ ܩܘܡܡܘܢܣ", "विकिमिडिया कमन्स", "विकिमीडिया कमन्स", "विकिमीडिया कॉमन्स", "উইকিমিডিয়া কমন্স", "ৱিকিমিডিয়া কমন্স", "ਵਿਕੀਮੀਡੀਆ ਕਾਮਨਜ਼", "વિકિમીડિયા કૉમન્સ", "ଉଇକିକମନ୍ସ", "ଉଇକିମିଡ଼ିଆ କମନ୍ସ", "விக்கிமீடியா பொதுவகம்", "వికీమీడియా కామన్స్", "ವಿಕಿಮೀಡಿಯ ಕಾಮನ್ಸ್", "വിക്കിമീഡിയ കോമൺസ്", "วิกิมีเดียคอมมอนส์", "ვიკიოწკარუე", "ვიკისაწყობი", "ᱣᱤᱠᱤᱢᱤᱰᱤᱭᱟ ᱠᱚᱢᱚᱱᱥ", "ウィキメディア・コモンズ", "維基共享", "維基共享資源", "維基同享", "维基共享", "维基共享资源", "위키미디어 공용"]
 }

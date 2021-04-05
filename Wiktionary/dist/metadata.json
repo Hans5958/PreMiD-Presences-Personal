@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -7,13 +7,13 @@
 	"service": "Wiktionary",
 	"description": {
 		"en": "Wiktionary is a free multilingual dictionary. The project aims to describe all words of all languages. It includes language resources such as a thesaurus, rhyme guide, and language statistics.",
-		"ar": "ويكاموس هو قاموس متعدد اللغات مجاني. يهدف المشروع إلى وصف جميع كلمات كل اللغات. ويشمل موارد اللغة مثل المكنز ، دليل قافية ، وإحصاءات اللغة.",
+		"ar_SA": "ويكاموس هو قاموس متعدد اللغات مجاني. يهدف المشروع إلى وصف جميع كلمات كل اللغات. ويشمل موارد اللغة مثل المكنز ، دليل قافية ، وإحصاءات اللغة.",
 		"zh_CN": "維基詞典是一本免費的多語言詞典。 該項目旨在描述所有語言的所有單詞。 它包括語言資源，如詞庫，押韻指南和語言統計。",
 		"fr": "Le Wiktionnaire est un dictionnaire multilingue libre. Le projet cherche à décrire tous les mots de toutes les langues. Il comprend des ressources linguistiques telles qu’un dictionnaire de synonymes, un dictionnaire des rimes et des statistiques langagières.",
 		"es": "Wikcionario es el diccionario multilingüe libre. El proyecto busca describir todas las palabras de todos los idiomas. Incluye recursos del idioma como tesauros, guía de rimas y estadísticas del idioma."
 	},
 	"url": "wiktionary.org",
-	"version": "1.0.2",
+	"version": "1.0.5",
 	"logo": "https://i.imgur.com/veGwn6G.png",
 	"thumbnail": "https://i.imgur.com/dqjnnV8.png",
 	"color": "#f9f9f9",
@@ -27,5 +27,6 @@
 		"wmf"
 	],
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])+wiktionary[.]org[/]"
+	"regExp": "([a-z0-9-]+[.])+wiktionary[.]org[/]",
+	"altnames": ["Biquizionario", "Galizionario", "Słowôrz Wikipediji", "Veizgiek Swzdenj", "Viccionari", "Victionarium", "Vicífhoclóir", "VikiLüğət", "Vikilugʻat", "Vikilüğət", "Vikisõnastik", "Vikisözlük", "Vikivortaro", "Vikivārdnīca", "Vikižodynas", "Viksiyonaryo", "Wečnik", "Wiccionaire", "Wiciadur", "Wikbaatukaay", "Wikcionario", "Wikcionariu", "Wikcionário", "Wikeriadur", "Wiki-Tlhanodi", "WikiWoordeboek", "WikiWoordenboek", "Wikibolana", "Wikiccionari", "Wikikamus", "Wikiorðabókin", "Wikirječnik", "Wikisanakirja", "Wikisionario", "Wikislovar", "Wikislovník", "Wikiszótár", "Wikisüzleq", "Wikisłownik", "Wikiwordbōc", "Wikizionario", "Wikiztegia", "Wikizziunariu", "Wikizzjunarju", "Wikiñe'ẽndy", "Wiktionair", "Wiktionar", "Wiktionario", "Wiktionary", "Wiktionnaire", "Wikționar", "Wječnik", "Wîkîferheng", "Wïkïtënëbûku", "Βικιλεξικό", "Викидошам", "Викилуғат", "Викиречник", "Викисăмахсар", "Викисловарь", "Викисүзлек", "Вікісловник", "Вікіслоўнік", "Уикиречник", "Ուիքիբառարան", "Վիքիբառարան", "וויקיווערטערבוך", "ויקימילון", "ويكاموس", "ويكشينارى", "ويکيسيند", "وڪي لغت", "ویکی لغت", "ویکی‌سؤزجوک", "ویکی‌سؤزلوک", "ویکی‌واژه", "پنجابی وکشنری", "विकस्नरी", "विक्शनरी", "विक्षनरी", "विक्सनरी", "উইকিঅভিধান", "ৱিক্স্যনেৰী", "ਵਿਕਸ਼ਨਰੀ", "વિકિકોશ", "વિક્શનરી", "ଉଇକି ଅଭିଧାନ", "ଉଇକିଅଭିଧାନ", "விக்சனரி", "విక్షనరీ", "ವಿಕ್ಷನರಿ", "വിക്ഷണറി", "වික්‍ෂනරි", "วิกิพจนานุกรม", "ဝစ်ရှင်နရီ", "ဝိၵ်ႇသျိၼ်ႇၼရီႇ", "ვიქსიკონი", "វិគីនានុក្រម", "ウィクショナリー", "維基大典:維基爾雅", "維基爾雅", "維基詞典", "維基辭典", "维基词典", "위키낱말사전"]
 }

@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -7,13 +7,13 @@
 	"service": "Wikibooks",
 	"description": {
 		"en": "Wikibooks aims to build a collection of free e-book resources including textbooks, annotated texts, instructional guides, and manuals.",
-		"ar": "تهدف ويكي الكتب إلى إنشاء مجموعة من موارد الكتب الإلكترونية المجانية بما في ذلك الكتب النصية ، والنصوص المشروحة ، والأدلة الإرشادية ، والأدلة.",
+		"ar_SA": "تهدف ويكي الكتب إلى إنشاء مجموعة من موارد الكتب الإلكترونية المجانية بما في ذلك الكتب النصية ، والنصوص المشروحة ، والأدلة الإرشادية ، والأدلة.",
 		"zh_CN": "維基教科書旨在建立一系列免費電子書資源，包括教科書，註釋文本，教學指南和手冊。",
 		"fr": "Wikilivres vise à constituer une bibliothèque de ressources livresques électroniques, composée de manuels scolaires et techniques ainsi que de textes annotés et de guides.",
 		"es": "Wikilibros busca construir una colección de recursos libres en e-book incluyendo libros de texto, versiones comentadas, guías instructivas y manuales."
 	},
 	"url": "wikibooks.org",
-	"version": "1.0.2",
+	"version": "1.0.4",
 	"logo": "https://i.imgur.com/Y6Z6NKa.png",
 	"thumbnail": "https://i.imgur.com/zhJBMJe.png",
 	"color": "#f9f9f9",
@@ -29,5 +29,6 @@
 		"wmf"
 	],
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])+wikibooks[.]org[/]"
+	"regExp": "([a-z0-9-]+[.])+wikibooks[.]org[/]",
+	"altnames": ["Galilibros", "Veizgiek Gobwnj", "Vicilibri", "VikiKitab", "Vikikitab", "Vikikitap", "Vikikitob", "Vikiknygos", "Vikilibroj", "Vikiõpikud", "Viquillibres", "Wicilyfrau", "Wiki Kuó-buōng", "Wikibeuk", "Wikibeuks", "Wikibuku", "Wikibækur", "Wikibøker", "Wikibēc", "Wikikirjasto", "Wikikitap", "Wikiknihy", "Wikiknjige", "Wikikönyvek", "Wikikıtabi", "Wikilibros", "Wikilivros", "Wikillibros", "Wikimanuale", "Wikitbiet", "Wikotba", "Wîkîpirtûk", "Βικιβιβλία", "Викикитап", "Викикитоб", "Викикниги", "Викикњиге", "Викиучебник", "Викки-кĕнеке", "Вікікнігі", "Вікіпадручнік", "Вікіпідручник", "Уикикниги", "Վիքիգրքեր", "וויקיביכער", "ויקיספר", "ويكي الكتب", "وکی کتب", "ویکی کتب", "ویکی‌کتاب", "मराठी विकिबुक्स", "विकिपुस्तक", "विकिबुक्स", "উইকিবই", "ৱিকিবুক্‌ছ", "ਵਿਕੀਬੁਕਸ", "ଉଇକିପୋଥି", "விக்கிநூல்கள்", "వికీబుక్స్", "ವಿಕಿಪುಸ್ತಕ", "ವಿಕಿಬುಕ್ಸ್", "വിക്കിബുക്സ്", "วิกิตำรา", "ვიკიწიგნები", "ウィキブックス", "維基教科書", "維基書本", "维基教科书", "위키책"]
 }

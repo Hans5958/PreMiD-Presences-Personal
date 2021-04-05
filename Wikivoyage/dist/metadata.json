@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -7,13 +7,13 @@
 	"service": "Wikivoyage",
 	"description": {
 		"en": "Wikivoyage aims to create the world's largest free, complete and up-to-date worldwide travel guide.",
-		"ar": "يهدف ويكي الرحلات إلى إنشاء أكبر دليل سفر مجاني وكامل وحديث في جميع أنحاء العالم.",
+		"ar_SA": "يهدف ويكي الرحلات إلى إنشاء أكبر دليل سفر مجاني وكامل وحديث في جميع أنحاء العالم.",
 		"zh_CN": "維基導遊旨在創建世界上最大的免費，完整和最新的全球旅行指南。",
 		"fr": "Wikivoyage vise à créer le plus grand guide de voyage libre, complet et à jour pour le monde entier.",
 		"es": "Wikiviajes tiene como fin crear la guía de viajes más grande, completa y actualizada en todo el mundo."
 	},
 	"url": "wikivoyage.org",
-	"version": "1.0.2",
+	"version": "1.0.5",
 	"logo": "https://i.imgur.com/rvZf7UA.png",
 	"thumbnail": "https://i.imgur.com/LnIR7ny.png",
 	"color": "#f9f9f9",
@@ -27,5 +27,6 @@
 		"wmf"
 	],
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])+wikivoyage[.]org[/]"
+	"regExp": "([a-z0-9-]+[.])+wikivoyage[.]org[/]",
+	"altnames": ["Veizgiek Lijyouz", "Vicivia", "Viciviaja", "Vikigezgin", "Vikigid", "Vikikelionės", "Vikisəyahət", "Vikivojaĝo", "Vikivojaĝo‎‎", "Viquiviatges", "Wikibeaj", "Wikibidaiak", "Wikicesty", "Wikimatkat", "Wikipodróże", "Wikipotovanje", "Wikiviajes", "Wikiviatge", "Wikiviaxes", "Wikivoyage", "Wikivoyajo", "Wîkîger", "Βικιταξίδια", "Викигид", "Википатување", "Википутовања", "Википутовање", "Викисәфәр", "Віківандроўка", "Вікімандри", "Уикипътешественик", "Վիքիճամփորդ", "ויקימסע", "ويكي الرحلات", "ويکيسفر", "ویکی سفرنامہ", "ویکی‌سفر", "विकियात्रा", "উইকিভ্রমণ", "ਵਿਕੀਵੌਇਜ", "ਵਿਕੀਸਫ਼ਰ", "વિકિપ્રવાસ", "ଉଇକିଭ୍ରମଣ", "விக்கிபயணம்", "விக்கிப்பயணம்", "ವಿಕಿ ವೋಯೇಜ್", "വിക്കിപര്യടനം", "วิกิท่องเที่ยว", "ვიკივოიაჟი", "វិគីទេសចរណ៍", "ウィキボヤージュ", "維基導遊", "維基遊埠", "维基导游", "위키여행"]
 }

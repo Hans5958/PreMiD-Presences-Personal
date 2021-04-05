@@ -68,7 +68,7 @@ const getURLParam = (urlParam: string): string => {
 		const details: {[index: string]: string} = {
 			"-2": "Viewing a media",
 			"-1": "Viewing a special page",
-			0: "Reading a work",
+			0: "Reading a text",
 			1: "Viewing a talk page",
 			2: "Viewing a user page",
 			3: "Viewing a user talk page",

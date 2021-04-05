@@ -1,5 +1,5 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.1",
+	"$schema": "https://schemas.premid.app/metadata/1.3",
 	"author": {
 		"name": "Hans5958",
 		"id": "279855717203050496"
@@ -7,13 +7,13 @@
 	"service": "Wikiquote",
 	"description": {
 		"en": "Wikiquote is a online collection of sourced quotations from notable people and creative works in over 75 languages. It also includes proverbs, mnemonics and slogans.",
-		"ar": "ويكي الاقتباس هي عبارة عن مجموعة من الاقتباسات من الأشخاص البارزين والأعمال الإبداعية في أكثر من 75 لغة. ويشمل أيضا الأمثال ، والمأثورات والشعارات.",
+		"ar_SA": "ويكي الاقتباس هي عبارة عن مجموعة من الاقتباسات من الأشخاص البارزين والأعمال الإبداعية في أكثر من 75 لغة. ويشمل أيضا الأمثال ، والمأثورات والشعارات.",
 		"zh_CN": "維基語錄是一個收集超過75種語言來自著名人物和創意作品的引文庫。 它包括諺語，助記符號和口號。",
 		"fr": "Wikiquote est un recueil en ligne de citations sourcées de personnes et œuvres célèbres en plus de 75 langues. Il comporte également des proverbes, des formules mnémotechniques et des slogans.",
 		"es": "Wikiquote es una colección online de citas referenciadas de personas destacadas y trabajos creativos en más de 75 idiomas. Incluye proverbios, mnemotecnias y lemas."
 	},
 	"url": "wikiquote.org",
-	"version": "1.0.2",
+	"version": "1.0.5",
 	"logo": "https://i.imgur.com/WCkNcSb.png",
 	"thumbnail": "https://i.imgur.com/MZrut8J.png",
 	"color": "#f9f9f9",
@@ -26,5 +26,6 @@
 		"wmf"
 	],
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])+wikiquote[.]org[/]"
+	"regExp": "([a-z0-9-]+[.])+wikiquote[.]org[/]",
+	"altnames": ["Veizgiek Yijluz", "Vicicitatio", "VikiSitat", "Vikicitaro", "Vikicitatos", "Vikiiqtibos", "Vikisitat", "Vikisöz", "Vikitsitaadid", "Viquidites", "Wiki Ngṳ̄-luŏh", "Wikiarroud", "Wikicitat", "Wikicitate", "Wikicites", "Wikicitáty", "Wikicwide", "Wikicytaty", "Wikidézet", "Wikiesanak", "Wikifrasar", "Wikikwota", "Wikinavedek", "Wikisitaatit", "Wikivate", "Wikivitnun", "Wîkîgotin", "Βικιφθέγματα", "Биики Домох", "Викигуфтовард", "Викииқтибос", "Викикаларăш", "Викицитат", "Викицитатник", "Викиөзек", "Викиөҙөмтә", "Вікіцитати", "Вікіцытатнік", "Уикицитат", "Վիքիքաղվածք", "וויקיציטאט", "ויקיציטוט", "ويكي الاقتباس", "ويکيوراشه", "وکی اقتباسات", "ویکی اقتباس", "ویکیوتە", "ویکی‌گفتاورد", "विकिकथन", "विकिकोट", "विकिसूक्तयः", "विकिसूक्ति", "विकिसूक्तिः", "উইকিউক্তি", "ৱিকিকোৱ'ট", "ଉଇକିକଥା", "விக்கிமேற்கோள்", "వికీకోట్", "వికీవ్యాఖ్య", "ವಿಕಿಕೋಟ್", "വിക്കിക്വോട്ട്", "วิกิคำคม", "ვიკიციტატა", "ខ្មែរ", "ウィキクォート", "維基語錄", "维基语录", "위키인용집"]
 }
