@@ -72,7 +72,6 @@ const getURLParam = (urlParam: string): string => {
 			else presenceData.state = document.title.split(" - ")[0]
 		}
 
-
 	} else if (currentURL.hostname === "fandomauth.gamepedia.com") {
 
 		if (currentPath[0] === "signin") {
@@ -81,8 +80,8 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.details = "Registering an account"
 		}
 
-	} else {
-		
+	} else if (currentURL.hostname.endsWith("fandom.com") && currentPath.includes("wiki")) {
+
 		/*
 
 		Chapter 2
@@ -90,12 +89,18 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 
+		if (!document.querySelector("#netbar")) { // Do not run on Fandom wikis.
+			presenceData = null
+			return
+		}
+
 		let title: string, sitename: string
 		const actionResult = (): string => getURLParam("action") || getURLParam("veaction")
 
 		const titleFromURL = (): string => {
-			const raw = currentPath[0] === "index.php" ? getURLParam("title") : currentPath.join("/")
-			return decodeURI(raw.replace(/_/g, " "))
+			const raw: string = currentPath[0] === "index.php" ? getURLParam("title") : currentPath[0] === "wiki" ? currentPath.slice(1).join("/") : currentPath.slice(2).join("/")
+			//let lang: string = currentPath[0]
+			return raw.replace(/_/g, " ")		
 		}
 
 		try {
@@ -109,7 +114,9 @@ const getURLParam = (urlParam: string): string => {
 		} catch (e) {
 			const mainPageHref = ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href
 			const mainPageURL = new URL(mainPageHref)
-			sitename = decodeURI(mainPageURL.pathname.replace(/^\/|\/$/g, "").replace(/_/g, " "))
+			const mainPagePath = mainPageURL.pathname.replace(/^\/|\/$/g, "").split("/")
+			const mainPageRaw = decodeURI(mainPagePath[0] === "index.php" ? getURLParam("title") : mainPagePath[0] === "wiki" ? mainPagePath.slice(1).join("/") : mainPagePath.slice(2).join("/"))
+			sitename = mainPageRaw.replace(/_/g, " ")
 		}
 
 		/**
@@ -157,9 +164,6 @@ const getURLParam = (urlParam: string): string => {
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a wiki page"
 		}
 
-		presence.info(title)
-		presence.info(titleFromURL())
-
 		if (((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href) {
 			presenceData.details = "On the home page"
 		} else if (document.querySelector(".unified-search__form")) {
@@ -204,13 +208,13 @@ const getURLParam = (urlParam: string): string => {
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }

@@ -112,8 +112,14 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 
+		if (!document.querySelector("#globalNavigation")) { // Do not run on Gamepedia wikis.
+			presenceData = null
+			return
+		}
+
 		let title: string, sitename: string
 		const actionResult = (): string => getURLParam("action") || getURLParam("veaction")
+
 		const titleFromURL = (): string => {
 			const raw: string = currentPath[0] === "index.php" ? getURLParam("title") : currentPath[0] === "wiki" ? currentPath.slice(1).join("/") : currentPath.slice(2).join("/")
 			//let lang: string = currentPath[0]
@@ -121,7 +127,7 @@ const getURLParam = (urlParam: string): string => {
 		}
 
 		try {
-			title = document.querySelector(".page-header__title").innerHTML
+			title = document.querySelector("h1").textContent
 		} catch (e) {
 			title = titleFromURL()
 		}
@@ -235,7 +241,6 @@ const getURLParam = (urlParam: string): string => {
 			}
 		}
 
-		presenceData.startTimestamp = browsingStamp
 		if (presenceData.state) presenceData.state += " | " + sitename
 		else presenceData.state = sitename
 
@@ -283,13 +288,13 @@ const getURLParam = (urlParam: string): string => {
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
