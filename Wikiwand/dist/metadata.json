@@ -6,7 +6,7 @@
 	},
 	"service": "Wikiwand",
 	"url": "www.wikiwand.com",
-	"version": "1.0.2",
+	"version": "1.0.4",
 	"logo": "https://i.imgur.com/8QkIyOM.png",
 	"thumbnail": "https://i.imgur.com/vLXp14J.jpg",
 	"color": "#F7F6F5",
@@ -19,5 +19,6 @@
 	"description": {
 		"en": "Wikiwand is a modern reader for web and mobile, that optimizes Wikipedia's amazing content for a significantly improved reading experience."
 	},
-	"category": "other"
+	"category": "other",
+	"altnames": ["ويكي واند", "विकिवैंड", "ৱিকিৱাণ্ড", "వికీవాండ్", "വിക്കിവാൻഡ്", "위키원드"]
 }
