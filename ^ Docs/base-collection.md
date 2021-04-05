@@ -45,14 +45,14 @@ All code related to the presence are written here.
 })();
 
 if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		resetData()
 		updateCallback.function()
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
 		presence.setActivity(presenceData)
 	})
 } else {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
 		presence.setActivity(presenceData)
 	})
@@ -162,13 +162,13 @@ function resetData(): void {
 })();
 
 if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		resetData();
 		updateCallback.function();
 		presence.setActivity(presenceData);
 	});
 } else {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData);
 	});
 }
@@ -272,13 +272,13 @@ const resetData = () => void {
 })()
 
 if (updateCallback.present) {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		resetData()
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }

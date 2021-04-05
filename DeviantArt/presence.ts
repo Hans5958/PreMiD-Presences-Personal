@@ -582,13 +582,13 @@ prepare = async (): Promise<void> => {
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	presence.on("UpdateData", async () => {
+	if (presenceData) presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
