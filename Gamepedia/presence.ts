@@ -1,3 +1,13 @@
+if (!(
+	document.location.hostname.endsWith("fandom.com") && 
+	document.location.pathname.includes("/wiki/") && 
+	!document.querySelector("#netbar")
+	// Only run on Gamepedia wikis.
+) && 
+	!(document.location.hostname === "www.fandom.com")
+	// Do not run on www.fandom.com.
+) ((): void => { 
+
 const presence = new Presence({
 	clientId: "652880245371699222"
 })
@@ -46,6 +56,8 @@ const getURLParam = (urlParam: string): string => {
 
 ((): void => {
 
+	presence.info("Running...")
+
 	if (currentURL.hostname === "www.gamepedia.com") {
 
 		/*
@@ -80,7 +92,7 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.details = "Registering an account"
 		}
 
-	} else if (currentURL.hostname.endsWith("fandom.com") && currentPath.includes("wiki")) {
+	} else {
 
 		/*
 
@@ -89,18 +101,13 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 
-		if (!document.querySelector("#netbar")) { // Do not run on Fandom wikis.
-			presenceData = null
-			return
-		}
-
 		let title: string, sitename: string
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction")
+		const actionResult = (): string => getURLParam("action") || getURLParam("veaction"), lang = currentPath[0] === "wiki" ? "en" : currentPath[0]
 
 		const titleFromURL = (): string => {
 			const raw: string = currentPath[0] === "index.php" ? getURLParam("title") : currentPath[0] === "wiki" ? currentPath.slice(1).join("/") : currentPath.slice(2).join("/")
 			//let lang: string = currentPath[0]
-			return raw.replace(/_/g, " ")		
+			return decodeURIComponent(raw.replace(/_/g, " "))		
 		}
 
 		try {
@@ -115,8 +122,8 @@ const getURLParam = (urlParam: string): string => {
 			const mainPageHref = ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href
 			const mainPageURL = new URL(mainPageHref)
 			const mainPagePath = mainPageURL.pathname.replace(/^\/|\/$/g, "").split("/")
-			const mainPageRaw = decodeURI(mainPagePath[0] === "index.php" ? getURLParam("title") : mainPagePath[0] === "wiki" ? mainPagePath.slice(1).join("/") : mainPagePath.slice(2).join("/"))
-			sitename = mainPageRaw.replace(/_/g, " ")
+			const mainPageRaw = mainPagePath[0] === "index.php" ? getURLParam("title") : mainPagePath[0] === "wiki" ? mainPagePath.slice(1).join("/") : mainPagePath.slice(2).join("/")
+			sitename = decodeURIComponent(mainPageRaw.replace(/_/g, " "))
 		}
 
 		/**
@@ -202,19 +209,27 @@ const getURLParam = (urlParam: string): string => {
 
 		if (presenceData.state) presenceData.state += " | " + sitename
 		else presenceData.state = sitename
+
+		if (lang !== "en") {
+			if (presenceData.state) presenceData.state += ` (${lang})`
+			else presenceData.details += ` (${lang})`
+		}
+
 	}
 	
 })()
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
+
+})()

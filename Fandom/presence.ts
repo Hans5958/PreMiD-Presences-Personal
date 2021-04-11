@@ -1,3 +1,9 @@
+if (!(
+	document.location.pathname.includes("/wiki/") && 
+	!document.querySelector("#globalNavigation")
+	// Only run on Fandom wikis.
+)) ((): void => {
+
 const presence = new Presence({
 	clientId: "644400074008297512"
 })
@@ -45,6 +51,8 @@ const getURLParam = (urlParam: string): string => {
 }
 
 ((): void => {
+
+	presence.info("Running...")
 
 	if (currentURL.host === "www.fandom.com") {
 
@@ -112,18 +120,13 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 
-		if (!document.querySelector("#globalNavigation")) { // Do not run on Gamepedia wikis.
-			presenceData = null
-			return
-		}
-
 		let title: string, sitename: string
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction")
+		const actionResult = (): string => getURLParam("action") || getURLParam("veaction"), lang = currentPath[0] === "wiki" ? "en" : currentPath[0]
 
 		const titleFromURL = (): string => {
 			const raw: string = currentPath[0] === "index.php" ? getURLParam("title") : currentPath[0] === "wiki" ? currentPath.slice(1).join("/") : currentPath.slice(2).join("/")
 			//let lang: string = currentPath[0]
-			return raw.replace(/_/g, " ")		
+			return decodeURIComponent(raw.replace(/_/g, " "))		
 		}
 
 		try {
@@ -244,6 +247,11 @@ const getURLParam = (urlParam: string): string => {
 		if (presenceData.state) presenceData.state += " | " + sitename
 		else presenceData.state = sitename
 
+		if (lang !== "en") {
+			if (presenceData.state) presenceData.state += ` (${lang})`
+			else presenceData.details += ` (${lang})`
+		}
+
 	} else if (currentPath[0] === "f") {
 
 		/*
@@ -288,13 +296,15 @@ const getURLParam = (urlParam: string): string => {
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
+
+})()
