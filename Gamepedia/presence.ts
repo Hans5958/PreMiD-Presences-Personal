@@ -4,7 +4,7 @@ if (!(
 	!document.querySelector("#netbar")
 	// Only run on Gamepedia wikis.
 ) && 
-	!(document.location.hostname === "www.fandom.com")
+	document.location.hostname !== "www.fandom.com"
 	// Do not run on www.fandom.com.
 ) ((): void => { 
 
