@@ -77,20 +77,18 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.state = document.querySelector(".topic-header__title").firstElementChild.innerHTML
 		} else if (currentPath[0] === "video") {
 			presenceData.details = "Watching a video"
+			delete presenceData.startTimestamp
 			updateCallback.function = (): void => {
 				presenceData.state = document.querySelector(".video-page-featured-player__title").textContent
 				try {
 					if (document.querySelector(".jw-icon-playback").getAttribute("aria-label") === "Pause") {
 						const video: HTMLVideoElement = document.querySelector(".jw-video")
 						const timestamps = presence.getTimestampsfromMedia(video)
-						presenceData.startTimestamp = timestamps[0]
 						presenceData.endTimestamp = timestamps[1]
 					} else {
-						delete presenceData.startTimestamp
 						delete presenceData.endTimestamp
 					}
 				} catch (e) {
-					delete presenceData.startTimestamp
 					delete presenceData.endTimestamp
 				}
 			}
