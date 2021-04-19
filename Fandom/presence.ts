@@ -8,10 +8,10 @@ const presence = new Presence({
 	clientId: "644400074008297512"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: PresenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
