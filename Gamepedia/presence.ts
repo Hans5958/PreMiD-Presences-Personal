@@ -1,12 +1,10 @@
-if (!(
-	document.location.hostname.endsWith("fandom.com") && 
-	document.location.pathname.includes("/wiki/") && 
-	!document.querySelector("#netbar")
-	// Only run on Gamepedia wikis.
-) && 
-	document.location.hostname !== "www.fandom.com"
-	// Do not run on www.fandom.com.
-) ((): void => { 
+if (document.location.pathname.includes("/wiki/") ? (
+	document.querySelector(".skin-hydra") ||
+	(
+		document.querySelector(".skin-fandomdesktop") ||
+		document.querySelector(".skin-fandommobile")
+	) && document.querySelector(".is-gamepedia")
+) : true) ((): void => { 
 
 const presence = new Presence({
 	clientId: "652880245371699222"
@@ -111,7 +109,7 @@ const getURLParam = (urlParam: string): string => {
 		}
 
 		try {
-			title = document.querySelector("h1").textContent
+			title = document.querySelector("h1").textContent.trim()
 		} catch (e) {
 			title = titleFromURL()
 		}
@@ -119,11 +117,22 @@ const getURLParam = (urlParam: string): string => {
 		try {
 			sitename = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement).content
 		} catch (e) {
-			const mainPageHref = ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href
-			const mainPageURL = new URL(mainPageHref)
-			const mainPagePath = mainPageURL.pathname.replace(/^\/|\/$/g, "").split("/")
-			const mainPageRaw = mainPagePath[0] === "index.php" ? getURLParam("title") : mainPagePath[0] === "wiki" ? mainPagePath.slice(1).join("/") : mainPagePath.slice(2).join("/")
-			sitename = decodeURIComponent(mainPageRaw.replace(/_/g, " "))
+			if (
+				document.querySelector(".skin-fandomdesktop") ||
+				document.querySelector(".skin-fandommobile")			
+			) {
+				sitename = (
+					document.querySelector(".fandom-community-header__community-name") ||
+					document.querySelector(".wds-community-bar__sitename")
+				).textContent.trim()	
+			}
+			else {
+				const mainPageHref = ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href
+				const mainPageURL = new URL(mainPageHref)
+				const mainPagePath = mainPageURL.pathname.replace(/^\/|\/$/g, "").split("/")
+				const mainPageRaw = mainPagePath[0] === "index.php" ? getURLParam("title") : mainPagePath[0] === "wiki" ? mainPagePath.slice(1).join("/") : mainPagePath.slice(2).join("/")
+				sitename = decodeURIComponent(mainPageRaw.replace(/_/g, " "))
+			}
 		}
 
 		/**
@@ -150,17 +159,26 @@ const getURLParam = (urlParam: string): string => {
 				13: "Viewing a help talk page",
 				14: "Viewing a category",
 				15: "Viewing a category talk page",
+				100: "Viewing a portal",
+				101: "Viewing a portal talk page",
 				110: "Viewing a forum page",
 				111: "Viewing a forum talk page",
-				202: "Viewing a user profile", // handled again by function below
-				274: "Viewing a widget page",
-				275: "Viewing a widget talk page",
 				420: "Viewing a GeoJson page",
 				421: "Viewing a GeoJson talk page",
+				500: "Viewing a user blog", // handled again by function below
+				501: "Viewing a user blog comment", // depercated, redirected
+				502: "Viewing a blog",
+				503: "Viewing a blog talk page",
 				710: "Viewing a media's subtitles",
 				711: "Viewing a media's subtitles talk page",
 				828: "Viewing a module",
 				829: "Viewing a module talk page",
+				1200: "Viewing a message wall",
+				1201: "Viewing a thread",
+				1202: "Viewing a message wall greeting",
+				2000: "Viewing a forum board", // depercated, redirected
+				2001: "Viewing a forum board thread", // depercated, redirected
+				2002: "Viewing a forum topic", // depercated, redirected
 				// Wikis like Minecraft Wiki have custom namespaces above 9999 for other topics. 
 				// They work like normal main pages. 
 				10000: "Reading an article",
@@ -171,7 +189,7 @@ const getURLParam = (urlParam: string): string => {
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a wiki page"
 		}
 
-		if (((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href) {
+		if (((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href || title === "Home") {
 			presenceData.details = "On the home page"
 		} else if (document.querySelector(".unified-search__form")) {
 			presenceData.details = "Searching for a page"
@@ -188,6 +206,14 @@ const getURLParam = (urlParam: string): string => {
 		} else if (namespaceDetails() === "Viewing a user profile") {
 			presenceData.details = namespaceDetails()
 			presenceData.state = document.querySelector(".mw-headline").textContent
+		} else if (namespaceDetails() === "Viewing a user blog") {
+			if (title) {
+				presenceData.details = "Reading a user blog post"
+				presenceData.state = title + " by " + document.querySelector(".page-header__blog-post-details").firstElementChild.textContent
+			} else {
+				presenceData.details = namespaceDetails()
+				presenceData.state = titleFromURL()
+			}
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
 			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
 			updateCallback.function = (): void => {
