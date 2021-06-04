@@ -1,3 +1,9 @@
+if [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; then
+	while [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; do
+		cd ..
+	done
+fi
+
 letter_folder=${1::1}
 letter_folder=${letter_folder^^}
 escaped=${1/ /%20}

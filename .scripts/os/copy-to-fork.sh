@@ -1,3 +1,9 @@
+if [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; then
+	while [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; do
+		cd ..
+	done
+fi
+
 letter_folder=${1::1}
 letter_folder=${letter_folder^^}
 
@@ -13,15 +19,17 @@ cp -r "$1/dist/metadata.json" "../PreMiD-Presences/websites/$letter_folder/$1/di
 cd "../PreMiD-Presences/websites/$letter_folder/$1"
 
 echo -e "Updating dependencies..."
-echo -e "npm install"
-
-echo -e "Fixing errors/warnings automatically using ESLint..."
-cmd.exe /c "eslint presence.ts --fix"
+# cmd.exe /c "npm install"
 
 echo -e "Tidying up files using Prettier..."
 cmd.exe /c "prettier --write tsconfig.json"
 cmd.exe /c "prettier --write dist/metadata.json"
 cmd.exe /c "prettier --write presence.ts"
+
+echo -e "Fixing errors/warnings automatically using ESLint..."
+cmd.exe /c "eslint presence.ts --fix"
+cmd.exe /c "prettier --write presence.ts"
+cmd.exe /c "eslint presence.ts"
 
 echo -e "Compiling \e[100mpresence.ts\e[0m for testing purposes..."
 cmd.exe /c "tsc --build tsconfig.json"

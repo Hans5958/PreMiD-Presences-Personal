@@ -1,3 +1,9 @@
+if [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; then
+	while [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; do
+		cd ..
+	done
+fi
+
 letter_folder=${1::1}
 letter_folder=${letter_folder^^}
 echo "Preparing repository branch..."
@@ -7,7 +13,7 @@ ver=$(sed -e 's/^"//' -e 's/"$//' <<< $(jq .version "$1/dist/metadata.json"))
 cd ../PreMiD-Presences
 cd ../PreMiD-Presences-Personal
 echo "Copying..."
-bash copy-to-fork.sh "$1"
+bash .scripts/os/copy-to-fork.sh "$1"
 cd ../PreMiD-Presences
 echo "Creating commit..."
 git add "websites/$letter_folder/$1/*"

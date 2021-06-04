@@ -1,3 +1,9 @@
+if [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; then
+	while [[ $(basename $(pwd)) != "PreMiD-Presences-Personal" ]]; do
+		cd ..
+	done
+fi
+
 echo "Preparing repository branch..."
 git config --global user.email "email5958.1@gmail.com"
 git config --global user.name "Hans5958"
@@ -9,4 +15,4 @@ git checkout master
 git branch -D "$branch"
 git checkout -b "$branch"
 cd ../PreMiD-Presences-Personal
-bash commit-copy-to-fork.sh "$1"
+bash .scripts/os/commit-copy-to-fork.sh "$1"
