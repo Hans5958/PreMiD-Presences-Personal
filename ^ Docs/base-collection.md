@@ -45,14 +45,14 @@ All code related to the presence are written here.
 })();
 
 if (updateCallback.present) {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData()
 		updateCallback.function()
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
 		presence.setActivity(presenceData)
 	})
@@ -162,13 +162,13 @@ function resetData(): void {
 })();
 
 if (updateCallback.present) {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData();
 		updateCallback.function();
 		presence.setActivity(presenceData);
 	});
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData);
 	});
 }
@@ -225,13 +225,13 @@ function getURLParam(urlParam: string): string {
 
 ```ts
 const presence = new Presence({
-	clientId: "715602476249776239"
+	clientId: "662312595239469097"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.slice(1).split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: presenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
@@ -252,14 +252,14 @@ const updateCallback = {
 /**
  * Initialize/reset presenceData.
  */
-const resetData = () => void {
+const resetData = (defaultData: PresenceData = {
+	details: "Viewing an unsupported page",
+	largeImageKey: "lg",
+	startTimestamp: browsingStamp
+}): void => {
 	currentURL = new URL(document.location.href)
-	currentPath = currentURL.pathname.slice(1).split("/")
-	presenceData = {
-		details: "Viewing an unsupported page",
-		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
+	presenceData = {...defaultData}
 }
 
 ((): void => {
@@ -272,13 +272,14 @@ const resetData = () => void {
 })()
 
 if (updateCallback.present) {
-	if (presenceData) presence.on("UpdateData", async () => {
-		resetData()
+	const defaultData = {...presenceData}
+	presence.on("UpdateData", async () => {
+		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }

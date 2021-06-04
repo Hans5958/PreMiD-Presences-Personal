@@ -37,14 +37,14 @@ All code related to the presence are written here.
 })();
 
 if (updateCallback.present) {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData()
 		updateCallback.function()
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		// console.log(`Presence output:\n\n${presenceData.details}\n${presenceData.state}`)
 		presence.setActivity(presenceData)
 	})
