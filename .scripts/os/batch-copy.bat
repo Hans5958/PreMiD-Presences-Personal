@@ -20,7 +20,7 @@ exit /B
 
 IF NOT %1==".vscode" IF NOT %1=="@types" IF NOT %1=="^^ Docs" IF NOT %1=="# Assets" IF NOT %1=="^^ Base" IF NOT %1=="^^ Base (ESLint safe)" IF NOT %1=="node_modules" (
     echo Copying %1...
-    commit-copy-to-fork.sh %1
+    copy-to-fork.sh %1
 )
 
 exit /B
