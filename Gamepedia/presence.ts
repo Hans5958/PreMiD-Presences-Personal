@@ -1,9 +1,9 @@
 if (document.location.pathname.includes("/wiki/") ? (
 	document.querySelector(".skin-hydra") ||
-	(
+	((
 		document.querySelector(".skin-fandomdesktop") ||
 		document.querySelector(".skin-fandommobile")
-	) && document.querySelector(".is-gamepedia")
+	) && document.querySelector(".is-gamepedia"))
 ) : true) ((): void => { 
 
 const presence = new Presence({
@@ -79,7 +79,7 @@ const getURLParam = (urlParam: string): string => {
 		} else {
 			presenceData.details = "Viewing a page"
 			if (currentPath[0] === "PRO") presenceData.state = "Gamepedia PRO"
-			else presenceData.state = document.title.split(" - ")[0]
+			else [ presenceData.state ] = document.title.split(" - ")
 		}
 
 	} else if (currentURL.hostname === "fandomauth.gamepedia.com") {
@@ -125,8 +125,7 @@ const getURLParam = (urlParam: string): string => {
 					document.querySelector(".fandom-community-header__community-name") ||
 					document.querySelector(".wds-community-bar__sitename")
 				).textContent.trim()	
-			}
-			else {
+			} else {
 				const mainPageHref = ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href
 				const mainPageURL = new URL(mainPageHref)
 				const mainPagePath = mainPageURL.pathname.replace(/^\/|\/$/g, "").split("/")
@@ -209,7 +208,7 @@ const getURLParam = (urlParam: string): string => {
 		} else if (namespaceDetails() === "Viewing a user blog") {
 			if (title) {
 				presenceData.details = "Reading a user blog post"
-				presenceData.state = title + " by " + document.querySelector(".page-header__blog-post-details").firstElementChild.textContent
+				presenceData.state = `${title} by ${document.querySelector(".page-header__blog-post-details").firstElementChild.textContent}`
 			} else {
 				presenceData.details = namespaceDetails()
 				presenceData.state = titleFromURL()
@@ -233,7 +232,7 @@ const getURLParam = (urlParam: string): string => {
 			}
 		}
 
-		if (presenceData.state) presenceData.state += " | " + sitename
+		if (presenceData.state) presenceData.state += ` | ${sitename}`
 		else presenceData.state = sitename
 
 		if (lang !== "en") {

@@ -1,9 +1,9 @@
 if (document.location.pathname.includes("/wiki/") ? (
 	document.querySelector(".skin-oasis") ||
-	(
+	((
 		document.querySelector(".skin-fandomdesktop") ||
 		document.querySelector(".skin-fandommobile")
-	) && !document.querySelector(".is-gamepedia")
+	) && !document.querySelector(".is-gamepedia"))
 ) : true) ((): void => {
 
 const presence = new Presence({
@@ -86,7 +86,7 @@ const getURLParam = (urlParam: string): string => {
 					if (document.querySelector(".jw-icon-playback").getAttribute("aria-label") === "Pause") {
 						const video: HTMLVideoElement = document.querySelector(".jw-video")
 						const timestamps = presence.getTimestampsfromMedia(video)
-						presenceData.endTimestamp = timestamps[1]
+						;[ , presenceData.endTimestamp ] = timestamps
 					} else {
 						delete presenceData.endTimestamp
 					}
@@ -211,7 +211,7 @@ const getURLParam = (urlParam: string): string => {
 		} else if (namespaceDetails() === "Viewing a user blog") {
 			if (title) {
 				presenceData.details = "Reading a user blog post"
-				presenceData.state = title + " by " + document.querySelector(".page-header__blog-post-details").firstElementChild.textContent
+				presenceData.state = `${title} by ${document.querySelector(".page-header__blog-post-details").firstElementChild.textContent}`
 			} else {
 				presenceData.details = namespaceDetails()
 				presenceData.state = titleFromURL()
@@ -235,7 +235,7 @@ const getURLParam = (urlParam: string): string => {
 			}
 		}
 
-		if (presenceData.state) presenceData.state += " | " + sitename
+		if (presenceData.state) presenceData.state += ` | ${sitename}`
 		else presenceData.state = sitename
 
 		if (lang !== "en") {
@@ -277,7 +277,7 @@ const getURLParam = (urlParam: string): string => {
 				presenceData.state = `${document.querySelector(".user-overview__username").textContent} | ${sitename}`
 			}
 
-			if (presenceData.state) presenceData.state += " | " + sitename
+			if (presenceData.state) presenceData.state += ` | ${sitename}`
 			else presenceData.state = sitename	
 		}
 
