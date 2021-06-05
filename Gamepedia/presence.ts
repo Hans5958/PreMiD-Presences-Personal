@@ -188,7 +188,7 @@ const getURLParam = (urlParam: string): string => {
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a wiki page"
 		}
 
-		if (((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href || title === "Home") {
+		if ((document.querySelector(".skin-hydra") && ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href === currentURL.href) || title === "Home") {
 			presenceData.details = "On the home page"
 		} else if (document.querySelector(".unified-search__form")) {
 			presenceData.details = "Searching for a page"
