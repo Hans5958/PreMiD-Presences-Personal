@@ -30,7 +30,7 @@ module.exports = {
 		"prefer-const": "error",
 		"no-multi-spaces": "error",
 		"object-shorthand": "error",
-		"quote-props": ["error", "as-needed"],
+		// "quote-props": ["error", "as-needed"], // doesn't matter since it is auto-fixed by ESLint nonetheless
 		"prefer-destructuring": "warn",
 		"prefer-template": "warn",
 		"space-before-blocks": ["error", "always"],
@@ -40,7 +40,7 @@ module.exports = {
 		"dot-notation": "error",
 		"no-case-declarations": "error",
 		"no-mixed-operators": "error",
-		"brace-style": "error",
+		// "brace-style": "error", // doesn't matter since it is auto-fixed by ESLint nonetheless
 		"template-curly-spacing": "warn",
 		"no-restricted-syntax": [
 			"error",
