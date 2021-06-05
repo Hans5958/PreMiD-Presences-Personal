@@ -2,10 +2,10 @@ const presence = new Presence({
 	clientId: "731069087031230487"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: PresenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
@@ -116,11 +116,11 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		} else if (currentPath[0] === "tracks" || currentPath[0] === "maps") {
 			presenceData.details = document.querySelector(".panelbox-heading h1").textContent.trim()
-			presenceData.state = document.querySelector(".panelbox-stats a[id^='user-']").textContent.trim()
+			presenceData.state = document.querySelector(".panelbox-stats a[data-userid]").textContent.trim()
 
 		} else if (currentPath[0] === "tracksearch2" || currentPath[0] === "mapsearch2" || currentPath[0] === "ts" || currentPath[0] === "ms" ) {
+			presenceData.details = chooseTwo("Searching for a track", "Searching for a map")
 			updateCallback.function = (): void => {
-				presenceData.details = chooseTwo("Searching for a track", "Searching for a map")
 				presenceData.state = getURLParam("trackname") || undefined
 			}
 
@@ -152,17 +152,16 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			} 
 
 		} else if (currentPath[0] === "recordsearch") { // Valid on TrackMania² and Trackmania (2020) only
+			presenceData.details = "Searching for a record"
 			updateCallback.function = (): void => {
-				presenceData.details = "Searching for a record"
 				presenceData.state = getURLParam("name") || undefined
 			}
 
 		} else if (currentPath[0] === "leaderboard") { // Valid on TrackMania² and Trackmania (2020) only
-			const searchSummary = document.querySelector(".windowv2-textcontainer").textContent.slice(17, this.length - 4)
 			presenceData.details = "Viewing the leaderboards"
-			if ((document.querySelector("#DriverName") as HTMLInputElement).value) presenceData.state = `${(document.querySelector("#DriverName") as HTMLInputElement).value}, ${searchSummary}`
-			else presenceData.state = searchSummary[0].toUpperCase() + searchSummary.slice(1)
-
+			updateCallback.function = (): void => {
+				presenceData.state = document.querySelector(".select2-choice").textContent.trim()
+			}
 		} else if (currentPath[0] === "reports") {
 			if (currentPath[1] === "compose") {
 				presenceData.details = "Reporting something"
@@ -249,7 +248,10 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			presenceData.state = document.querySelector(".windowv2-header").textContent.trim()
 			if (presenceData.state === "Statistics") delete presenceData.state
 
-		} 
+		} else if (currentPath[0] === "news" && currentPath[1] === "archive") {
+			presenceData.details = "Viewing the news archive"
+
+		}
 
 	} else if (currentURL.hostname.startsWith("item")) {
 
@@ -275,14 +277,14 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			presenceData.state = `${document.querySelector(".panel-body dd:nth-of-type(2)").textContent.trim()} (set)`
 
 		} else if (currentPath[0] === "itemsearch") {
+			presenceData.details = "Searching for an item"
 			updateCallback.function = (): void => {
-				presenceData.details = "Searching for an item"
 				presenceData.state = getURLParam("itemname") || undefined
 			}
 
 		} else if (currentPath[0] === "setsearch") {
+			presenceData.details = "Searching for a set"
 			updateCallback.function = (): void => {
-				presenceData.details = "Searching for a set"
 				presenceData.state = getURLParam("setname") || undefined
 			}
 
@@ -368,17 +370,17 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			} else if (currentPath[0] === "view") {	
 				presenceData.details = document.querySelector("h2").textContent.trim()
 				presenceData.state = document.querySelector(".box-user h2").textContent.trim()
+				delete presenceData.startTimestamp
 				try {
 					if (document.querySelector(".mejs__playpause-button button").getAttribute("aria-label") === "Pause") {
 						const video: HTMLVideoElement = document.querySelector("video")
 						const timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
-						presenceData.startTimestamp = timestamps[0]
-						presenceData.endTimestamp = timestamps[1]
+						;[ , presenceData.endTimestamp ] = timestamps
 					} else {
-						delete presenceData.startTimestamp
+						delete presenceData.endTimestamp
 					}
 				} catch (e) {
-					delete presenceData.startTimestamp
+					delete presenceData.endTimestamp
 				}
 			} else if (currentPath[0] === "search") {
 				presenceData.details = "Searching for a video"	
@@ -403,19 +405,28 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			}
 		}
 
+	} else if (currentURL.hostname.startsWith("blog")) {
+
+		if (currentPath[0] === "posts" && currentPath[1]) {
+			presenceData.details = "Reading a blog post"
+			presenceData.state = document.querySelector("h1").textContent
+		} else {
+			presenceData.details = "Viewing the blog"
+		}
+
 	}
 
 })()
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }

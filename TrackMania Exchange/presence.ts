@@ -2,10 +2,10 @@ const presence = new Presence({
 	clientId: "721986767322087464"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: PresenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
@@ -105,7 +105,9 @@ const getURLParam = (urlParam: string): string => {
 				"Your Account": "usershow",
 				"Send Private Message": "postupdate",
 				"Edit Post": "postedit",
-				"Report Problem": "reportproblem"
+				"Report Problem": "reportproblem",
+				"News Archive": "newssearch",
+				"Track Replay Info": "trackreplayshow"
 			}
 			try {pageType = locationType[document.querySelector(".NavigatorCell b").textContent]}
 			catch(e) {pageType = null}
@@ -141,7 +143,11 @@ const getURLParam = (urlParam: string): string => {
 
 		/* This part sets the details to be given to PreMID. */
 			
-		if (currentPath[0] === "error") {
+		if (
+			currentPath[0] === "error" || 
+			(document.querySelector(".WindowTitle") && document.querySelector(".WindowTitle").textContent === "Error") || 
+			(document.querySelector("h1") && document.querySelector("h1").textContent === "Server Error")
+		) {
 			presenceData.details = "On a non-existent page"
 
 		} else if (pageType === "home") {	
@@ -178,7 +184,7 @@ const getURLParam = (urlParam: string): string => {
 			presenceData.details = "Submitting replays"
 
 		} else if (pageType === "userrecords") {
-			const searchSummary = document.querySelector(`#${idPrefix}_ShowSummary`).textContent.slice(17, this.length - 4)
+			const searchSummary = document.querySelector(`#${idPrefix}_ShowSummary`).textContent.slice(16, this.length - 4)
 			presenceData.details = "Viewing the leaderboards"
 			if ((document.querySelector(`#${idPrefix}_GetUser`) as HTMLInputElement).value) presenceData.state = `${(document.querySelector(`#${idPrefix}_GetUser`) as HTMLInputElement).value}, ${searchSummary}`
 			else presenceData.state = searchSummary[0].toUpperCase() + searchSummary.slice(1)
@@ -229,6 +235,13 @@ const getURLParam = (urlParam: string): string => {
 		} else if (pageType === "reportproblem") {
 			presenceData.details = "Reporting something"
 
+		} else if (pageType === "newssearch") {
+			presenceData.details = "Viewing the news archive"
+
+		} else if (pageType === "trackreplayshow") {
+			presenceData.details = "Viewing the replay history"
+			presenceData.state = document.querySelector(`#${idPrefix}_Windowrow10 a`).textContent
+
 		}
 	
 	}
@@ -237,14 +250,13 @@ const getURLParam = (urlParam: string): string => {
 
 if (updateCallback.present) {
 	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
 		presence.setActivity(presenceData)
 	})
 } else {
-	if (presenceData) presence.on("UpdateData", async () => {
+	presence.on("UpdateData", async () => {
 		presence.setActivity(presenceData)
 	})
 }
-
