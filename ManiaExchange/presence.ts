@@ -61,12 +61,14 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		if (currentPath[0] === "") {
 			presenceData.details = "On the portal"
-		} else if (currentPath[0] === "tac.html") {
+		} else {
 			presenceData.details = "Viewing a page"
-			presenceData.details = "Terms and Conditions"
-		} else if (currentPath[0] === "privacy.html") {
-			presenceData.details = "Viewing a page"
-			presenceData.details = "Privacy Policy"
+			const pageNames: {[index: string]: string} = {
+				"tac": "Terms and Conditions",
+				"privacy": "Privacy Policy",
+				"logos": "Logos & Signpacks"
+			}
+			presenceData.state = pageNames[currentPath[0]]
 		}
 	
 	} else if (currentURL.hostname.startsWith("tm.") || currentURL.hostname.startsWith("sm") || currentURL.hostname.startsWith("trackmania")) {
@@ -97,7 +99,10 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 	
 		}
 
-		if (currentPath[0] === "error") {
+		if (
+			currentPath[0] === "error" ||
+			(document.querySelector(".ly-box > span").children.length === 3 && document.querySelector(".ly-box b").textContent === "Error")
+		) {
 			presenceData.details = "On a non-existent page"
 
 		} else if (currentPath[0] === "" || currentPath[0] === "home") {
@@ -359,7 +364,7 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 		}
 
 	} else if (currentURL.hostname.startsWith("tmtube")) {
-		
+
 		presenceData.smallImageKey = "lg"
 		presenceData.smallImageText = "TMTube Archive"
 		presenceData.largeImageKey = "tmtube"
@@ -373,10 +378,14 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 				delete presenceData.startTimestamp
 				try {
 					if (document.querySelector(".mejs__playpause-button button").getAttribute("aria-label") === "Pause") {
+						presenceData.smallImageKey = "play"
+						presenceData.smallImageText = "TMTube Archive — Playing"
 						const video: HTMLVideoElement = document.querySelector("video")
 						const timestamps = getTimestamps(Math.floor(video.currentTime), Math.floor(video.duration))
 						;[ , presenceData.endTimestamp ] = timestamps
 					} else {
+						presenceData.smallImageKey = "pause"
+						presenceData.smallImageText = "TMTube Archive — Paused"
 						delete presenceData.endTimestamp
 					}
 				} catch (e) {
@@ -406,6 +415,9 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 		}
 
 	} else if (currentURL.hostname.startsWith("blog")) {
+
+		presenceData.smallImageKey = "reading"
+		presenceData.smallImageText = "Blog"
 
 		if (currentPath[0] === "posts" && currentPath[1]) {
 			presenceData.details = "Reading a blog post"

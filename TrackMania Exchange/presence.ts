@@ -76,7 +76,7 @@ const getURLParam = (urlParam: string): string => {
 	
 		if (getURLParam("action") !== null && getURLParam("action") !== "auto#auto") {
 			pageType = getURLParam("action")
-		} else if (document.querySelector(".BookmarkCell a") !== null) {
+		} else if (document.querySelector(".BookmarkCell a")) {
 			currentURL = new URL(document.querySelector(".BookmarkCell a").textContent)
 			pageType = getURLParam("action")
 		} else {
@@ -121,11 +121,12 @@ const getURLParam = (urlParam: string): string => {
 			case "united.tm-exchange.com":
 				presenceData.smallImageKey = "united"
 				presenceData.smallImageText = "United"
-				idPrefix = "_ctl3"
+				idPrefix = "_ctl1"
 				break
 			case "tmnforever.tm-exchange.com":
 				presenceData.smallImageKey = "nforever"
 				presenceData.smallImageText = "Nations Forever"
+				idPrefix = "ctl01"
 				break
 			case "nations.tm-exchange.com":
 				presenceData.smallImageKey = "nations"
