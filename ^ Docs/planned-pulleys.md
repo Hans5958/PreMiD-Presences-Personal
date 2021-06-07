@@ -13,40 +13,58 @@
 
 ----
 
-# Multiple presences (05/06/2021)
+# Multiple presences (07/06/2021)
 
 ## Description
 
-Here's a PR that tackles a quite simple problem IMO. Somehow it took a while due to complications on my workspace, but it's all okay. This PR adds support of FandomMobile and future FandomDesktop skin, along with tackling some issues.
-
-This PR resolves #3883 and is related to Hans5958/PreMiD-Presences-Personal#6
+Here's a PR that supposed to be simple, but then finished with lots of things changed, added, and fixed. It's so much that I think this is a minor bump. At least I got this thing done, unlike Yandere Simulator.
 
 This PR includes updates to the following presences:
 
-- Fandom (1.2.6)
-- Gamepedia (1.2.6)
+- ManiaExchange (1.1.0)
+- TrackMania Exchange (1.1.0)
 
 ## Changelog
 
-- Support FandomMobile and future FandomDesktop skin (Fandom, Gamepedia)
-- Simplify Fandom/Gamepedia detection (Fandom, Gamepedia)
-- Remove support for Community Central-specific namespaces (Fandom)
-- Add support for more namespaces (Fandom, Gamepedia)
-- Sync code for search page from Gamepedia
-- Fix ESLint warnings and errors
+- Update base script
+  - Change position to save `let`/`const` keyword (@Bas950)
+- Optimize runtime on some parts by only set static string once
+- Add support for "News Archive" page
+- Improve error page detection
+- Fix error on detecting track creator username (ManiaExchange)
+- Revamp code on "Leaderboard" page (ManiaExchange)
+- Avoid using startTimestamp when endTimestamp is used (ManiaExchange) (@ririxidev)
+- Add support for blog.mania.exchange (ManiaExchange)
+- Fix presence not working on MX portal pages (ManiaExchange)
+- Add support for logos and signage on MX portal (ManiaExchange)
+- Improve error page detection (ManiaExchange)
+- Add small image for TM-Tube Archive and the blog (ManiaExchange)
+- Add support for "Track Replay Info" page (TrackMania Exchange)
+- Fix presence string on "Leaderboards" slicing too much (TrackMania Exchange)
+- Remove unneeded equality check (TrackMania Exchange)
+- Update ID prefix for TMNF and TMUF (TrackMania Exchange)
 
 ## Images
 
-All variations will give the same presence data, so to prove there are no smoke and mirrors, all screenshots are full-screen.
-
 | Image | Link visited |
 | ----- | ------------ |
-| ![](https://user-images.githubusercontent.com/11584103/120887311-45f4ff00-c61c-11eb-8575-0a7760184cd5.png) | https://sonic.fandom.com/wiki/Miles_%22Tails%22_Prower |
-| ![](https://user-images.githubusercontent.com/11584103/120887319-4c837680-c61c-11eb-8201-45d231d0c509.png) | https://sonic.fandom.com/wiki/Miles_%22Tails%22_Prower?useskin=fandomdesktop |
-| ![](https://user-images.githubusercontent.com/11584103/120887322-4e4d3a00-c61c-11eb-91dd-46cfc0fa8b1d.png) | https://sonic.fandom.com/wiki/Miles_%22Tails%22_Prower?useskin=fandommobile |
-| ![](https://user-images.githubusercontent.com/11584103/120887326-5016fd80-c61c-11eb-8a1f-f19a46810083.png) | https://minecraft.fandom.com/wiki/Java_Edition_1.16.5 |
-| ![](https://user-images.githubusercontent.com/11584103/120887328-51482a80-c61c-11eb-86b2-6638b060605f.png) | https://minecraft.fandom.com/wiki/Java_Edition_1.16.5?useskin=fandomdesktop |
-| ![](https://user-images.githubusercontent.com/11584103/120887329-53aa8480-c61c-11eb-8f5d-74c5ea9c2f11.png) | https://minecraft.fandom.com/wiki/Java_Edition_1.16.5?useskin=fandommobile |
+| ![](https://user-images.githubusercontent.com/11584103/120961518-2e3a8980-c788-11eb-9302-21596b64b796.png) | https://www.tm-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961529-3397d400-c788-11eb-8a14-c030e22ffa3a.png) | https://tmnforever.tm-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961535-34c90100-c788-11eb-98e5-32d4b707fbdf.png) | https://tmnforever.tm-exchange.com/main.aspx?action=trackshow&id=8735422#auto |
+| ![](https://user-images.githubusercontent.com/11584103/120961546-385c8800-c788-11eb-93ee-43859e222713.png) | https://tmnforever.tm-exchange.com/main.aspx?action=trackreplayshow&id=8735422 |
+| ![](https://user-images.githubusercontent.com/11584103/120961558-3db9d280-c788-11eb-91c8-5044e08d5f40.png) | https://nations.tm-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961560-3eeaff80-c788-11eb-8085-a0f5045ee312.png) | https://nations.tm-exchange.com/main.aspx?action=trackshow&id=2167077#auto |
+| ![](https://user-images.githubusercontent.com/11584103/120961571-427e8680-c788-11eb-980a-ded6eddbba11.png) | https://united.tm-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961594-50cca280-c788-11eb-9d60-cee0fb92c1cf.png) | https://united.tm-exchange.com/main.aspx?action=trackshow&id=6023253#auto |
+| ![](https://user-images.githubusercontent.com/11584103/120961614-5aeea100-c788-11eb-9b17-06eec7c16e1e.png) | https://mania-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961617-5c1fce00-c788-11eb-873f-af4b0e14ffdd.png) | https://trackmania.exchange/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961622-5de99180-c788-11eb-900d-0aaa4420ee00.png) | https://trackmania.exchange/maps/29090/90mc-5eudoxus |
+| ![](https://user-images.githubusercontent.com/11584103/120961638-63df7280-c788-11eb-9547-a75064d63681.png) | https://tm.mania-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961643-6641cc80-c788-11eb-8a48-bf4c2efbab5c.png) | https://tm.mania-exchange.com/maps/195017/corsica-sunset-v3-esl |
+| ![](https://user-images.githubusercontent.com/11584103/120961677-79ed3300-c788-11eb-841e-5c0c5c9a7c25.png) | https://tmtube.mania-exchange.com/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961681-7b1e6000-c788-11eb-9ac1-704bceff0762.png) | https://tmtube.mania-exchange.com/view/15867 |
+| ![](https://user-images.githubusercontent.com/11584103/120961686-7ce82380-c788-11eb-99fb-91735b1cfe65.png) | https://blog.mania.exchange/ |
+| ![](https://user-images.githubusercontent.com/11584103/120961689-7eb1e700-c788-11eb-9a6f-4850a39f55e2.png) | https://blog.mania.exchange/posts/disclose-past-cheated-replays-tmx |
 
 ----
 
