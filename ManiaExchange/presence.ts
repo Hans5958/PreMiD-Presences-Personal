@@ -100,7 +100,8 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 		}
 
 		if (
-			currentPath[0] === "error" ||
+			currentPath[0] === "error" || 
+			currentPath[0] === "errorhandler" || 
 			(document.querySelector(".ly-box > span").children.length === 3 && document.querySelector(".ly-box b").textContent === "Error")
 		) {
 			presenceData.details = "On a non-existent page"
