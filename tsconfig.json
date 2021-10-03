@@ -6,13 +6,11 @@
 		"noEmitOnError": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
-		"newLine": "crlf",
+		"newLine": "lf",
 		"noImplicitAny": true,
 		"noUnusedParameters": true,
-		"inlineSourceMap": true,
 		"typeRoots": ["@types"],
-		"esModuleInterop": true,
-		"skipLibCheck": true
+		"esModuleInterop": true
 	},
 	"exclude": ["node_modules", "**/dist/*.js"]
 }
