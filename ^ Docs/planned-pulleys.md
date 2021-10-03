@@ -48,7 +48,7 @@ This PR includes updates for the following presences:
 
 Here's a long overdue of Project Wikimedia. For the sake of completeness, here's a catch-all presence for other Wikimedia domains. These does not include Wikipedia and the others. Compared to other domains, the scope is wider than the other wikis. 
 
-Along with the new presence is the experiment of using the MediaWiki configuration values exposed in `mw.config`. It's my first time of me using `presence.getPageletiable()`, and my first impressions is not quite good, but I get it done nonetheless.
+Along with the new presence is the experiment of using the MediaWiki configuration values exposed in `mw.config`. It's my first time of me using `presence.getPageletiable()`, and my first impressions is not quite good, but I get it done nonetheless. If this is merged, then I will also include this update to the other MediaWiki presences.
 
 Notes:
 - Should I use Wikimedia or Wikimedia Foundation? Wikimedia refers to the movement, and the Wikmedia Foundation refers to the foundation that's doing the foundation.
