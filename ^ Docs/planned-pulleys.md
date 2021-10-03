@@ -13,36 +13,7 @@
 
 ----
 
-# Multiple presences (07/06/2021)
-
-## Description
-
-This PR is quite overdue, because I got university stuff to tackle first, but here it is. There is a critical change that I need to do in response to [the path structure change on two of the most used branches of the service](https://tmnforever.tm-exchange.com/newssearch). Along with it are some other changes and bugfixes. Enjoy, and I apologise.
-
-This PR includes updates to the following presences:
-
-- ManiaExchange (1.1.2)
-- TrackMania Exchange (1.1.1)
-
-## Changelog
-
-- Add new mentions of TMNF-X and TMUF-X on the presence (TrackMania Exchange)
-- Support another path for error pages
-- Support new path structure for TMNF-X and TMUF-X (TrackMania Exchange)
-- Fix wrong action types (TrackMania Exchange)
-
-## Images
-
-| Image | Link visited |
-| ----- | ------------ |
-| ![](https://user-images.githubusercontent.com/11584103/133931904-59f4f905-4a0a-4a3f-a51c-e4c2c2709e47.png) | https://tmnforever.tm-exchange.com/ |
-| ![](https://user-images.githubusercontent.com/11584103/133931907-210cd268-82e2-4848-b76d-d8f1f7f66fa4.png) | https://tmnforever.tm-exchange.com/trackshow/8183124 |
-| ![](https://user-images.githubusercontent.com/11584103/133931909-ad2966ab-4bdf-4904-ba2f-6c03afc57fd9.png) | https://united.tm-exchange.com/ |
-| ![](https://user-images.githubusercontent.com/11584103/133931911-79fbaf62-16df-4a13-80ea-662378348fcf.png) | https://united.tm-exchange.com/trackshow/6136240 |
-
-----
-
-# Multiple updates WMF (18/10/2020) 
+# Multiple updates WMF (?/?/2021) 
 
 ## Description
 
@@ -68,6 +39,8 @@ This PR includes updates for the following presences:
 
 | Image | Link visited |
 | ----- | ------------ |
+
+----
 
 # Wikimedia (03/10/2021) 
 
