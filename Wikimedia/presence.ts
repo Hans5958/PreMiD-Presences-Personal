@@ -367,35 +367,6 @@ prepare = async (): Promise<void> => {
 
 			const canonicalNamespace = mwConfig.wgCanonicalNamespace.replace(/_/g, " ")
 			return details[mwConfig.wgNamespaceNumber] || details[canonicalNamespace] || `Viewing a/an ${canonicalNamespace} page`
-
-			/* Witheld until we found a better solution for future translating */
-
-			// const details: {[index: string]: string} = {
-			// 	"-2": "Viewing a media",
-			// 	0: "Reading an article",
-			// 	1: "Viewing a talk page",
-			// }
-
-			// const detailsShort: {[index: string]: string} = {
-			// 	"Special": "a special",
-			// 	"User": "a user",
-			// 	"Project": "a project",
-			// 	"File": "a file",
-			// 	"Interface": "an interface",
-			// 	"Template": "a template",
-			// 	"Help": "a help",
-			// 	"Category": "a category",
-			// 	"Portal": "a portal",
-			// 	"Draft": "a draft",
-			// 	"Module": "a module",
-			// 	"Gadget": "a gadget",
-			// 	"Gadget definition": "a gadget defintion",
-			// 	"Manual": "a manual",
-			// 	"Topic": "a topic"
-			// }
-			
-			// const namespaceName = mwConfig.wgCanonicalNamespace.replace(/_/g, " ")
-			// return details[mwConfig.wgNamespaceNumber] || `Viewing ${detailsShort[namespaceName.split(" talk")[0]] + (namespaceName.endsWith(" talk") ? " talk" : "") || `a/n ${namespaceName}`} page`
 		}
 		
 		//
