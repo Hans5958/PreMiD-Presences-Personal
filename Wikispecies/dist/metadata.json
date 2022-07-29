@@ -1,29 +1,86 @@
 {
-	"$schema": "https://schemas.premid.app/metadata/1.3",
-	"author": {
-		"name": "Hans5958",
-		"id": "279855717203050496"
-	},
+	"$schema": "https://schemas.premid.app/metadata/1.7",
+	"author": { "name": "Hans5958", "id": "279855717203050496" },
 	"service": "Wikispecies",
 	"description": {
 		"en": "Wikispecies is a species database for taxonomy that covers living and fossil representatives of Animalia, Plantae, Fungi, Bacteria, Archaea, Protista and all other forms of life.",
 		"zh_CN": "維基物種是分類學物種數據庫，涵蓋動物界，植物界，真菌，細菌，古細菌，原生生物和所有其他形式的生命的生活和化石形態。",
 		"fr": "Wikispecies est une base de données taxonomiques pour les espèces vivantes et fossiles d’Animalia, Plantae, Fungi, Bacteria, Archaea, Protista et toute autre forme de vie.",
 		"es": "Wikiespecies el la base de datos de especies por taxonomía que incluye representantes vivos y fósiles de Animalia, Plantae, Fungi, Bacteria, Archaea, Protista y otras formas de vida.",
-		"ga_IE": "Is bunachar sonraí speiceas é Wikispecies le haghaidh tacsanomaíocht a chuimsíonn ionadaithe beo agus iontaise de Animalia, Plantae, Fungais, Baictéir, Archaea, Protista agus gach cineál beatha eile."
+		"ga_IE": "Is bunachar sonraí speiceas é Wikispecies le haghaidh tacsanomaíocht a chuimsíonn ionadaithe beo agus iontaise de Animalia, Plantae, Fungais, Baictéir, Archaea, Protista agus gach cineál beatha eile.",
+		"nl": "Wikispecies is een soortendatabase voor taxonomie die levende en fossiele vertegenwoordigers van Animalia, Plantae, Fungi, Bacteria, Archaea, Protista en alle andere levensvormen omvat."
 	},
 	"url": "species.wikimedia.org",
-	"version": "1.0.5",
+	"version": "1.1.0",
 	"logo": "https://i.imgur.com/9f1XxZE.png",
 	"thumbnail": "https://i.imgur.com/5SnUKIH.png",
 	"color": "#f9f9f9",
-	"tags": [
-		"information",
-		"wiki",
-		"wikimedia-foundation",
-		"wikimedia",
-		"wmf"
-	],
+	"tags": ["information", "wiki", "wikimedia-foundation", "wikimedia", "wmf"],
 	"category": "other",
-	"altnames": ["Biquiespecies", "Güiquiespéciis", "Veizgiek Vuzcungj", "VikiNövlər", "Vikinövlər", "Vikirūšys", "Vikispecioj", "Vikiturlar", "Vikitür", "Vikivrste", "Viquiespècies", "Wicirywogaeth", "Wiki Ŭk-cṳ̄ng", "Wikicynn", "Wikidruhy", "Wikiespezieak", "Wikifajok", "Wikilífverur", "Wikispeċi", "Wikitörlär", "Wikivrste", "Βικιείδη", "Викивидови", "Викивиды", "Викиврсте", "Викинамуд", "Викитĕссем", "Віківиди", "Віківиды", "Віківіды", "Уикивидове", "Վիքիցեղեր", "ויקימינים", "ويكي أنواع", "ویکی انواع", "ویکی‌گونه", "विकिप्रजाति", "विकिस्पेसिज", "উইকিপ্রজাতি", "ৱিকিস্পিচিজ", "ଉଇକିସ୍ପିସିସ", "விக்கியினங்கள்", "వికీస్పీసిస్", "ವಿಕಿ ಸ್ಪೀಷೀಸ್", "വിക്കിസ്പീഷിസ്", "วิกิสปีชีส์", "ウィキスピーシーズ", "維基物種", "维基物种", "위키생물종"]
+	"settings": [
+		{
+			"id": "buttons",
+			"title": "Show buttons",
+			"icon": "fas fa-compress-arrows-alt",
+			"value": true
+		},
+		{
+			"id": "time",
+			"title": "Show timestamps",
+			"icon": "fad fa-stopwatch",
+			"value": true
+		}
+	],
+	"altnames": [
+		"Biquiespecies",
+		"Güiquiespéciis",
+		"Veizgiek Vuzcungj",
+		"VikiNövlər",
+		"Vikinövlər",
+		"Vikirūšys",
+		"Vikispecioj",
+		"Vikiturlar",
+		"Vikitür",
+		"Vikivrste",
+		"Viquiespècies",
+		"Wicirywogaeth",
+		"Wiki Ŭk-cṳ̄ng",
+		"Wikicynn",
+		"Wikidruhy",
+		"Wikiespezieak",
+		"Wikifajok",
+		"Wikilífverur",
+		"Wikispeċi",
+		"Wikitörlär",
+		"Wikivrste",
+		"Βικιείδη",
+		"Викивидови",
+		"Викивиды",
+		"Викиврсте",
+		"Викинамуд",
+		"Викитĕссем",
+		"Віківиди",
+		"Віківиды",
+		"Віківіды",
+		"Уикивидове",
+		"Վիքիցեղեր",
+		"ויקימינים",
+		"ويكي أنواع",
+		"ویکی انواع",
+		"ویکی‌گونه",
+		"विकिप्रजाति",
+		"विकिस्पेसिज",
+		"উইকিপ্রজাতি",
+		"ৱিকিস্পিচিজ",
+		"ଉଇକିସ୍ପିସିସ",
+		"விக்கியினங்கள்",
+		"వికీస్పీసిస్",
+		"ವಿಕಿ ಸ್ಪೀಷೀಸ್",
+		"വിക്കിസ്പീഷിസ്",
+		"วิกิสปีชีส์",
+		"ウィキスピーシーズ",
+		"維基物種",
+		"维基物种",
+		"위키생물종"
+	]
 }

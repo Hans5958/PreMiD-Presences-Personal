@@ -11,7 +11,7 @@ let currentURL = new URL(document.location.href),
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as () => void,
+		_function: () => void {} as () => void,
 		get function(): () => void {
 			return this._function
 		},
@@ -42,9 +42,9 @@ const resetData = (defaultData: PresenceData = {
  */
 const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
-},
+}
 
-prepare = async (): Promise<void> => {
+const prepare = async (): Promise<void> => {
 
 	if (currentURL.hostname === "www.wikimedia.org") {
 		presenceData.smallImageKey = "lg-black"
@@ -151,6 +151,8 @@ prepare = async (): Promise<void> => {
 
 		if (currentPath[0] === "") {
 			presenceData.details = "On the home page"
+		} else if (document.querySelector(".phui-crumbs-view.phui-crumbs-border .phui-crumb-name").textContent.trim() === "Auth") {
+			presenceData.details = "Logging in"
 		} else if (/^T\d+$/.test(currentPath[0])) {
 			presenceData.details = "Viewing a task"
 			presenceData.state = document.title.replace(/^[^\w\s\d]{1} /, "")
@@ -230,7 +232,7 @@ prepare = async (): Promise<void> => {
 				presenceData.state = document.querySelector("h1 .phui-header-header").textContent	
 			}
 		} else {
-			presenceData.details = `Viewing ${document.querySelector(".phui-crumbs-view.phui-crumbs-border .phui-crumb-name").textContent}`
+			presenceData.details = `Viewing ${document.querySelector(".phui-crumbs-view.phui-crumbs-border .phui-crumb-name").textContent.trim()}`
 			presenceData.state = [...document.querySelectorAll(".phui-crumbs-view.phui-crumbs-border .phui-crumb-name")].slice(1).map(element => element.textContent.trim()).join(" > ")
 		}
 	
@@ -278,8 +280,13 @@ prepare = async (): Promise<void> => {
 
 	} else {
 
-		let mwConfig = await presence.getPageletiable('mw"]["config"]["values')
-		// console.log(mwConfig)
+		const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
+		
+		const action: string = mwConfig.wgAction
+		const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction")
+		const titleFromConfig: string = decodeURIComponent(mwConfig.wgPageName.replace(/_/g, " "))
+
+		const title = document.querySelector("h1")?.textContent.trim() || titleFromConfig
 
 		if (currentURL.hostname === "meta.wikimedia.org") {
 			presenceData.smallImageKey = "meta"
@@ -296,16 +303,6 @@ prepare = async (): Promise<void> => {
 		} else if (currentURL.hostname === "wikispore.wmflabs.org") { 
 			presenceData.smallImageKey = "wikispore"
 		}
-
-		const siteName = mwConfig.wgSiteName
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction") || mwConfig.wgAction
-
-		const titleFromURL = (): string => {
-			const raw = mwConfig.wgPageName
-			return decodeURIComponent(raw.replace(/_/g, " "))
-		}
-
-		const title = document.querySelector("h1") ? document.querySelector("h1").textContent : titleFromURL()
 
 		/**
 		 * Returns details based on the namespace.
@@ -374,10 +371,10 @@ prepare = async (): Promise<void> => {
 		//
 		// When checking for the current location, avoid using the URL.
 		// The URL is going to be different in other languages.
-		// Use the elements on the page instead.
+		// Use the elements on the page or the config instead.
 		//
 
-		if (mwConfig.wgIsMainPage) {
+		if (mwConfig.wgIsMainPage && action === "view") {
 			presenceData.details = "On the main page"
 		} else if (document.querySelector("#wpLoginAttempt")) {
 			presenceData.details = "Logging in"
@@ -386,37 +383,33 @@ prepare = async (): Promise<void> => {
 		} else if (document.querySelector(".searchresults")) {
 			presenceData.details = "Searching for a page"
 			presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
-		} else if (actionResult() === "history") {
+		} else if (action === "history") {
 			presenceData.details = "Viewing revision history"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (getURLParam("diff")) {
 			presenceData.details = "Viewing difference between revisions"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (getURLParam("oldid")) {
 			presenceData.details = "Viewing an old revision of a page"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
-			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+			presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			updateCallback.function = (): void => {
-				if (actionResult() === "edit" || actionResult() === "editsource") {
+				if (actionFromURL().startsWith("edit")) {
 					presenceData.details = "Editing a page"
 				} else {
 					presenceData.details = namespaceDetails()
 				}
 			}
 		} else {
-			if (actionResult() === "edit") {
+			if (action === "edit") {
 				presenceData.details = document.querySelector("#ca-edit") ? "Editing a page" : "Viewing source"
-				presenceData.state = titleFromURL()
+				presenceData.state = titleFromConfig
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+				presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			}
 		}
-
-		if (presenceData.state) presenceData.state += ` | ${siteName}`
-		else presenceData.state = siteName
-		if (presenceData.smallImageKey) presenceData.smallImageText = siteName
 
 	}
 
