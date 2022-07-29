@@ -44,7 +44,7 @@ const prepare = async (): Promise<void> => {
 	const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
 		
 	const action: string = mwConfig.wgAction
-	const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction")
+	const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction") || "view"
 	const titleFromConfig: string = decodeURIComponent(mwConfig.wgPageName.replace(/_/g, " "))
 
 	const title = document.querySelector("h1")?.textContent.trim() || titleFromConfig
@@ -113,33 +113,33 @@ const prepare = async (): Promise<void> => {
 	} else if (document.querySelector(".searchresults")) {
 		presenceData.details = "Searching for a page"
 		presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
-		} else if (action === "history") {
-			presenceData.details = "Viewing revision history"
-			presenceData.state = titleFromConfig
-		} else if (getURLParam("diff")) {
-			presenceData.details = "Viewing difference between revisions"
-			presenceData.state = titleFromConfig
-		} else if (getURLParam("oldid")) {
-			presenceData.details = "Viewing an old revision of a page"
-			presenceData.state = titleFromConfig
-		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
-			presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
-			updateCallback.function = (): void => {
-				if (actionFromURL().startsWith("edit")) {
-					presenceData.details = "Editing a page"
-				} else {
-					presenceData.details = namespaceDetails()
-				}
-			}
-		} else {
-			if (action === "edit") {
-				presenceData.details = document.querySelector("#ca-edit") ? "Editing a page" : "Viewing source"
-				presenceData.state = titleFromConfig
+	} else if (action === "history") {
+		presenceData.details = "Viewing revision history"
+		presenceData.state = titleFromConfig
+	} else if (getURLParam("diff")) {
+		presenceData.details = "Viewing difference between revisions"
+		presenceData.state = titleFromConfig
+	} else if (getURLParam("oldid")) {
+		presenceData.details = "Viewing an old revision of a page"
+		presenceData.state = titleFromConfig
+	} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
+		presenceData.state = title + (title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`)
+		updateCallback.function = (): void => {
+			if (actionFromURL().startsWith("edit")) {
+				presenceData.details = "Editing a page"
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			}
 		}
+	} else {
+		if (action === "edit") {
+			presenceData.details = document.querySelector("#ca-edit") ? "Editing a page" : "Viewing source"
+			presenceData.state = titleFromConfig
+		} else {
+			presenceData.details = namespaceDetails()
+			presenceData.state = title + (title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`)
+		}
+	}
 
 	if (lang === "wikisource") {
 		if (presenceData.details === "On the main page") presenceData.details = "On the home page"  

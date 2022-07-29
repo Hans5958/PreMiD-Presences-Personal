@@ -49,7 +49,7 @@ const prepare = async (): Promise<void> => {
 		const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
 		
 		const action: string = mwConfig.wgAction
-		const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction")
+		const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction") || "view"
 		const titleFromConfig: string = decodeURIComponent(mwConfig.wgPageName.replace(/_/g, " "))
 
 		const title = document.querySelector("h1")?.textContent.trim() || titleFromConfig
@@ -140,7 +140,7 @@ const prepare = async (): Promise<void> => {
 			presenceData.details = "Viewing an old revision of a page"
 			presenceData.state = titleFromConfig
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
-			presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
+			presenceData.state = title + (title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`)
 			updateCallback.function = (): void => {
 				if (actionFromURL().startsWith("edit")) {
 					presenceData.details = "Editing a page"
@@ -154,7 +154,7 @@ const prepare = async (): Promise<void> => {
 				presenceData.state = titleFromConfig
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
+				presenceData.state = title + (title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`)
 			}
 		}
 
