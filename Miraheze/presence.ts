@@ -11,7 +11,7 @@ let currentURL = new URL(document.location.href),
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as () => void,
+		_function: () => void {} as () => void,
 		get function(): () => void {
 			return this._function
 		},
@@ -42,9 +42,9 @@ const resetData = (defaultData: PresenceData = {
  */
 const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
-},
+}
 
-prepare = async (): Promise<void> => {
+const prepare = async (): Promise<void> => {
 
 	presence.info("Running...")
 
@@ -186,16 +186,15 @@ prepare = async (): Promise<void> => {
 		*/
 
 		const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
+		
+		const action: string = mwConfig.wgAction
+		const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction")
+		const titleFromConfig: string = decodeURIComponent(mwConfig.wgPageName.replace(/_/g, " "))
+
+		const title = document.querySelector("h1")?.textContent.trim() || titleFromConfig
+		const lang: string = mwConfig.wgContentLanguage || currentURL.hostname.split(".")[0]
 
 		const siteName = mwConfig.wgSiteName
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction") || mwConfig.wgAction
-
-		const titleFromURL = (): string => {
-			const raw = mwConfig.wgPageName
-			return decodeURIComponent(raw.replace(/_/g, " "))
-		}
-
-		const title = document.querySelector("h1") ? document.querySelector("h1").textContent : titleFromURL()
 
 		/**
 		 * Returns details based on the namespace.
@@ -247,7 +246,7 @@ prepare = async (): Promise<void> => {
 			return details[mwConfig.wgNamespaceNumber] || details[canonicalNamespace] || `Viewing a/an ${canonicalNamespace} page`
 		}
 
-		if (mwConfig.wgIsMainPage && actionResult() === "view") {
+		if (mwConfig.wgIsMainPage && action === "view") {
 			presenceData.details = "On the main page"
 		} else if (document.querySelector("#wpLoginAttempt")) {
 			presenceData.details = "Logging in"
@@ -256,38 +255,50 @@ prepare = async (): Promise<void> => {
 		} else if (document.querySelector(".searchresults")) {
 			presenceData.details = "Searching for a page"
 			presenceData.state = (document.querySelector("input[type=search]") as HTMLInputElement).value
-		} else if (actionResult() === "history") {
+		} else if (action === "history") {
 			presenceData.details = "Viewing revision history"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (getURLParam("diff")) {
 			presenceData.details = "Viewing difference between revisions"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (getURLParam("oldid")) {
 			presenceData.details = "Viewing an old revision of a page"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
-			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+			presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			updateCallback.function = (): void => {
-				if (actionResult() === "edit" || actionResult() === "editsource") {
+				if (actionFromURL().startsWith("edit")) {
 					presenceData.details = "Editing a page"
 				} else {
 					presenceData.details = namespaceDetails()
 				}
 			}
 		} else {
-			if (actionResult() === "edit") {
+			if (action === "edit") {
 				presenceData.details = document.querySelector("#ca-edit") ? "Editing a page" : "Viewing source"
-				presenceData.state = titleFromURL()
+				presenceData.state = titleFromConfig
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+				presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			}
 		}
 
 		if (presenceData.state) presenceData.state += ` | ${siteName}`
 		else presenceData.state = siteName
 
+		if (lang !== "en") {
+			if (presenceData.state) presenceData.state += ` (${lang})`
+			else presenceData.details += ` (${lang})`
+		}
+
 	}
+
+	presenceData.buttons = [
+		{
+			label: "View Page",
+			url: window.location.href,
+		},
+	]
 	
 }
 

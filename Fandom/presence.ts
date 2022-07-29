@@ -1,11 +1,3 @@
-if (document.location.pathname.includes("/wiki/") ? (
-	document.querySelector(".skin-oasis") ||
-	((
-		document.querySelector(".skin-fandomdesktop") ||
-		document.querySelector(".skin-fandommobile")
-	) && !document.querySelector(".is-gamepedia"))
-) : true) ((): void => {
-
 const presence = new Presence({
 	clientId: "644400074008297512"
 })
@@ -19,16 +11,13 @@ let currentURL = new URL(document.location.href),
 		startTimestamp: browsingStamp
 	}
 const updateCallback = {
-		_function: null as () => void,
+		_function: () => void {} as () => void,
 		get function(): () => void {
 			return this._function
 		},
 		set function(parameter) {
 			this._function = parameter
 		},
-		get present(): boolean {
-			return this._function !== null
-		}
 	}
 
 /**
@@ -52,7 +41,7 @@ const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
 }
 
-((): void => {
+const prepare = async (): Promise<void> => {
 
 	presence.info("Running...")
 
@@ -60,9 +49,9 @@ const getURLParam = (urlParam: string): string => {
 
 		/*
 
-		Chapter 1
+		Chapter 1.0
 		This one is for the editorial part of Fandom.
-		
+
 		*/
 
 		if (currentPath[0] === "") {
@@ -111,6 +100,21 @@ const getURLParam = (urlParam: string): string => {
 			else if (currentPath[0] === "local-sitemap") presenceData.state = "Local Sitemap"
 		}
 
+	} else if (currentURL.host === "auth.fandom.com") {
+
+		/*
+
+		Chapter 1.1
+		This one is for the authentication part of Fandom.
+		
+		*/
+
+		if (currentPath[0] === "signin") {
+			presenceData.details = "Signing in"
+		} else if (currentPath[0] === "register") {
+			presenceData.details = "Registering an account"
+		}
+
 	} else if (currentPath.includes("wiki")) {
 
 		/*
@@ -120,30 +124,22 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 
-		let title: string, sitename: string
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction"), lang = currentPath[0] === "wiki" ? "en" : currentPath[0]
+		const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
+		
+		const action: string = mwConfig.wgAction
+		const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction")
+		const titleFromConfig: string = decodeURIComponent(mwConfig.wgPageName.replace(/_/g, " "))
 
-		const titleFromURL = (): string => {
-			const raw: string = currentPath[0] === "index.php" ? getURLParam("title") : currentPath[0] === "wiki" ? currentPath.slice(1).join("/") : currentPath.slice(2).join("/")
-			//let lang: string = currentPath[0]
-			return decodeURIComponent(raw.replace(/_/g, " "))		
-		}
+		const title = document.querySelector("h1")?.textContent.trim() || titleFromConfig
+		const lang: string = mwConfig.wgContentLanguage || currentURL.hostname.split(".")[0]
 
-		try {
-			title = document.querySelector("h1").textContent.trim()
-		} catch (e) {
-			title = titleFromURL()
-		}
-
-		try {
-			sitename = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement).content
-		} catch (e) {
-			sitename = (
+		const siteName = mwConfig.wgSiteName ||
+			(document.querySelector("meta[property='og:site_name']") as HTMLMetaElement)?.content ||
+			(
 				document.querySelector(".wds-community-header__sitename") ||
 				document.querySelector(".fandom-community-header__community-name") ||
 				document.querySelector(".wds-community-bar__sitename")
 			).textContent.trim()
-		}
 
 		/**
 		 * Returns details based on the namespace.
@@ -193,50 +189,49 @@ const getURLParam = (urlParam: string): string => {
 			return details[[...document.querySelector("body").classList].filter(v => /ns--?\d/.test(v))[0].slice(3)] || "Viewing a wiki page"
 		}
 
-		if (title === "Home") {
-			sitename = (document.querySelector("meta[property='og:title']") as HTMLMetaElement).content
+		if (mwConfig.wgIsMainPage && action === "view") {
 			presenceData.details = "On the home page"
 		} else if (document.querySelector(".unified-search__form")) {
 			presenceData.details = "Searching for a page"
 			presenceData.state = (document.querySelector(".unified-search__input__query") as HTMLInputElement).value
-		} else if (actionResult() === "history") {
+		} else if (action === "history") {
 			presenceData.details = "Viewing revision history"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (getURLParam("diff")) {
 			presenceData.details = "Viewing difference between revisions"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (getURLParam("oldid")) {
 			presenceData.details = "Viewing an old revision of a page"
-			presenceData.state = titleFromURL()
+			presenceData.state = titleFromConfig
 		} else if (namespaceDetails() === "Viewing a user blog") {
 			if (title) {
 				presenceData.details = "Reading a user blog post"
 				presenceData.state = `${title} by ${document.querySelector(".page-header__blog-post-details").firstElementChild.textContent}`
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = titleFromURL()
+				presenceData.state = titleFromConfig
 			}
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
-			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+			presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			updateCallback.function = (): void => {
-				if (actionResult() === "edit" || actionResult() === "editsource") {
+				if (actionFromURL().startsWith("edit")) {
 					presenceData.details = "Editing a page"
 				} else {
 					presenceData.details = namespaceDetails()
 				}
 			}
 		} else {
-			if (actionResult() === "edit") {
+			if (action === "edit") {
 				presenceData.details = document.querySelector("#ca-edit") ? "Editing a page" : "Viewing source"
-				presenceData.state = titleFromURL()
+				presenceData.state = titleFromConfig
 			} else {
 				presenceData.details = namespaceDetails()
-				presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
+				presenceData.state = title + title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`
 			}
 		}
 
-		if (presenceData.state) presenceData.state += ` | ${sitename}`
-		else presenceData.state = sitename
+		if (presenceData.state) presenceData.state += ` | ${siteName}`
+		else presenceData.state = siteName
 
 		if (lang !== "en") {
 			if (presenceData.state) presenceData.state += ` (${lang})`
@@ -252,13 +247,8 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 		
-		let sitename: string
-
-		try {
-			sitename = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement).content
-		} catch (e) {
-			sitename = (document.querySelector(".wds-community-header__sitename").textContent)
-		}
+		const siteName = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement)?.content ||
+			(document.querySelector(".wds-community-header__siteName").textContent)
 
 		updateCallback.function = (): void => {
 			if (!currentPath[1]) {
@@ -271,31 +261,36 @@ const getURLParam = (urlParam: string): string => {
 				}
 			} else if (currentPath[1] === "p") {
 				presenceData.details = "Reading a discussion post"
-				presenceData.state = `${document.querySelector(".post-info__title").textContent} | ${sitename}`
+				presenceData.state = `${document.querySelector(".post-info__title").textContent} | ${siteName}`
 			} else if (currentPath[1] === "u") {
 				presenceData.details = "Viewing a discussion user page"
-				presenceData.state = `${document.querySelector(".user-overview__username").textContent} | ${sitename}`
+				presenceData.state = `${document.querySelector(".user-overview__username").textContent} | ${siteName}`
 			}
 
-			if (presenceData.state) presenceData.state += ` | ${sitename}`
-			else presenceData.state = sitename	
+			if (presenceData.state) presenceData.state += ` | ${siteName}`
+			else presenceData.state = siteName	
 		}
 
 	}
-	
-})()
 
-if (updateCallback.present) {
+	presenceData.buttons = [
+		{
+			label: "View Page",
+			url: window.location.href,
+		},
+	]
+	
+}
+
+(async (): Promise<void> => { await prepare()
+
 	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
 		resetData(defaultData)
 		updateCallback.function()
+		if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+		if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
 		presence.setActivity(presenceData)
 	})
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
-
+	
 })()
