@@ -39,9 +39,28 @@ const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
 }
 
+/**
+ * An object obtained from on `mw.config.values`.
+ * (Unused values on this type has been removed. Refer to the link for the full object.)
+ * @link https://github.com/wikimedia-gadgets/types-mediawiki/blob/main/mw/config.d.ts
+ */
+type mwConfigValues = {
+	wgContentLanguage: string;
+	wgSiteName: string;
+	wgAction: string;
+	wgCanonicalNamespace: string;
+	wgCurRevisionId: number;
+	wgNamespaceNumber: number;
+	wgPageName: string;
+	wgRevisionId: number;
+	wgIsMainPage: boolean;
+	wgDiffOldId: number | false;
+	wgDiffNewId: number;
+}
+
 const prepare = async (): Promise<void> => {
 
-	const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
+	const mwConfig: mwConfigValues = await presence.getPageletiable('mw"]["config"]["values')
 		
 	const action: string = mwConfig.wgAction
 	const actionFromURL = (): string => getURLParam("action") || getURLParam("veaction") || "view"
@@ -113,10 +132,10 @@ const prepare = async (): Promise<void> => {
 	} else if (action === "history") {
 		presenceData.details = "Viewing revision history"
 		presenceData.state = titleFromConfig
-	} else if (getURLParam("diff")) {
+	} else if (mwConfig.wgDiffOldId) {
 		presenceData.details = "Viewing difference between revisions"
 		presenceData.state = titleFromConfig
-	} else if (getURLParam("oldid")) {
+	} else if (mwConfig.wgCurRevisionId !== mwConfig.wgRevisionId) {
 		presenceData.details = "Viewing an old revision of a page"
 		presenceData.state = titleFromConfig
 	} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
