@@ -10,7 +10,7 @@ module.exports = {
 	},
 	parser: "@typescript-eslint/parser",
 	parserOptions: {
-		ecmaVersion: 2020,
+		ecmaVersion: 2021,
 		project: "./tsconfig.json"
 	},
 	rules: {
@@ -50,6 +50,8 @@ module.exports = {
 			}
 		  ],
 		"@typescript-eslint/no-explicit-any": "error",
+		"radix": 0,
+		"no-eval": "warn"
 	},
 	overrides: [
 		{

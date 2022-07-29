@@ -22,11 +22,11 @@ const arrayEqualsIgnoreOrder = (a: Array<string>, b: Array<string>) => {
 
 const keysToCheck = [
 	"description", 
-	// "url", 
+	"url", 
 	"version", 
-	// "logo", 
-	// "thumbnail", 
-	// "color", 
+	"logo", 
+	"thumbnail", 
+	"color", 
 	"tags", 
 	"regexp"
 ]
@@ -35,11 +35,11 @@ const keysToCheck = [
 
 	console.log("Preparing upstream folder...")
 	console.log("Fetching upstream...")
-	await gitUp.fetch("upstream", "master")
+	await gitUp.fetch("upstream", "main")
 	console.log("Checking out to master...")
 	await gitUp.checkout("master")
 	console.log("Resetting master to upstream...")
-	await gitUp.reset(["upstream/master", "--hard"])
+	await gitUp.reset(["upstream/main", "--hard"])
 
 	const presenceNames = globby.sync(["*", "!.*", "!# *", "!^ *", "!node_modules", "!@types"], {
 		"onlyDirectories": true
