@@ -8,18 +8,20 @@ let currentURL = new URL(document.location.href),
 	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
 	},
 	updateCallback: () => void = () => void {}
 
 /**
- * Initialize/reset presenceData.
+ * Initialize/reset presenceData and related variables.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -58,12 +60,8 @@ const prepare = async (): Promise<void> => {
 
 	if (currentURL.host === "www.fandom.com") {
 
-		/*
-
-		Chapter 1.0
-		This one is for the editorial part of Fandom.
-
-		*/
+		// Chapter 1.0
+		// This one is for the editorial part of Fandom.
 
 		if (currentPath[0] === "") {
 			presenceData.details = "On the index page"
@@ -113,12 +111,8 @@ const prepare = async (): Promise<void> => {
 
 	} else if (currentURL.host === "auth.fandom.com") {
 
-		/*
-
-		Chapter 1.1
-		This one is for the authentication part of Fandom.
-		
-		*/
+		// Chapter 1.1
+		// This one is for the authentication part of Fandom.
 
 		if (currentPath[0] === "signin") {
 			presenceData.details = "Signing in"
@@ -128,13 +122,9 @@ const prepare = async (): Promise<void> => {
 
 	} else if (currentPath.includes("wiki")) {
 
-		/*
-
-		Chapter 2
-		This one is for the wiki part on the Fandom, which was Wikia a while ago.
+		// Chapter 2
+		// This one is for the wiki part on the Fandom, which was Wikia a while ago.
 		
-		*/
-
 		const mwConfig: mwConfigValues = await presence.getPageletiable('mw"]["config"]["values')
 		
 		const action: string = mwConfig.wgAction
@@ -251,12 +241,8 @@ const prepare = async (): Promise<void> => {
 
 	} else if (currentPath[0] === "f") {
 
-		/*
-		
-		Chapter 3
-		This one is for the discussion parts on each wikis.
-		
-		*/
+		// Chapter 3
+		// This one is for the discussion parts on each wikis.
 		
 		const siteName = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement)?.content ||
 			(document.querySelector(".wds-community-header__siteName").textContent)
@@ -283,13 +269,6 @@ const prepare = async (): Promise<void> => {
 		}
 
 	}
-
-	presenceData.buttons = [
-		{
-			label: "View Page",
-			url: window.location.href,
-		},
-	]
 	
 }
 
