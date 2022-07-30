@@ -9,16 +9,8 @@ let currentURL = new URL(document.location.href),
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
 		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: () => void {} as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-	}
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
@@ -88,7 +80,7 @@ const prepare = async (): Promise<void> => {
 		} else if (currentPath[0] === "video") {
 			presenceData.details = "Watching a video"
 			delete presenceData.startTimestamp
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.state = document.querySelector(".video-page-featured-player__title").textContent
 				try {
 					if (document.querySelector(".jw-icon-playback").getAttribute("aria-label") === "Pause") {
@@ -232,7 +224,7 @@ const prepare = async (): Promise<void> => {
 			}
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
 			presenceData.state = title + (title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`)
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				if (actionFromURL().startsWith("edit")) {
 					presenceData.details = "Editing a page"
 				} else {
@@ -269,7 +261,7 @@ const prepare = async (): Promise<void> => {
 		const siteName = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement)?.content ||
 			(document.querySelector(".wds-community-header__siteName").textContent)
 
-		updateCallback.function = (): void => {
+		updateCallback = (): void => {
 			if (!currentPath[1]) {
 				const category = document.querySelector(".category-filter__dropdown-toggle").textContent
 				if (category === "Categories") {
@@ -306,7 +298,7 @@ const prepare = async (): Promise<void> => {
 	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
 		resetData(defaultData)
-		updateCallback.function()
+		updateCallback()
 		if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
 		if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
 		presence.setActivity(presenceData)
