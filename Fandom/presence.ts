@@ -274,13 +274,13 @@ const prepare = async (): Promise<void> => {
 
 (async (): Promise<void> => { await prepare()
 
-	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback()
-		if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
-		if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
-		presence.setActivity(presenceData)
-	})
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})
 	
 })()

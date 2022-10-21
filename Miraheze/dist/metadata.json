@@ -12,5 +12,19 @@
 		"en": "Miraheze is a non-profit wiki farm with the goal of providing everyone high quality wiki hosting with flexibility."
 	},
 	"category": "other",
-	"regExp": "([a-z0-9-]+[.])?miraheze[.](org|wiki)[/]"
+	"regExp": "([a-z0-9-]+[.])?miraheze[.](org|wiki)[/]",
+	"settings": [
+		{
+			"id": "buttons",
+			"title": "Show Buttons",
+			"icon": "fas fa-compress-arrows-alt",
+			"value": true
+		},
+		{
+			"id": "time",
+			"title": "Show Timestamps",
+			"icon": "fad fa-stopwatch",
+			"value": true
+		}
+	]
 }

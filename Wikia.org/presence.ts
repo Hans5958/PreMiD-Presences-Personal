@@ -8,29 +8,20 @@ let currentURL = new URL(document.location.href),
 	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -42,9 +33,28 @@ const resetData = (defaultData: PresenceData = {
  */
 const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
-},
+}
 
-prepare = async (): Promise<void> => {
+/**
+ * An object obtained from on `mw.config.values`.
+ * (Unused values on this type has been removed. Refer to the link for the full object.)
+ * @link https://github.com/wikimedia-gadgets/types-mediawiki/blob/main/mw/config.d.ts
+ */
+ type mwConfigValues = {
+	wgContentLanguage: string;
+	wgSiteName: string;
+	wgAction: string;
+	wgCanonicalNamespace: string;
+	wgCurRevisionId: number;
+	wgNamespaceNumber: number;
+	wgPageName: string;
+	wgRevisionId: number;
+	wgIsMainPage: boolean;
+	wgDiffOldId: number | false;
+	wgDiffNewId: number;
+}
+
+const prepare = async (): Promise<void> => {
 
 	presence.info("Running...")
 
@@ -74,12 +84,12 @@ prepare = async (): Promise<void> => {
 		
 		*/
 
-		const mwConfig = await presence.getPageletiable('mw"]["config"]["values')
+		const mwConfig: mwConfigValues = await presence.getPageletiable('mw"]["config"]["values')
 
 		const siteName = mwConfig.wgSiteName
 		const lang = currentPath[0] === "wiki" ? "en" : currentPath[0]
 		
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction") || mwConfig.wgAction
+		const actionResult = (): string => getURLParam("action") || getURLParam("veaction") || "view" || mwConfig.wgAction
 
 		const titleFromURL = (): string => {
 			const raw = mwConfig.wgPageName
@@ -154,10 +164,10 @@ prepare = async (): Promise<void> => {
 		} else if (actionResult() === "history") {
 			presenceData.details = "Viewing revision history"
 			presenceData.state = titleFromURL()
-		} else if (getURLParam("diff")) {
+		} else if (mwConfig.wgDiffOldId) {
 			presenceData.details = "Viewing difference between revisions"
 			presenceData.state = titleFromURL()
-		} else if (getURLParam("oldid")) {
+		} else if (mwConfig.wgCurRevisionId !== mwConfig.wgRevisionId) {
 			presenceData.details = "Viewing an old revision of a page"
 			presenceData.state = titleFromURL()
 		} else if (namespaceDetails() === "Viewing a user blog") {
@@ -170,7 +180,7 @@ prepare = async (): Promise<void> => {
 			}
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
 			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				if (actionResult() === "edit" || actionResult() === "editsource") {
 					presenceData.details = "Editing a page"
 				} else {
@@ -201,17 +211,13 @@ prepare = async (): Promise<void> => {
 
 (async (): Promise<void> => { await prepare()
 
-if (updateCallback.present) {
-	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
-
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})
+	
 })()

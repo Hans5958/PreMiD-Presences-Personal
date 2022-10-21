@@ -15,11 +15,7 @@ let currentURL = new URL(document.location.href),
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/") // You may don't need this, so remove if not needed.
 	presenceData = {...defaultData}
@@ -169,13 +165,13 @@ const prepare = async (): Promise<void> => {
 
 (async (): Promise<void> => { await prepare()
 
-	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback()
-		if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
-		if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
-		presence.setActivity(presenceData)
-	})
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})
 	
 })()

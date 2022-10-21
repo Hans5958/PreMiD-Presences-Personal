@@ -2,35 +2,26 @@ const presence = new Presence({
 	clientId: "664057766809436161"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: PresenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -70,9 +61,9 @@ const logHandler = {
  */
 const getURLParam = (urlParam: string): string => {
 	return currentURL.searchParams.get(urlParam)
-},
+}
 
-prepare = async (): Promise<void> => {
+const prepare = async (): Promise<void> => {
 
 	/*
 
@@ -131,11 +122,11 @@ prepare = async (): Promise<void> => {
 				}
 			} catch {
 				if (currentPath[0].toLowerCase() === document.querySelector("title").textContent.split(" ")[0].toLowerCase()) return document.querySelector("title").textContent.split(" ")[0]
-				else if (currentPath[0].toLowerCase() === document.querySelector("title").textContent.split(" by ")[1].split(" ")[0].toLowerCase()) return (presenceData.state = document.querySelector("title").textContent.split(" by ")[1].split(" ")[0])
+				else if (currentPath[0].toLowerCase() === document.querySelector("title").textContent.split(" by ")[1].split(" ")[0].toLowerCase()) return document.querySelector("title").textContent.split(" by ")[1].split(" ")[0]
 			}
 		}
 
-		updateCallback.function = (): void => {
+		updateCallback = (): void => {
 			if ((loadedPath !== currentURL.pathname) || forceUpdate) {
 				
 				loadedPath = currentURL.pathname
@@ -272,7 +263,7 @@ prepare = async (): Promise<void> => {
 					
 					} else if (currentPath[1] === "art") {
 						presenceData.details = document.querySelector("title").textContent.split(" by ").slice(0, -1).join(" - ")
-						presenceData.state = document.querySelector("title").textContent.split(" by ").pop().split(" ")[0]
+						;[ presenceData.state ] = document.querySelector("title").textContent.split(" by ").pop().split(" ")
 						/* I actually wanted to get it using the visible elements, but well, it's complicated. */
 						if (presenceData.details === presenceDataPlaced.details && presenceData.state === presenceDataPlaced.state) throw new Error("Current status is the same as the previous.")
 						if (presenceData.details === "") throw new Error("No art title detected and user is from the homepage.")
@@ -301,7 +292,7 @@ prepare = async (): Promise<void> => {
 						presenceData.state = getName(true)
 					
 					} else if (currentPath[1] === "prints") {
-						presenceData.details = `Viewing a user's prints`
+						presenceData.details = "Viewing a user's prints"
 						presenceData.state = getName()
 					
 					} else if (currentPath[1] === "posts") {
@@ -321,7 +312,7 @@ prepare = async (): Promise<void> => {
 							presenceData.state = `${getName()} (journal)`
 						} else {
 							/* This part is only valid on the old theme. */
-							presenceData.details = `Viewing a user's journals`
+							presenceData.details = "Viewing a user's journals"
 							presenceData.state = getName()
 						}
 					
@@ -400,7 +391,7 @@ prepare = async (): Promise<void> => {
 					// console.log(`${retries}/30`)
 
 					if (retries === 30) {
-						updateCallback.function = (): void => undefined
+						updateCallback = (): void => undefined
 						logHandler.fatalError(error)
 					}
 				
@@ -425,7 +416,7 @@ prepare = async (): Promise<void> => {
 				const channel = (): string => document.querySelector(".damnc-tabbar strong").textContent
 				let loadedChannel = "", forceUpdate = false, presenceDataPlaced: PresenceData = {}, retries = 0
 	
-				updateCallback.function = (): void => {
+				updateCallback = (): void => {
 	
 					if (loadedChannel !== channel() || forceUpdate) {
 						loadedChannel = channel()
@@ -443,7 +434,7 @@ prepare = async (): Promise<void> => {
 							// if (retries === 1) console.groupCollapsed("Loading or retrying...")
 							// console.log(`${retries}/30`)
 							if (retries === 30) {
-								updateCallback.function = (): void => undefined
+								updateCallback = (): void => undefined
 								logHandler.fatalError(error)
 							}
 						}
@@ -485,9 +476,9 @@ prepare = async (): Promise<void> => {
 		let currentTitle = "",
 			presenceDataPlaced: PresenceData = {}
 
-		updateCallback.function = (): void => {
+		updateCallback = (): void => {
 			if (currentTitle !== document.title.split(" - ")[0]) {
-				currentTitle = document.title.split(" - ")[0]
+				[ currentTitle ] = document.title.split(" - ")
 				presenceData.details = "Viewing the help center/KB"
 				presenceData.state = currentTitle
 				presenceDataPlaced = presenceData
@@ -508,7 +499,7 @@ prepare = async (): Promise<void> => {
 
 		let loadedPath: string, forceUpdate = false, presenceDataPlaced: PresenceData = {},	retries = 0
 
-		updateCallback.function = (): void => {
+		updateCallback = (): void => {
 			if ((loadedPath !== currentURL.pathname) || forceUpdate) {
 				loadedPath = currentURL.pathname
 
@@ -562,7 +553,7 @@ prepare = async (): Promise<void> => {
 					// console.log(`${retries}/30`)
 
 					if (retries === 30) {
-						updateCallback.function = (): void => undefined
+						updateCallback = (): void => undefined
 						logHandler.fatalError(error)
 					}
 
@@ -580,17 +571,13 @@ prepare = async (): Promise<void> => {
 
 (async (): Promise<void> => { await prepare()
 
-if (updateCallback.present) {
-	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	if (presenceData) presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
-
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})
+	
 })()

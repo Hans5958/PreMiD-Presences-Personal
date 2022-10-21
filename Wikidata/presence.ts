@@ -4,29 +4,24 @@ const presence = new Presence({
 
 const browsingStamp = Math.floor(Date.now() / 1000)
 let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
 	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: () => void {} as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	presenceData = {...defaultData}
 }
@@ -140,7 +135,7 @@ const prepare = async (): Promise<void> => {
 		presenceData.state = titleFromConfig
 	} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
 		presenceData.state = title + (title.toLowerCase() === titleFromConfig.toLowerCase() ? '' : ` (${titleFromConfig})`)
-		updateCallback.function = (): void => {
+		updateCallback = (): void => {
 			if (actionFromURL().startsWith("edit")) {
 				presenceData.details = "Editing a page"
 			} else {
@@ -171,7 +166,7 @@ const prepare = async (): Promise<void> => {
 	const defaultData = {...presenceData}
 	presence.on("UpdateData", async () => {
 		resetData(defaultData)
-		updateCallback.function()
+		updateCallback()
 		if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
 		if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
 		presence.setActivity(presenceData)

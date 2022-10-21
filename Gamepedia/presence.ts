@@ -16,29 +16,20 @@ let currentURL = new URL(document.location.href),
 	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -99,8 +90,8 @@ const getURLParam = (urlParam: string): string => {
 		
 		*/
 
-		let title: string, sitename: string
-		const actionResult = (): string => getURLParam("action") || getURLParam("veaction"), lang = currentPath[0] === "wiki" ? "en" : currentPath[0]
+		let title: string, siteName: string
+		const actionResult = (): string => getURLParam("action") || getURLParam("veaction") || "view", lang = currentPath[0] === "wiki" ? "en" : currentPath[0]
 
 		const titleFromURL = (): string => {
 			const raw: string = currentPath[0] === "index.php" ? getURLParam("title") : currentPath[0] === "wiki" ? currentPath.slice(1).join("/") : currentPath.slice(2).join("/")
@@ -115,22 +106,22 @@ const getURLParam = (urlParam: string): string => {
 		}
 
 		try {
-			sitename = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement).content
+			siteName = (document.querySelector("meta[property='og:site_name']") as HTMLMetaElement).content
 		} catch (e) {
 			if (
 				document.querySelector(".skin-fandomdesktop") ||
 				document.querySelector(".skin-fandommobile")			
 			) {
-				sitename = (
+				siteName = (
 					document.querySelector(".fandom-community-header__community-name") ||
-					document.querySelector(".wds-community-bar__sitename")
+					document.querySelector(".wds-community-bar__siteName")
 				).textContent.trim()	
 			} else {
 				const mainPageHref = ((document.querySelector("#n-mainpage-description a") || document.querySelector("#p-navigation a") || document.querySelector(".mw-wiki-logo")) as HTMLAnchorElement).href
 				const mainPageURL = new URL(mainPageHref)
 				const mainPagePath = mainPageURL.pathname.replace(/^\/|\/$/g, "").split("/")
 				const mainPageRaw = mainPagePath[0] === "index.php" ? getURLParam("title") : mainPagePath[0] === "wiki" ? mainPagePath.slice(1).join("/") : mainPagePath.slice(2).join("/")
-				sitename = decodeURIComponent(mainPageRaw.replace(/_/g, " "))
+				siteName = decodeURIComponent(mainPageRaw.replace(/_/g, " "))
 			}
 		}
 
@@ -196,10 +187,10 @@ const getURLParam = (urlParam: string): string => {
 		} else if (actionResult() === "history") {
 			presenceData.details = "Viewing revision history"
 			presenceData.state = titleFromURL()
-		} else if (getURLParam("diff")) {
+		} else if (mwConfig.wgDiffOldId) {
 			presenceData.details = "Viewing difference between revisions"
 			presenceData.state = titleFromURL()
-		} else if (getURLParam("oldid")) {
+		} else if (mwConfig.wgCurRevisionId !== mwConfig.wgRevisionId) {
 			presenceData.details = "Viewing an old revision of a page"
 			presenceData.state = titleFromURL()
 		} else if (namespaceDetails() === "Viewing a user profile") {
@@ -215,7 +206,7 @@ const getURLParam = (urlParam: string): string => {
 			}
 		} else if (document.querySelector("#ca-ve-edit") || getURLParam("veaction")) { 
 			presenceData.state = `${(title.toLowerCase() === titleFromURL().toLowerCase() ? `${title}` : `${title} (${titleFromURL()})`)}`
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				if (actionResult() === "edit" || actionResult() === "editsource") {
 					presenceData.details = "Editing a page"
 				} else {
@@ -232,8 +223,8 @@ const getURLParam = (urlParam: string): string => {
 			}
 		}
 
-		if (presenceData.state) presenceData.state += ` | ${sitename}`
-		else presenceData.state = sitename
+		if (presenceData.state) presenceData.state += ` | ${siteName}`
+		else presenceData.state = siteName
 
 		if (lang !== "en") {
 			if (presenceData.state) presenceData.state += ` (${lang})`
@@ -244,17 +235,13 @@ const getURLParam = (urlParam: string): string => {
 	
 })()
 
-if (updateCallback.present) {
-	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})
 
 })()

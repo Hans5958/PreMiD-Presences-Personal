@@ -2,35 +2,26 @@ const presence = new Presence({
 	clientId: "654906151523057664"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.replace(/^\/|\/$|\/index\.html$|.html$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: PresenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$|\/index\.html$|.html$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$|\/index\.html$|.html$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -42,7 +33,7 @@ const resetData = (defaultData: PresenceData = {
 		presenceDataPlaced: PresenceData = {},
 		forceUpdate = false
 
-	updateCallback.function = (): void => {
+	updateCallback = (): void => {
 
 		if ((loadedPath !== currentURL.pathname) || forceUpdate) {
 
@@ -56,12 +47,12 @@ const resetData = (defaultData: PresenceData = {
 				forceUpdate = true
 				presenceData.details = document.querySelector(".game-status[data-qa=map-name] .game-status__body").textContent
 				if (document.querySelector(".result")) {
-					presenceData.state = Number(document.querySelector(".game-status[data-qa=round-number] .game-status__body").textContent.split(" / ")[0]) + 1 + " of 5, " + document.querySelector(".game-status[data-qa=score] .game-status__body").textContent + " points"
+					presenceData.state = `${Number(document.querySelector(".game-status[data-qa=round-number] .game-status__body").textContent.split(" / ")[0]) + 1} of 5, ${document.querySelector(".game-status[data-qa=score] .game-status__body").textContent} points`
 					if (document.querySelector(".game-status[data-qa=round-number] .game-status__body").textContent.split(" / ")[0] === "5") {
-						presenceData.state = "Finished, " + document.querySelector(".game-status[data-qa=score] .game-status__body").textContent + " points"
+						presenceData.state = `Finished, ${document.querySelector(".game-status[data-qa=score] .game-status__body").textContent} points`
 					}
 				} else {
-					presenceData.state = document.querySelector(".game-status[data-qa=round-number] .game-status__body").textContent.split(" / ")[0] + " of 5, " + document.querySelector(".game-status[data-qa=score] .game-status__body").textContent + " points"
+					presenceData.state = `${document.querySelector(".game-status[data-qa=round-number] .game-status__body").textContent.split(" / ")[0]} of 5, ${document.querySelector(".game-status[data-qa=score] .game-status__body").textContent} points`
 				}
 			} else if (currentPath[0] === "maps" && !currentPath[1]) {
 				presenceData.details = "Looking for a map"
@@ -114,15 +105,11 @@ const resetData = (defaultData: PresenceData = {
 	
 })() 
 
-if (updateCallback.present) {
-	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	if (presenceData) presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})

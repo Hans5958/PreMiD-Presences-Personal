@@ -2,35 +2,26 @@ const presence = new Presence({
 	clientId: "731472884337475596"
 })
 
-let currentURL = new URL(document.location.href), 
-	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 const browsingStamp = Math.floor(Date.now() / 1000)
-let presenceData: PresenceData = {
+let currentURL = new URL(document.location.href), 
+	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/"),
+	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -42,7 +33,7 @@ const resetData = (defaultData: PresenceData = {
 
 	const titleFromURL = (): string => {
 		const raw = currentPath.slice(1).join("/")
-		return decodeURI(raw.replace(/_/g, " "))
+		return decodeURIComponent(raw.replace(/_/g, " "))
 	}
 
 	try {
@@ -66,15 +57,11 @@ const resetData = (defaultData: PresenceData = {
 
 })()
 
-if (updateCallback.present) {
-	const defaultData = {...presenceData}
-	if (presenceData) presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	if (presenceData) presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})

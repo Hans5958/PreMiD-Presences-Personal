@@ -8,29 +8,20 @@ let currentURL = new URL(document.location.href),
 	presenceData: PresenceData = {
 		details: "Viewing an unsupported page",
 		largeImageKey: "lg",
-		startTimestamp: browsingStamp
-	}
-const updateCallback = {
-		_function: null as () => void,
-		get function(): () => void {
-			return this._function
-		},
-		set function(parameter) {
-			this._function = parameter
-		},
-		get present(): boolean {
-			return this._function !== null
-		}
-	}
+		startTimestamp: browsingStamp,
+		buttons: [
+			{
+				label: "View Page",
+				url: window.location.href,
+			}
+		],
+	},
+	updateCallback: () => void = () => void {}
 
 /**
  * Initialize/reset presenceData.
  */
-const resetData = (defaultData: PresenceData = {
-	details: "Viewing an unsupported page",
-	largeImageKey: "lg",
-	startTimestamp: browsingStamp
-}): void => {
+const resetData = (defaultData: PresenceData): void => {
 	currentURL = new URL(document.location.href)
 	currentPath = currentURL.pathname.replace(/^\/|\/$/g, "").split("/")
 	presenceData = {...defaultData}
@@ -126,7 +117,7 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		} else if (currentPath[0] === "tracksearch2" || currentPath[0] === "mapsearch2" || currentPath[0] === "ts" || currentPath[0] === "ms" ) {
 			presenceData.details = chooseTwo("Searching for a track", "Searching for a map")
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.state = getURLParam("trackname") || undefined
 			}
 
@@ -137,7 +128,7 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 			else presenceData.state = searchSummary[0].toUpperCase() + searchSummary.slice(1)
 
 		} else if (currentPath[0] === "mappacksearch") { // Valid on TrackMania² and Trackmania (2020) only
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.details = "Searching for a mappack"
 				presenceData.state = getURLParam("name") || undefined
 			}
@@ -159,13 +150,13 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		} else if (currentPath[0] === "recordsearch") { // Valid on TrackMania² and Trackmania (2020) only
 			presenceData.details = "Searching for a record"
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.state = getURLParam("name") || undefined
 			}
 
 		} else if (currentPath[0] === "leaderboard") { // Valid on TrackMania² and Trackmania (2020) only
 			presenceData.details = "Viewing the leaderboards"
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.state = document.querySelector(".select2-choice").textContent.trim()
 			}
 		} else if (currentPath[0] === "reports") {
@@ -284,13 +275,13 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 		} else if (currentPath[0] === "itemsearch") {
 			presenceData.details = "Searching for an item"
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.state = getURLParam("itemname") || undefined
 			}
 
 		} else if (currentPath[0] === "setsearch") {
 			presenceData.details = "Searching for a set"
-			updateCallback.function = (): void => {
+			updateCallback = (): void => {
 				presenceData.state = getURLParam("setname") || undefined
 			}
 
@@ -370,7 +361,7 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 		presenceData.smallImageText = "TMTube Archive"
 		presenceData.largeImageKey = "tmtube"
 
-		updateCallback.function = (): void => {
+		updateCallback = (): void => {
 			if (currentPath[0] === "") {	
 				presenceData.details = "On the home page"
 			} else if (currentPath[0] === "view") {	
@@ -431,15 +422,11 @@ const getTimestamps = (videoTime: number, videoDuration: number): Array<number> 
 
 })()
 
-if (updateCallback.present) {
-	const defaultData = {...presenceData}
-	presence.on("UpdateData", async () => {
-		resetData(defaultData)
-		updateCallback.function()
-		presence.setActivity(presenceData)
-	})
-} else {
-	presence.on("UpdateData", async () => {
-		presence.setActivity(presenceData)
-	})
-}
+const defaultData = {...presenceData}
+presence.on("UpdateData", async () => {
+	resetData(defaultData)
+	updateCallback()
+	if (!(await presence.getSetting('time'))) delete presenceData.startTimestamp
+	if (!(await presence.getSetting('buttons'))) delete presenceData.buttons
+	presence.setActivity(presenceData)
+})
