@@ -10,14 +10,16 @@ REM cd Wikispecies & tsc & cd..
 REM cd Wikiversity & tsc & cd..
 REM cd Wikivoyage & tsc & cd..
 REM cd Wiktionary & tsc & cd..
-commit-copy-to-fork.sh Wikipedia
-commit-copy-to-fork.sh Wikibooks
-commit-copy-to-fork.sh Wikidata
-commit-copy-to-fork.sh Wikimedia Commons
-commit-copy-to-fork.sh Wikinews
-commit-copy-to-fork.sh Wikiquote
-commit-copy-to-fork.sh Wikisource
-commit-copy-to-fork.sh Wikispecies
-commit-copy-to-fork.sh Wikiversity
-commit-copy-to-fork.sh Wikivoyage
-commit-copy-to-fork.sh Wiktionary
+echo %1
+echo %2
+commit-copy-to-fork.sh "Wikipedia" "%1" "%2"
+commit-copy-to-fork.sh "Wikibooks" "%1" "%2"
+commit-copy-to-fork.sh "Wikidata" "%1" "%2"
+commit-copy-to-fork.sh "Wikimedia Commons" "%1" "%2"
+commit-copy-to-fork.sh "Wikinews" "%1" "%2"
+commit-copy-to-fork.sh "Wikiquote" "%1" "%2"
+commit-copy-to-fork.sh "Wikisource" "%1" "%2"
+commit-copy-to-fork.sh "Wikispecies" "%1" "%2"
+commit-copy-to-fork.sh "Wikiversity" "%1" "%2"
+commit-copy-to-fork.sh "Wikivoyage" "%1" "%2"
+commit-copy-to-fork.sh "Wiktionary" "%1" "%2"
