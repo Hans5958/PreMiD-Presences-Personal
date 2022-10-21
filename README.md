@@ -1,3 +1,11 @@
+> ## Discontinued
+>
+> Due to the disagreement (and partly a loss of interest), I have decided to discontinue the development on the presences maintained by me.
+>
+> No updates will be made in the future regarding the said presences. No code, assets, or applications will be removed or unpublished from my side. All presences are going to continue to work until the unforseeable future. Anyone is free to take over/continue the development.
+>
+> I apologize for the inconvenience. Thank you for the times.
+
 <div align="center">
     <img src="https://avatars3.githubusercontent.com/u/46326568?s=400&amp;u=15e4a4988014780288d30ffb969fd1569fec23e6&amp;v=4" width="128px" style="max-width:100%;">
     <h1><small>Hans5958's Personal</small> PreMiD Presences</h1>
